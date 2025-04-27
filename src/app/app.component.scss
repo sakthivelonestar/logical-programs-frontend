@@ -1,0 +1,47 @@
+p,h1,h2,h3,h4,h5,h6{
+    margin: 0px;
+    padding: 0px;
+}
+.wraper{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    h1{
+        padding-bottom: 20px;
+    }
+    .card-wraper{ 
+        height: 5%;
+        width: 100%;
+        display: flex;
+        justify-content: center; 
+        align-items: start;
+        flex-wrap: wrap;
+        gap: 20px;
+        cursor: pointer;
+        .card{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: aliceblue;
+            width: 100px;
+            height: 50px;
+            border-radius: 10px;    
+    }
+
+    .active {
+        background-color: #007bff;
+        color: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      }
+} 
+.modules{
+    height: 95%;
+    width: 100%;
+    overflow:hidden ;
+}    
+}
+
