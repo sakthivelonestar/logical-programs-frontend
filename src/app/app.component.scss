@@ -4,11 +4,12 @@ p,h1,h2,h3,h4,h5,h6{
 }
 .wraper{
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
+    overflow: hidden;
     h1{
         padding-bottom: 20px;
     }
@@ -41,7 +42,6 @@ p,h1,h2,h3,h4,h5,h6{
 .modules{
     height: 95%;
     width: 100%;
-    overflow:hidden ;
 }    
 }
 
