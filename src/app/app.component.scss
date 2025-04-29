@@ -3,15 +3,12 @@ p,h1,h2,h3,h4,h5,h6{
     padding: 0px;
 }
 .wraper{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
     h1{
         padding-bottom: 20px;
+        text-align: center;
     }
     .card-wraper{ 
         height: 5%;
@@ -42,6 +39,7 @@ p,h1,h2,h3,h4,h5,h6{
 .modules{
     height: 95%;
     width: 100%;
+    
 }    
 }
 

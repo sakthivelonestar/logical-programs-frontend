@@ -25,7 +25,5 @@ export class AppComponent {
     this.router.navigate([path]);
   }
 
-  isActive(route: string): boolean {
-    return this.router.url === `/${route}`;
-  }
+
 }

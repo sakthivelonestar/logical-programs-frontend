@@ -1,11 +1,55 @@
-<div class="wraper">
-    <div class="header"> 
-        <p> <span class="question">What:</span>
-            Control flow in JavaScript is the way the program decides which code to run next based on conditions, loops, or function calls.</p>
-        <p> <span class="question">Why:</span>
-            It is important because it allows the program to make decisions, repeat tasks, and handle errors, making the code dynamic and intelligent.</p>
-        <p> <span class="question">Where:</span>
-            Control flow is used in if-else statements, loops (for, while), functions, switch cases, and error handling to manage how and when parts of the code are executed.
-            explain neetly</p>
+<div class="oveall-wraper"  appMaximize #controlflow="maximize" id="controlflow">
+    <div class="wraper">
+        <img class="swap" *ngIf="controlflow.checkfullscreen() ==  'hide'" (click)="controlflow.toggle()" src="../../../assets/expand.svg" alt="">
+        <img class="swap" *ngIf="controlflow.checkfullscreen() !=  'hide'" (click)="controlflow.toggle()" src="../../../assets/Minimize icon.svg" alt="">
+        <div class="header">
+            <p> <span class="question">What:</span>
+                Control flow in JavaScript is the way the <strong>program decides which code to run next based on conditions, loops, or function calls.</strong> </p>
+            <p> <span class="question">Why:</span>
+                It is important because it allows the program to <strong>make decisions, repeat tasks, and handle errors, making the code dynamic and intelligent.</strong></p>
+            <p> <span class="question">Where:</span>
+                Control flow is used in <strong>if-else statements, loops (for, while), functions, switch cases, and error handling</strong>  to manage how and when parts of the code are executed.</p>
+        </div>
     </div>
-</div>
+
+    <div class="examples">
+        <div class="control-flow-statement">      
+            <div class="card">
+                <h3>For Loop</h3>
+                <div class="for" >
+                    <div class="loop" *ngFor="let loop of loops">
+                        <h4>{{ loop.title }}</h4>
+                        <pre><code>{{ loop.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ loop.output }}</p>
+                      </div>
+                </div>
+            </div>
+
+            <div class="card">
+                    <h3>If-Else Statement</h3>
+                <div class="if">    
+                    <pre><code>{{ ifElse.code }}</code></pre>
+                    <p><strong>Output:</strong> {{ ifElse.output }}</p>
+                </div>
+            </div>
+              
+              <div class="card">
+                    <h3>Switch Case</h3>
+                <div class="switch">    
+                    <pre><code>{{ switchCase.code }}</code></pre>
+                    <p><strong>Output:</strong> {{ switchCase.output }}</p>
+                </div>
+              </div>
+              
+              <div class="card">
+                    <h3>Error Handling (Try-Catch)</h3>
+                <div class="try">    
+                    <pre><code>{{ tryCatch.code }}</code></pre>
+                    <p><strong>Output:</strong> {{ tryCatch.output }}</p>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>   
+
+
