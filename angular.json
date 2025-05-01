@@ -45,7 +45,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumError": "2mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -103,8 +103,8 @@
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
           "options": {
-          "baseHref": "/logical-programs-frontend/"
-         }
+            "baseHref": "/logical-programs/"
+          }
         }
       }
     }
