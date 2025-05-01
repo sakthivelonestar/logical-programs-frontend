@@ -9,6 +9,7 @@ p,h1,h2,h3,h4,h5,h6{
   flex-direction: column;
   gap: 10px;
   background-color: #FFF;
+  overflow-y: auto;
   // header
   .wraper{
     width: 100%;
@@ -71,7 +72,6 @@ p,h1,h2,h3,h4,h5,h6{
         border-radius: 10px;
         padding: 20px 20px 20px 40px;
        }
-
        pre,code {
         display: block;
         background-color: #f4f4f4;
@@ -83,7 +83,6 @@ p,h1,h2,h3,h4,h5,h6{
         overflow-x: auto;
         white-space: pre-wrap; 
       }
-      
        p {
         font-size: 14px;
         margin-top: 8px;
@@ -91,6 +90,7 @@ p,h1,h2,h3,h4,h5,h6{
       }
     }
   }
+  // loop 
   .control-flow-statement .card:nth-child(1) {
      width: 100%;
      .for{
@@ -110,6 +110,55 @@ p,h1,h2,h3,h4,h5,h6{
       }
      }
   }
+
+  // problems
+  .problem-container {
+    width: 100%;
+    padding: 1rem;
+  
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.5rem;
+    }
+  
+    .category-block {
+      margin-top: 2rem;
+  
+      h4 {
+        font-size: 1.25rem;
+        color: #0d6efd;
+        margin-bottom: 1rem;
+      }
+    }
+  
+    .problem-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  
+    .problem-card {
+      width: 30%;
+      border: 1px solid #ccc;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      background-color: #f4f4f4;
+  
+      h5 {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+  
+      p {
+        margin: 0.25rem 0;
+      }
+  
+      &:hover {
+        background-color:  rgba(0, 255, 21, 0.171);
+      }
+    }
+  }
+  
 }
 }
 
@@ -118,8 +167,8 @@ p,h1,h2,h3,h4,h5,h6{
   width: 24px;
   height: 24px;
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: -20px;
+  right: -20px;
   z-index: 10;
   background-color: #FFF;
 }

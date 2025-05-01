@@ -49,6 +49,31 @@
                 </div>
               </div>
         </div>
+        <hr>
+        <div class="problem-container">
+            <h2>Problem List</h2>
+          
+            <div *ngFor="let category of problemList" class="category-block">
+              <h4>{{ category.title }}</h4>
+          
+              <div class="problem-list">
+                <div
+                  *ngFor="let item of category.items"
+                  class="problem-card"
+                >
+                  <h5>{{ item.title }}</h5>
+          
+                  <div class="problem-content">
+                    <p><strong>Problem:</strong> {{ item.problem }}</p>
+                    <p *ngIf="item.input"><strong>Input:</strong> {{ item.input }}</p>
+                    <p *ngIf="item.output"><strong>Output:</strong> {{ item.output }}</p>
+                    <p *ngIf="item.solution"><strong>Solution Approach:</strong> {{ item.solution }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
     </div>
 </div>   
 
