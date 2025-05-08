@@ -6,8 +6,11 @@ p,h1,h2,h3,h4,h5,h6{
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    // gap: 20px;
     h1{
-        padding-bottom: 20px;
+        padding-bottom: 10px;
         text-align: center;
     }
     .card-wraper{ 
@@ -39,6 +42,7 @@ p,h1,h2,h3,h4,h5,h6{
 .modules{
     height: 95%;
     width: 100%;
+    padding-top: 20px;
     
 }    
 }

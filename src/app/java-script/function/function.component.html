@@ -1,1 +1,97 @@
-<p>function works!</p>
+<div class="oveall-wraper" appMaximize #functionConcepts="maximize" id="functionConcepts">
+    <div class="wraper">
+        <img class="swap" *ngIf="functionConcepts.checkfullscreen() ==  'hide'" (click)="functionConcepts.toggle()" src="../../../assets/expand.svg" alt="">
+        <img class="swap" *ngIf="functionConcepts.checkfullscreen() !=  'hide'" (click)="functionConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="">
+        <div class="header">
+            <p> <span class="question">What:</span>
+                Functions in JavaScript are <strong>reusable blocks of code that perform specific tasks and can accept inputs and return values.</strong> </p>
+            <p> <span class="question">Why:</span>
+                Functions are important because they allow for <strong>code reusability, maintainability, and organization by breaking complex logic into manageable pieces.</strong></p>
+            <p> <span class="question">Where:</span>
+                Functions are used <strong>throughout JavaScript applications for handling events, processing data, implementing algorithms, and creating modular, maintainable code.</strong></p>
+        </div>
+    </div>
+
+    <div class="examples">
+        <div class="function-concepts">      
+            <div class="card">
+                <h3>Function Declarations</h3>
+                <div class="declarations">
+                    <div class="declaration" *ngFor="let func of functionDeclarations">
+                        <h4>{{ func.title }}</h4>
+                        <pre><code>{{ func.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ func.output }}</p>
+                      </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Function Expressions</h3>
+                <div class="expressions">
+                    <div class="expression" *ngFor="let func of functionExpressions">
+                        <h4>{{ func.title }}</h4>
+                        <pre><code>{{ func.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ func.output }}</p>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="card">
+                <h3>{{ arrowFunctions.title }}</h3>
+                <div class="arrow-functions">
+                    <div class="arrow-function" *ngFor="let example of arrowFunctions.examples">
+                        <h4>{{ example.title }}</h4>
+                        <pre><code>{{ example.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ example.output }}</p>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="card">
+                <h3>{{ closures.title }}</h3>
+                <div class="closures">
+                    <div class="closure" *ngFor="let example of closures.examples">
+                        <h4>{{ example.title }}</h4>
+                        <pre><code>{{ example.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ example.output }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>{{ callbacks.title }}</h3>
+                <div class="callbacks">
+                    <div class="callback" *ngFor="let example of callbacks.examples">
+                        <h4>{{ example.title }}</h4>
+                        <pre><code>{{ example.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ example.output }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="problem-container">
+            <h2>Problem List</h2>
+            <div *ngFor="let category of problemList" class="category-block">
+              <h4>{{ category.title }}</h4>
+          
+              <div class="problem-list">
+                <div
+                  *ngFor="let item of category.items"
+                  class="problem-card"
+                >
+                  <h5>{{ item.title }}</h5>
+          
+                  <div class="problem-content">
+                    <p><strong>Problem:</strong> {{ item.problem }}</p>
+                    <p *ngIf="item.input"><strong>Input:</strong> {{ item.input }}</p>
+                    <p *ngIf="item.output"><strong>Output:</strong> {{ item.output }}</p>
+                    <pre *ngIf="item.solution">Solution Approach:<code>{{ item.solution }}</code></pre>      
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+   
+    </div>
+</div>

@@ -1,7 +1,7 @@
 <div class="oveall-wraper"  appMaximize #controlflow="maximize" id="controlflow">
     <div class="wraper">
-        <img class="swap" *ngIf="controlflow.checkfullscreen() ==  'hide'" (click)="controlflow.toggle()" src="../../../assets/expand.svg" alt="">
-        <img class="swap" *ngIf="controlflow.checkfullscreen() !=  'hide'" (click)="controlflow.toggle()" src="../../../assets/Minimize icon.svg" alt="">
+        <img class="swap" *ngIf="controlflow.checkfullscreen() ==  'hide'" (click)="controlflow.toggle()" width="20px" height="20px" src="../../../assets/expand.svg" alt="">
+        <img class="swap" *ngIf="controlflow.checkfullscreen() !=  'hide'" (click)="controlflow.toggle()" width="20px" height="20px"  src="../../../assets/Minimize icon.svg" alt="">
         <div class="header">
             <p> <span class="question">What:</span>
                 Control flow in JavaScript is the way the <strong>program decides which code to run next based on conditions, loops, or function calls.</strong> </p>

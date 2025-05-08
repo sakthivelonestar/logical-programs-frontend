@@ -1,1 +1,108 @@
-<p>array-methods works!</p>
+<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
+    <div class="wrapper">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <div class="header">
+            <p> <span class="question">What:</span>
+                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+            <p> <span class="question">Why:</span>
+                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+            <p> <span class="question">Where:</span>
+                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+        </div>
+    </div>
+
+    <div class="examples">
+        <div class="array-methods">
+            <div class="card">
+                <h3>Iteration Methods</h3>
+                <div class="methods">
+                    <div class="method" *ngFor="let method of iterationMethods">
+                        <h4>{{ method.title }}</h4>
+                        <pre><code>{{ method.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ method.output }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Transformation Methods</h3>
+                <div class="methods">
+                    <div class="method" *ngFor="let method of transformationMethods">
+                        <h4>{{ method.title }}</h4>
+                        <pre><code>{{ method.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ method.output }}</p>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="card">
+                <h3>Search and Filter Methods</h3>
+                <div class="methods">
+                    <div class="method" *ngFor="let method of searchFilterMethods">
+                        <h4>{{ method.title }}</h4>
+                        <pre><code>{{ method.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ method.output }}</p>
+                    </div>
+                </div>
+            </div>
+              
+            <div class="card">
+                <h3>Manipulation Methods</h3>
+                <div class="methods">
+                    <div class="method" *ngFor="let method of manipulationMethods">
+                        <h4>{{ method.title }}</h4>
+                        <pre><code>{{ method.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ method.output }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Aggregation Methods</h3>
+                <div class="methods">
+                    <div class="method" *ngFor="let method of aggregationMethods">
+                        <h4>{{ method.title }}</h4>
+                        <pre><code>{{ method.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ method.output }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>Sorting Methods</h3>
+                <div class="methods">
+                    <div class="method" *ngFor="let method of sortingMethods">
+                        <h4>{{ method.title }}</h4>
+                        <pre><code>{{ method.code }}</code></pre>
+                        <p><strong>Output:</strong> {{ method.output }}</p>
+                    </div>
+                </div>
+            </div>
+           
+        </div>
+        <hr>
+        <div class="problem-container">
+            <h2>Array Methods Practice Problems</h2>
+            <div *ngFor="let category of problemList" class="category-block">
+                <h4>{{ category.title }}</h4>
+          
+                <div class="problem-list">
+                    <div
+                        *ngFor="let item of category.items"
+                        class="problem-card"
+                    >
+                        <h5>{{ item.title }}</h5>
+          
+                        <div class="problem-content">
+                            <p><strong>Problem:</strong> {{ item.problem }}</p>
+                            <p *ngIf="item.input"><strong>Input:</strong> {{ item.input }}</p>
+                            <p *ngIf="item.output"><strong>Output:</strong> {{ item.output }}</p>
+                            <p *ngIf="item.solution"><strong>Solution Approach:</strong> {{ item.solution }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>   
+    </div>
+</div>

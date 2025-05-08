@@ -12,13 +12,7 @@ import { JavaScriptModule } from './java-script/java-script.module';
 })
 export class AppComponent {
   constructor(private router: Router) {
-
-  }
-
-  OnInit(){
-    console.log("padth of onlint dataa")
     this.navigateTo("javascript")
-
   }
 
   navigateTo(path: string) {
