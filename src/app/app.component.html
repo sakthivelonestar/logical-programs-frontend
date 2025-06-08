@@ -1,8 +1,8 @@
 <div class="wraper">
-  <h1>Front-end technologies</h1>
+  <h1>Fullstack Technologies</h1>
 
   <div class="card-wraper">
-    <div class="card" routerLinkActive="active" (click)="navigateTo('javascript')">
+    <div class="card" routerLinkActive="active" (click)="navigateTo('javascript/controleflow')">
       JavaScript
     </div>
     <div class="card" routerLinkActive="active" (click)="navigateTo('typescript')">
@@ -14,8 +14,22 @@
     <div class="card" routerLinkActive="active" (click)="navigateTo('d3js')">
       D3 Js
     </div>
+    <div class="card" routerLinkActive="active" (click)="navigateTo('nodejs')">
+      Node Js
+    </div>
+    <div class="card" routerLinkActive="active" (click)="navigateTo('nestjs')">
+      Nest Js
+    </div>
+    <div class="card" routerLinkActive="active" (click)="navigateTo('sql')">
+      sql
+    </div>
+    <div class="card" routerLinkActive="active" (click)="navigateTo('gitHub/gitprocess')">
+      Git Hub
+    </div>
+    <div class="card" routerLinkActive="active" (click)="navigateTo('aws/deployment')">
+      Aws
+    </div>
   </div>
-  
   <div class="modules">
     <router-outlet></router-outlet>
   </div>

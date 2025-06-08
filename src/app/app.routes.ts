@@ -22,5 +22,13 @@ export const routes: Routes = [
    {
       path: "d3js",
       loadChildren: () => import('./d3js/d3js.module').then(m => m.D3jsModule)
-   }
+   },
+    {
+      path: "aws",
+      loadChildren: () => import('./aws/aws.module').then(m => m.AwsModule)
+   },
+    {
+      path: "gitHub",
+      loadChildren: () => import('./github/github.module').then(m => m.GithubModule)
+   },
 ];

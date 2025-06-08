@@ -1,0 +1,336 @@
+<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
+    <div class="wrapper">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <div class="header">
+            <p><span class="question">What:</span>
+                AWS deployment means running your full stack app (frontend + backend + database) on Amazon Web Services like EC2, S3, and RDS.
+            </p>
+            <p><span class="question">Why:</span>
+                It lets you host apps reliably, scale easily, and keep your data secure with low cost and high performance.
+            </p>
+            <p><span class="question">Where:</span>
+                Used in real-world projects to deploy Angular, NestJS, PostgreSQL, and store files using S3 on cloud servers.
+            </p>
+        </div>
+    </div>
+
+   <div class="examples">
+  <div class="header">
+    <h1>AWS EC2 Deployment Guide</h1>
+    <p>Angular (Frontend) and NestJS (Backend) with PostgreSQL and S3 Integration</p>
+  </div>
+
+  <h2>Phase 1: PostgreSQL Setup (Using Amazon RDS - Aurora PostgreSQL)</h2>
+  <ol>
+    <li>Go to <strong>RDS</strong> in AWS Console.</li>
+    <li>
+      Click <strong>Create Database</strong>:
+      <ul>
+        <li>Choose: <strong>Amazon Aurora</strong></li>
+        <li>Edition: <strong>Aurora PostgreSQL-Compatible Edition</strong></li>
+        <li>Template: <strong>Free tier</strong> (or Production if needed)</li>
+        <li>DB cluster identifier: <code>d3-cluster</code></li>
+        <li>Master username: <code>postgres</code></li>
+        <li>Master password: <code>your_password</code></li>
+      </ul>
+    </li>
+    <li>
+      Instance configuration:
+      <ul>
+        <li>DB instance size: <code>db.t3.medium</code> (or Free Tier eligible one)</li>
+      </ul>
+    </li>
+    <li>
+      Connectivity:
+      <ul>
+        <li>VPC: Same as your EC2</li>
+        <li>Public access: <strong>Yes</strong></li>
+        <li>Security group: Allow port 5432</li>
+      </ul>
+    </li>
+    <li>Click <strong>Create Database</strong> and wait for creation to complete.</li>
+  </ol>
+
+  <h3>Inbound Rule for RDS</h3>
+  <p>Go to <strong>EC2 > Security Groups</strong>:</p>
+  <ul>
+    <li>Find the security group used by your RDS DB</li>
+    <li>
+      Add inbound rule:
+      <ul>
+        <li>Type: PostgreSQL</li>
+        <li>Port: 5432</li>
+        <li>Source: EC2 security group or <code>0.0.0.0/0</code> for testing</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Connect EC2 Backend to RDS</h3>
+  <p>In your <code>.env</code> file in the EC2 instance, set:</p>
+  <pre>DB_HOST=your-rds-endpoint.amazonaws.com
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=your_password
+DB_NAME=your_db_name</pre>
+
+  <p>To test connection manually:</p>
+  <pre>PGPASSWORD="your_password" psql -h your-rds-endpoint.amazonaws.com -U postgres -d your_db_name -p 5432</pre>
+
+  <div class="page-break"></div>
+
+  <h2>Phase 2: AWS S3 Bucket Setup</h2>
+  <ol>
+    <li>Go to <strong>S3</strong> from AWS Console.</li>
+    <li>
+      Click <strong>Create Bucket</strong>:
+      <ul>
+        <li>Bucket name: <code>your_bucket_name</code></li>
+        <li>Region: <code>Asia Pacific (Mumbai)</code> or your preferred</li>
+        <li>Uncheck <strong>Block all public access</strong> if files need to be accessed publicly</li>
+      </ul>
+    </li>
+    <li>Click <strong>Create bucket</strong>.</li>
+  </ol>
+
+  <h3>Create IAM User for S3 Access</h3>
+  <ol>
+    <li>
+      Go to <strong>IAM > Users > Add User</strong>
+      <ul>
+        <li>User name: <code>s3-access-user</code></li>
+        <li>Access type: <strong>Programmatic access</strong></li>
+      </ul>
+    </li>
+    <li>
+      Click <strong>Next: Permissions</strong>
+      <ul>
+        <li>Attach policies directly → <strong>AmazonS3FullAccess</strong></li>
+      </ul>
+    </li>
+    <li>Click <strong>Next</strong>, then <strong>Create user</strong></li>
+    <li>Copy and save the <strong>Access key ID</strong> and <strong>Secret access key</strong></li>
+  </ol>
+
+  <h3>Add S3 Credentials to <code>.env</code> in EC2 Backend</h3>
+  <pre>AWS_ACCESS_KEY_ID=your_access_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_PUBLIC_BUCKET_NAME=your_bucket_name</pre>
+
+  <h2>Phase 3: Create EC2 Instance</h2>
+  <ol>
+    <li>Go to <strong>EC2</strong> from AWS Console.</li>
+    <li>Click on <strong>Instances</strong> in the left menu.</li>
+    <li>
+      Click <strong>Launch Instance</strong>:
+      <ul>
+        <li>Name: <code>new-d3</code></li>
+        <li>AMI: Ubuntu (e.g., Ubuntu 22.04)</li>
+        <li>Instance Type: <code>t2.micro</code></li>
+        <li>Key Pair: <code>newone.pem</code></li>
+        <li>
+          Security Group:
+          <ul>
+            <li>Allow ports: 22 (SSH), 3000 (Backend), 8080 (Frontend)</li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li>After launch, go to <strong>Security Groups</strong> → Check Inbound Rules.</li>
+    <li>Return to <strong>Instances</strong> and click <strong>Connect</strong>.</li>
+  </ol>
+
+  <h2>Phase 4: Initial EC2 Setup</h2>
+  <pre>sudo apt update
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+sudo apt install -y nodejs
+sudo npm install -g pm2</pre>
+
+  <h2>Phase 5: Upload Project Files (from your computer)</h2>
+  <pre>scp -i "newone.pem" -r "D:\git_Hub\FYNDNA\d3-be\dist" ubuntu&#64;13.201.133.122:/home/ubuntu/
+scp -i "newone.pem" "D:\git_Hub\FYNDNA\d3-be\package.json" ubuntu&#64;13.201.133.122:/home/ubuntu/
+scp -i "newone.pem" "D:\git_Hub\FYNDNA\d3-be\package-lock.json" ubuntu&#64;13.201.133.122:/home/ubuntu/
+scp -i "newone.pem" -r "D:\git_Hub\FYNDNA\d3-fe\dist\frontend\browser" ubuntu&#64;13.201.133.122:/home/ubuntu/dist/frontend</pre>
+
+  <div class="page-break"></div>
+
+  <h2>Phase 6: Connect to EC2 and Configure Backend</h2>
+  <pre>ssh -i "newone.pem" ubuntu&#64;13.201.133.122
+cd /home/ubuntu
+npm install --production
+nano .env
+* Paste your environment variables and save</pre>
+
+  <h2>Phase 7: Setup Frontend Hosting</h2>
+  <pre>sudo npm install -g http-server
+http-server /home/ubuntu/dist/frontend -p 8080
+
+* Use PM2 to serve frontend:
+pm2 start "http-server /home/ubuntu/dist/frontend -p 8080 -a 0.0.0.0 --proxy http://localhost:8080" --name angular-fe</pre>
+
+  <h2>Phase 8: Start Backend Server</h2>
+  <pre>pm2 start main.js --name nestd3-backend
+pm2 status
+
+* If .env not loading properly:
+export $(cat .env | xargs)
+pm2 restart nestd3-backend --update-env</pre>
+
+  <h2>Phase 9: Access Your Application</h2>
+  <ul>
+    <li>Frontend: <a href="http://13.201.133.122:8080">http://13.201.133.122:8080</a></li>
+    <li>Backend API: <a href="http://13.201.133.122:3000">http://13.201.133.122:3000</a></li>
+  </ul>
+
+  <h2>PM2 Commands</h2>
+  <div class="command-section">
+    <h4>Check status</h4>
+    <pre>pm2 status</pre>
+
+    <h4>View logs</h4>
+    <pre>pm2 logs
+pm2 logs nestd3-backend
+pm2 logs angular-fe</pre>
+
+    <h4>Stop services</h4>
+    <pre>pm2 stop nestd3-backend
+pm2 stop angular-fe</pre>
+
+    <h4>Restart services</h4>
+    <pre>pm2 restart nestd3-backend --update-env
+pm2 restart angular-fe</pre>
+
+    <h4>Delete services</h4>
+    <pre>pm2 delete nestd3-backend
+pm2 delete angular-fe</pre>
+  </div>
+
+  <div class="success">
+    ✅ Now your Angular + NestJS app is deployed with Aurora PostgreSQL and S3 on AWS EC2!
+  </div>
+  <!-- <div class="question-answers">
+  <h2>AWS + NestJS</h2>
+  <div class="qa">
+    <p><strong>Q1: How did you deploy your NestJS application to an EC2 instance?</strong></p>
+    <p>A: I created an EC2 Ubuntu instance, uploaded the compiled NestJS files, installed Node.js and PM2, configured environment variables, and started the app using PM2 for process management.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q2: What steps are needed to connect NestJS with Amazon RDS (PostgreSQL)?</strong></p>
+    <p>A: Create an RDS PostgreSQL instance, configure security groups to allow EC2 access, set connection details in NestJS’s .env file, and use a PostgreSQL client or ORM (e.g., TypeORM) in your app.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q3: What is the purpose of PM2 in your NestJS deployment?</strong></p>
+    <p>A: PM2 manages the Node.js process to keep the backend running continuously, automatically restarts on failure, and helps with zero-downtime reloads.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q4: How do you manage environment variables for your NestJS app on EC2?</strong></p>
+    <p>A: I store sensitive info like DB credentials and AWS keys in a .env file on EC2 and load them using the dotenv package. PM2 is configured to use these variables when starting the app.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q5: What are security best practices when exposing your NestJS backend on AWS?</strong></p>
+    <p>A: Use security groups to limit inbound traffic, use HTTPS via a load balancer or proxy, keep sensitive info in environment variables, and avoid exposing unnecessary ports.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q6: How do you configure the NestJS .env file for AWS credentials and DB connections?</strong></p>
+    <p>A: Include keys like AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD, and DB_NAME in the .env file and use them in your NestJS config modules.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q7: How do you handle file uploads to AWS S3 from your NestJS backend?</strong></p>
+    <p>A: Use AWS SDK in NestJS to authenticate with IAM user credentials and upload files programmatically to a designated S3 bucket.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q8: What IAM permissions are required for NestJS to access an S3 bucket?</strong></p>
+    <p>A: The IAM user needs permissions like s3:PutObject, s3:GetObject, and s3:ListBucket on the specific bucket.</p>
+  </div>
+
+  <h2>AWS + Angular</h2>
+
+  <div class="qa">
+    <p><strong>Q1: How do you build and host your Angular app on an EC2 instance?</strong></p>
+    <p>A: I run <code>ng build --prod</code> locally, upload the compiled files to EC2, then serve them using http-server or Nginx.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q2: Why did you choose EC2 over S3 for hosting the Angular frontend?</strong></p>
+    <p>A: EC2 allows hosting backend and frontend on the same instance with custom server setups; S3 is better for static sites but may lack backend integration flexibility.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q3: How do you serve the Angular app using http-server and PM2 on EC2?</strong></p>
+    <p>A: After uploading, I install http-server, then use PM2 to run <code>http-server /path-to-angular-dist -p 8080</code> so the app runs persistently.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q4: How do you handle routing in Angular when deployed on a static server (like EC2)?</strong></p>
+    <p>A: Configure the server to redirect all routes to index.html or use HashLocationStrategy in Angular to avoid 404 errors on refresh.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q5: What ports need to be open in EC2 for Angular to be accessible over the internet?</strong></p>
+    <p>A: Open port 8080 (or whichever port http-server is using) in the EC2 security group inbound rules.</p>
+  </div>
+
+  <h2>AWS + PostgreSQL (Amazon RDS)</h2>
+
+  <div class="qa">
+    <p><strong>Q1: How do you create and configure an Amazon RDS PostgreSQL instance?</strong></p>
+    <p>A: Use AWS Console > RDS > Create Database > Choose PostgreSQL, configure instance type, credentials, VPC, security group, and launch.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q2: What are the security group settings needed to connect EC2 to RDS?</strong></p>
+    <p>A: Allow inbound traffic on port 5432 from the EC2 instance security group or specific IPs.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q3: How do you securely store and use PostgreSQL credentials on EC2?</strong></p>
+    <p>A: Store them in a .env file with restricted permissions and never hardcode in source code.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q4: How do you test the database connection from your EC2 instance to RDS?</strong></p>
+    <p>A: Use psql command line with the RDS endpoint, username, and password to verify connectivity.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q5: What precautions do you take when allowing public access to your RDS instance?</strong></p>
+    <p>A: Restrict inbound IPs, use SSL connections, and avoid enabling public access if not necessary.</p>
+  </div>
+
+  <h2>Integration Questions (End-to-End Deployment)</h2>
+
+  <div class="qa">
+    <p><strong>Q1: Walk me through your full-stack app deployment using AWS (Angular + NestJS + RDS).</strong></p>
+    <p>A: Deploy PostgreSQL on RDS, setup EC2 with Node.js and PM2, deploy NestJS backend connected to RDS, build and upload Angular frontend, serve frontend via http-server, open necessary ports, and use PM2 to manage processes.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q2: How do you handle API requests from the Angular frontend to the NestJS backend hosted on EC2?</strong></p>
+    <p>A: Configure Angular to call the backend API endpoint (EC2 public IP and port), handle CORS in NestJS, and ensure security groups allow communication.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q3: How do you make sure the backend can access the database and S3 securely?</strong></p>
+    <p>A: Use IAM roles or user credentials with minimal permissions, environment variables for secrets, and security groups restricting access.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q4: What troubleshooting steps do you take if the frontend cannot reach the backend on EC2?</strong></p>
+    <p>A: Check EC2 security groups, backend service status via PM2, API endpoint URLs, and browser console errors.</p>
+  </div>
+
+  <div class="qa">
+    <p><strong>Q5: How do you restart or update your NestJS and Angular apps without downtime using PM2?</strong></p>
+    <p>A: Use <code>pm2 reload</code> or <code>pm2 restart --update-env</code> to gracefully restart apps with updated environment variables and zero downtime.</p>
+  </div>
+  </div> -->
+</div>
+
+</div>

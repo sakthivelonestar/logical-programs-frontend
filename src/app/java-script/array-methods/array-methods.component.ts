@@ -369,28 +369,28 @@ console.log(people);`,
         title: 'Basic Array Operations',
         items: [
           {
-            title: 'Sum of Numbers',
+            title: '1. Sum of Numbers',
             problem: 'Calculate the sum of all numbers in an array.',
             input: '[1, 2, 3, 4, 5]',
             output: '15',
             solution: 'Use the reduce() method to accumulate values.'
           },
           {
-            title: 'Double Every Number',
+            title: '2. Double Every Number',
             problem: 'Create a new array with each number doubled from the original array.',
             input: '[1, 2, 3, 4, 5]',
             output: '[2, 4, 6, 8, 10]',
             solution: 'Use the map() method with a function that multiplies each value by 2.'
           },
           {
-            title: 'Find Even Numbers',
+            title: '3. Find Even Numbers',
             problem: 'Filter out all even numbers from an array.',
             input: '[1, 2, 3, 4, 5, 6, 7, 8]',
             output: '[2, 4, 6, 8]',
             solution: 'Use the filter() method with a condition that checks if each number is divisible by 2.'
           },
           {
-            title: 'Average Value',
+            title: '4. Average Value',
             problem: 'Calculate the average value of numbers in an array.',
             input: '[10, 20, 30, 40, 50]',
             output: '30',
@@ -402,35 +402,35 @@ console.log(people);`,
         title: 'Intermediate Challenges',
         items: [
           {
-            title: 'Flatten Nested Arrays',
+            title: '1. Flatten Nested Arrays',
             problem: 'Convert a nested array structure into a single flat array.',
             input: '[[1, 2], [3, 4], [5, 6]]',
             output: '[1, 2, 3, 4, 5, 6]',
             solution: 'Use the flat() method or flatMap() for a single level of nesting.'
           },
           {
-            title: 'Group By Property',
+            title: '2. Group By Property',
             problem: 'Group an array of objects by a specific property.',
             input: '[{name: "Apple", type: "fruit"}, {name: "Carrot", type: "vegetable"}, {name: "Banana", type: "fruit"}]',
             output: '{ fruit: [{name: "Apple"...}, {name: "Banana"...}], vegetable: [{name: "Carrot"...}] }',
             solution: 'Use reduce() to build an object with keys as the property values.'
           },
           {
-            title: 'Find Duplicates',
+            title: '3. Find Duplicates',
             problem: 'Identify all duplicate values in an array.',
             input: '[1, 2, 3, 2, 4, 5, 1, 6]',
             output: '[1, 2]',
             solution: 'Use filter() with indexOf() and lastIndexOf() to compare occurrences.'
           },
           {
-            title: 'Chunk Array',
+            title: '4. Chunk Array',
             problem: 'Split an array into chunks of a specific size.',
             input: '[1, 2, 3, 4, 5, 6, 7, 8], size: 3',
             output: '[[1, 2, 3], [4, 5, 6], [7, 8]]',
             solution: 'Use slice() in a loop or with Array.from() and map().'
           },
           {
-            title: 'Remove Falsy Values',
+            title: '5. Remove Falsy Values',
             problem: 'Remove all falsy values (false, null, 0, "", undefined, NaN) from an array.',
             input: '[0, 1, false, 2, "", 3, null, undefined, NaN]',
             output: '[1, 2, 3]',
@@ -442,42 +442,42 @@ console.log(people);`,
         title: 'Advanced Array Techniques',
         items: [
           {
-            title: 'Custom Sort Function',
+            title: '1. Custom Sort Function',
             problem: 'Sort an array of objects by multiple properties.',
             input: '[{name: "John", age: 25}, {name: "Jane", age: 25}, {name: "Sam", age: 30}]',
             output: 'Objects sorted first by age ascending, then by name alphabetically',
             solution: 'Use sort() with a custom comparator function that checks multiple conditions.'
           },
           {
-            title: 'Data Transformation Pipeline',
+            title: '2. Data Transformation Pipeline',
             problem: 'Create a sequence of array operations to transform data.',
             input: '[{id: 1, values: [10, 20]}, {id: 2, values: [30, 40]}]',
             output: '[30, 60, 90, 120] (Each value multiplied by its id, then flattened)',
             solution: 'Chain map() and flatMap() methods to transform and flatten the data.'
           },
           {
-            title: 'Frequency Counter',
+            title: '3. Frequency Counter',
             problem: 'Count the occurrences of each element in an array.',
             input: '["a", "b", "a", "c", "b", "a"]',
             output: '{ a: 3, b: 2, c: 1 }',
             solution: 'Use reduce() to build a frequency object.'
           },
           {
-            title: 'Create Pagination',
+            title: '4. Create Pagination',
             problem: 'Implement a function that paginates an array of items.',
             input: 'array: [1-100], page: 2, itemsPerPage: 10',
             output: '[11, 12, 13, 14, 15, 16, 17, 18, 19, 20]',
             solution: 'Use slice() with calculated start and end indices based on page and itemsPerPage parameters.'
           },
           {
-            title: 'Deep Clone Array',
+            title: '5. Deep Clone Array',
             problem: 'Create a deep copy of a nested array structure without reference to the original.',
             input: '[[1, [2, 3]], [4, [5, 6]]]',
             output: 'A new array with the same structure and values but no references to the original.',
             solution: 'Use JSON.parse(JSON.stringify()) for simple cases or a recursive function for more complex structures.'
           },
           {
-            title: 'Functional Operations Pipeline',
+            title: '6. Functional Operations Pipeline',
             problem: 'Create a sequence of operations: filter even numbers, multiply by 3, find numbers greater than 10, sort descending.',
             input: '[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]',
             output: '[30, 24, 18, 12]',
@@ -489,28 +489,28 @@ console.log(people);`,
         title: 'Real-World Applications',
         items: [
           {
-            title: 'Cart Total Calculator',
+            title: '1. Cart Total Calculator',
             problem: 'Calculate the total price and total items in a shopping cart array.',
             input: '[{item: "Book", price: 10, qty: 2}, {item: "Pen", price: 1, qty: 5}, {item: "Notebook", price: 5, qty: 3}]',
             output: '{ totalPrice: 40, totalItems: 10 }',
             solution: 'Use reduce() to accumulate both totals in a single pass.'
           },
           {
-            title: 'Data Filtering with Multiple Conditions',
+            title: '2. Data Filtering with Multiple Conditions',
             problem: 'Filter products that are in stock, have a rating of 4 or higher, and price less than $50.',
             input: 'Array of product objects with various properties',
             output: 'Filtered array meeting all conditions',
             solution: 'Use filter() with multiple conditions combined with logical operators.'
           },
           {
-            title: 'Normalized Data Transformer',
+            title: '3. Normalized Data Transformer',
             problem: 'Convert an array of normalized data into a nested structure.',
             input: '[{id: 1, type: "user", name: "John"}, {id: 2, type: "post", title: "Hello", userId: 1}, {id: 3, type: "post", title: "World", userId: 1}]',
             output: '{users: [{id: 1, name: "John", posts: [{id: 2, title: "Hello"}, {id: 3, title: "World"}]}]}',
             solution: 'Use reduce() with a complex transformation logic to build the nested structure.'
           },
           {
-            title: 'Event Analytics',
+            title: '4. Event Analytics',
             problem: 'Analyze an array of event logs to count events by type and calculate average duration.',
             input: '[{type: "click", duration: 200}, {type: "scroll", duration: 150}, {type: "click", duration: 300}]',
             output: '{click: {count: 2, avgDuration: 250}, scroll: {count: 1, avgDuration: 150}}',

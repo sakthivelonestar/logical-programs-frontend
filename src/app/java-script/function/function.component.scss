@@ -44,8 +44,9 @@ p, h1, h2, h3, h4, h5, h6 {
     .examples {
       width: 100%;  
       .function-concepts {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
         gap: 20px;
         margin-bottom: 30px; 
         display: flex;
