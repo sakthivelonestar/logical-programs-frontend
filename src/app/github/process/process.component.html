@@ -62,6 +62,11 @@
                     (click)="scrollTo('conflicts'); $event.preventDefault()">
                     Conflicts
                     </a>
+                     <a class="nav-link" 
+                    href="#Terminal-command" 
+                    (click)="scrollTo('Terminal-command'); $event.preventDefault()">
+                    Terminal-command
+                    </a>
                 </div>
             </div>
         </nav>
@@ -202,35 +207,27 @@ git push origin main</code></pre>
                     <div class="card shadow-sm h-100">
                         <div class="card-header bg-success text-white">
                             <h2 class="card-title mb-0">
-                                <i class="fas fa-users me-2"></i>Adding and
-                                Managing Team Members
+                                <i class="fas fa-users me-2"></i>Adding and Managing Team Members
                             </h2>
                         </div>
                         <div class="card-body">
                             <div class="mb-4">
-                                <h3 class="h4 text-success mb-3">Adding
-                                    Collaborators</h3>
+                                <h3 class="h4 text-success mb-3">Adding Collaborators</h3>
                                 <div class="alert alert-success">
                                     <h4 class="alert-heading">
-                                        <i class="fas fa-lock me-2"></i>Adding
-                                        Team Members Steps:
+                                        <i class="fas fa-lock me-2"></i>Steps to Invite Team Members:
                                     </h4>
                                     <ol class="mb-0">
-                                        <li>Go to your repository on GitHub</li>
-                                        <li>Click <strong>"Settings"</strong>
-                                            tab (at the top of repo)</li>
-                                        <li>Click
-                                            <strong>"Collaborators"</strong> in
-                                            left sidebar</li>
-                                        <li>Click <strong>"Add people"</strong>
-                                            button</li>
-                                        <li>Enter teammate's <strong>GitHub
-                                                username</strong> or
-                                            <strong>email</strong></li>
-                                        <li>Select permission level and click
-                                            <strong>"Add [username]"</strong></li>
-                                        <li>Team member will receive email
-                                            invitation</li>
+                                        <li>Go to your repository on GitHub.</li>
+                                        <li>Click the <strong>"Settings"</strong> tab.</li>
+                                        <li>In the left sidebar, click <strong>"Collaborators"</strong>.</li>
+                                        <li>Click the <strong>"Add people"</strong> button.</li>
+                                        <li>Enter the team member’s <strong>GitHub username or email</strong>.</li>
+                                        <li>Click <strong>"Add to repository"</strong>.</li>
+                                        <li>The user will receive an <strong>email invitation</strong>.</li>
+                                        <li><strong>After they accept</strong>, click the ⚙️ icon next to their name.</li>
+                                        <li>Choose their <strong>permission level</strong>: Read, Write, or Admin.</li>
+                                        <li>Click <strong>Save</strong> to apply the permission.</li>
                                     </ol>
                                 </div>
                             </div>
@@ -250,24 +247,20 @@ git push origin main</code></pre>
                                         <tr>
                                             <td><strong>Read</strong></td>
                                             <td>View, clone, download code</td>
-                                            <td>Push changes, create PRs from
-                                                forks only</td>
-                                            <td>Stakeholders, viewers</td>
+                                            <td>Push changes, create PRs from forks only</td>
+                                            <td>Stakeholders, reviewers</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Write</strong></td>
-                                            <td>Push code, create branches, PRs,
-                                                issues</td>
-                                            <td>Change settings, delete
-                                                repo</td>
-                                            <td>Developers, contributors</td>
+                                            <td>Push code, create branches, pull requests, and issues</td>
+                                            <td>Change repository settings or delete the repo</td>
+                                            <td>Developers, regular contributors</td>
                                         </tr>
                                         <tr>
                                             <td><strong>Admin</strong></td>
-                                            <td>Everything including settings,
-                                                delete</td>
-                                            <td>Nothing restricted</td>
-                                            <td>Team leads, owners</td>
+                                            <td>Full access, including managing settings, teams, and deletion</td>
+                                            <td>None (full control)</td>
+                                            <td>Owners, team leads</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -930,6 +923,204 @@ git push origin --delete feature/user-authentication</code></pre>
                         </div>
                     </div>
                 </div>
+                <!-- -->
+                 <div id="Terminal-command" class="terminal-section" >
+                    <h3 class="header">🖥️ Essential Git Terminal Commands</h3>                     
+                    <div class="command-group">
+                        <h4>Repository Setup</h4>
+                        <div class="command">
+                            <code>git clone &lt;repository-url&gt;</code>
+                            <span class="description">Clone a remote repository to your local machine</span>
+                        </div>
+                        <div class="command">
+                            <code>git init</code>
+                            <span class="description">Initialize a new Git repository</span>
+                        </div>
+                        <div class="command">
+                            <code>git remote add origin &lt;url&gt;</code>
+                            <span class="description">Add a remote repository URL</span>
+                        </div>
+                    </div>
+
+                     <div class="command-group">
+                        <h4>Configuration</h4>
+                        <div class="command">
+                            <code>git config --global user.name "Your Name"</code>
+                            <span class="description">Set your name globally</span>
+                        </div>
+                        <div class="command">
+                            <code>git config --global user.email "email&#64;example.com"</code>
+                            <span class="description">Set your email globally</span>
+                        </div>
+                        <div class="command">
+                            <code>git config --list</code>
+                            <span class="description">View all configuration settings</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Branch Management</h4>
+                        <div class="command">
+                            <code>git branch</code>
+                            <span class="description">List all local branches</span>
+                        </div>
+                        <div class="command">
+                            <code>git branch -a</code>
+                            <span class="description">List all branches (local and remote)</span>
+                        </div>
+                        <div class="command">
+                            <code>git checkout -b &lt;branch-name&gt;</code>
+                            <span class="description">Create and switch to a new branch</span>
+                        </div>
+                        <div class="command">
+                            <code>git switch &lt;branch-name&gt;</code>
+                            <span class="description">Switch to an existing branch (newer command)</span>
+                        </div>
+                        <div class="command">
+                            <code>git branch -d &lt;branch-name&gt;</code>
+                            <span class="description">Delete a local branch (safe delete)</span>
+                        </div>
+                        <div class="command">
+                            <code>git push origin --delete &lt;branch-name&gt;</code>
+                            <span class="description">Delete a remote branch</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Making Changes</h4>
+                        <div class="command">
+                            <code>git status</code>
+                            <span class="description">Check the status of your working directory</span>
+                        </div>
+                        <div class="command">
+                            <code>git add .</code>
+                            <span class="description">Stage all changes for commit</span>
+                        </div>
+                        <div class="command">
+                            <code>git add &lt;file-name&gt;</code>
+                            <span class="description">Stage specific file for commit</span>
+                        </div>
+                        <div class="command">
+                            <code>git commit -m "commit message"</code>
+                            <span class="description">Commit staged changes with a message</span>
+                        </div>
+                        <div class="command">
+                            <code>git commit -am "message"</code>
+                            <span class="description">Stage and commit all tracked files</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Syncing with Remote</h4>
+                        <div class="command">
+                            <code>git push origin &lt;branch-name&gt;</code>
+                            <span class="description">Push local commits to remote branch</span>
+                        </div>
+                        <div class="command">
+                            <code>git pull origin &lt;branch-name&gt;</code>
+                            <span class="description">Fetch and merge changes from remote</span>
+                        </div>
+                        <div class="command">
+                            <code>git fetch</code>
+                            <span class="description">Download changes without merging</span>
+                        </div>
+                        <div class="command">
+                            <code>git pull --rebase</code>
+                            <span class="description">Pull changes and rebase instead of merge</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Viewing History</h4>
+                        <div class="command">
+                            <code>git log</code>
+                            <span class="description">View commit history</span>
+                        </div>
+                        <div class="command">
+                            <code>git log --oneline</code>
+                            <span class="description">View condensed commit history</span>
+                        </div>
+                        <div class="command">
+                            <code>git log --graph --oneline</code>
+                            <span class="description">View commit history with branch visualization</span>
+                        </div>
+                        <div class="command">
+                            <code>git diff</code>
+                            <span class="description">Show changes in working directory</span>
+                        </div>
+                        <div class="command">
+                            <code>git diff --staged</code>
+                            <span class="description">Show changes in staging area</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Undoing Changes</h4>
+                        <div class="command">
+                            <code>git reset HEAD~1</code>
+                            <span class="description">Undo last commit (keep changes)</span>
+                        </div>
+                        <div class="command">
+                            <code>git reset --hard HEAD~1</code>
+                            <span class="description">Undo last commit (discard changes)</span>
+                        </div>
+                        <div class="command">
+                            <code>git revert &lt;commit-hash&gt;</code>
+                            <span class="description">Create new commit that undoes previous commit</span>
+                        </div>
+                        <div class="command">
+                            <code>git checkout -- &lt;file-name&gt;</code>
+                            <span class="description">Discard changes in working directory</span>
+                        </div>
+                        <div class="command">
+                            <code>git restore &lt;file-name&gt;</code>
+                            <span class="description">Restore file to last committed state (newer command)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Merging & Rebasing</h4>
+                        <div class="command">
+                            <code>git merge &lt;branch-name&gt;</code>
+                            <span class="description">Merge another branch into current branch</span>
+                        </div>
+                        <div class="command">
+                            <code>git rebase &lt;branch-name&gt;</code>
+                            <span class="description">Rebase current branch onto another branch</span>
+                        </div>
+                        <div class="command">
+                            <code>git rebase -i HEAD~3</code>
+                            <span class="description">Interactive rebase for last 3 commits</span>
+                        </div>
+                        <div class="command">
+                            <code>git cherry-pick &lt;commit-hash&gt;</code>
+                            <span class="description">Apply specific commit to current branch</span>
+                        </div>
+                    </div>
+                    
+                    <div class="command-group">
+                        <h4>Stashing</h4>
+                        <div class="command">
+                            <code>git stash</code>
+                            <span class="description">Temporarily save changes</span>
+                        </div>
+                        <div class="command">
+                            <code>git stash pop</code>
+                            <span class="description">Apply and remove latest stash</span>
+                        </div>
+                        <div class="command">
+                            <code>git stash list</code>
+                            <span class="description">View all stashed changes</span>
+                        </div>
+                        <div class="command">
+                            <code>git stash drop</code>
+                            <span class="description">Delete latest stash</span>
+                        </div>
+                    </div>
+                    
+                   
+                 </div>
+
             </div>
         </div>
     </div>

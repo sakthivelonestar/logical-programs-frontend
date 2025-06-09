@@ -15,17 +15,7 @@ export class ProcessComponent implements OnInit {
   }
 
 
-    // Method 2: Alternative smooth scroll method
-  scrollToElement(elementId: string): void {
-    const element = document.getElementById(elementId);
-    if (element) {
-      element.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start',
-        inline: 'nearest'
-      });
-    }
-  }
+   
 
   // Public method to scroll to section (can be called from template)
  scrollTo(id: string) {
