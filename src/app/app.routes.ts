@@ -31,4 +31,8 @@ export const routes: Routes = [
       path: "gitHub",
       loadChildren: () => import('./github/github.module').then(m => m.GithubModule)
    },
+    {
+      path: "sql",
+      loadChildren: () => import('./sql/sql.module').then(m => m.SqlModule)
+   },
 ];

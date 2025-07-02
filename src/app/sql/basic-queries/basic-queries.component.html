@@ -1,0 +1,327 @@
+ <div class="overall-wrapper" appMaximize #sqlBasicsConcepts="maximize" id="sqlBasicsConcepts">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlBasicsConcepts.checkfullscreen() ==  'hide'" (click)="sqlBasicsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlBasicsConcepts.checkfullscreen() !=  'hide'" (click)="sqlBasicsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <div class="header">
+                <p><span class="question">What:</span>
+                    Basic SQL queries are <strong>fundamental database operations that allow you to retrieve, add, modify, and remove data from database tables using structured commands.</strong></p>
+                <p><span class="question">Why:</span>
+                    SQL queries are essential because they <strong>form the foundation of all database interactions, enable efficient data manipulation and retrieval, power business applications, and are critical for data-driven decision making.</strong></p>
+                <p><span class="question">Where:</span>
+                    SQL is used <strong>in web applications, mobile apps, data analytics platforms, business intelligence systems, e-commerce sites, banking systems, and any application that needs to store or retrieve structured data.</strong></p>
+            </div>
+        </div>
+
+        <div class="examples">
+            <h3>1. SELECT - Retrieving Data</h3>
+            <div class="step">
+                <h4>Step 1: Basic SELECT Operations</h4>
+                <pre><code>-- Select all data
+SELECT * FROM employees;
+
+-- Select specific columns
+SELECT first_name, last_name, email, salary FROM employees;
+
+-- Select with column aliases
+SELECT 
+    first_name AS 'First Name',
+    last_name AS 'Last Name',
+    salary AS 'Annual Salary'
+FROM employees;</code></pre>
+                <p>Basic SELECT operations for retrieving data with and without column aliases for better readability.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: SELECT with WHERE Conditions</h4>
+                <pre><code>-- Single condition
+SELECT * FROM employees WHERE salary > 50000;
+
+-- Multiple conditions with AND
+SELECT * FROM employees 
+WHERE salary > 45000 AND department = 'Sales';
+
+-- Multiple conditions with OR
+SELECT * FROM employees 
+WHERE department = 'Sales' OR department = 'Marketing';
+
+-- Pattern matching with LIKE
+SELECT * FROM employees WHERE first_name LIKE 'J%';
+SELECT * FROM employees WHERE email LIKE '%&#64;company.com';
+
+-- Range queries
+SELECT * FROM employees WHERE salary BETWEEN 40000 AND 60000;
+
+-- List matching with IN
+SELECT * FROM employees WHERE department IN ('Sales', 'Marketing', 'IT');</code></pre>
+                <p>Advanced WHERE clause techniques for filtering data using various operators and conditions.</p>
+            </div>
+            
+            <h3>2. INSERT - Adding New Data</h3>
+            <div class="step">
+                <h4>Step 1: Basic INSERT Operations</h4>
+                <pre><code>-- Insert single record
+INSERT INTO employees (first_name, last_name, email, hire_date, salary, department) 
+VALUES ('John', 'Doe', 'john.doe&#64;company.com', '2024-01-15', 55000, 'IT');
+
+-- Insert with all columns specified
+INSERT INTO employees (
+    first_name, last_name, email, phone_number, 
+    hire_date, salary, department, job_title, is_active
+) VALUES (
+    'Jane', 'Smith', 'jane.smith&#64;company.com', '555-0123',
+    '2024-02-01', 62000, 'Marketing', 'Marketing Manager', TRUE
+);</code></pre>
+                <p>Basic INSERT operations for adding single records with proper data formatting.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: INSERT Multiple Records</h4>
+                <pre><code>-- Insert multiple records in one statement
+INSERT INTO employees (first_name, last_name, email, hire_date, salary, department, job_title) 
+VALUES 
+    ('Mike', 'Johnson', 'mike.johnson&#64;company.com', '2024-01-20', 52000, 'Sales', 'Sales Representative'),
+    ('Sarah', 'Wilson', 'sarah.wilson&#64;company.com', '2024-02-05', 58000, 'HR', 'HR Specialist'),
+    ('David', 'Brown', 'david.brown&#64;company.com', '2024-01-30', 65000, 'IT', 'Senior Developer'),
+    ('Lisa', 'Davis', 'lisa.davis&#64;company.com', '2024-02-10', 59000, 'Finance', 'Financial Analyst');
+
+-- Insert departments
+INSERT INTO departments (department_name, budget, location) VALUES
+    ('IT', 500000, 'Building A - Floor 3'),
+    ('Sales', 300000, 'Building B - Floor 1'),
+    ('Marketing', 250000, 'Building B - Floor 2'),
+    ('HR', 150000, 'Building A - Floor 1'),
+    ('Finance', 200000, 'Building A - Floor 2');</code></pre>
+                <p>Efficient bulk insertion of multiple records to populate tables with sample data.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 3: Advanced INSERT Techniques</h4>
+                <pre><code>-- Insert with SELECT (copying data)
+INSERT INTO employees_backup 
+SELECT * FROM employees WHERE hire_date < '2024-01-01';
+
+-- Insert with calculated values
+INSERT INTO employees (first_name, last_name, email, hire_date, salary, department) 
+VALUES (
+    'Alex', 'Thompson', 
+    CONCAT('alex.thompson&#64;company.com'), 
+    CURDATE(), 
+    (SELECT AVG(salary) FROM employees WHERE department = 'IT'), 
+    'IT'
+);
+
+-- Insert on duplicate key update
+INSERT INTO employees (employee_id, email, salary)
+VALUES (1, 'updated.email&#64;company.com', 60000)
+ON DUPLICATE KEY UPDATE 
+    email = VALUES(email),
+    salary = VALUES(salary),
+    updated_at = CURRENT_TIMESTAMP;</code></pre>
+                <p>Advanced INSERT techniques including copying data, calculated values, and handling duplicates.</p>
+            </div>
+
+            <h3>3. UPDATE - Modifying Existing Data</h3>
+            <div class="step">
+                <h4>Step 1: Basic UPDATE Operations</h4>
+                <pre><code>-- Update single field
+UPDATE employees 
+SET salary = 58000 
+WHERE employee_id = 1;
+
+-- Update multiple fields
+UPDATE employees 
+SET salary = 65000, 
+    email = 'jane.newmail&#64;company.com',
+    updated_at = CURRENT_TIMESTAMP
+WHERE first_name = 'Jane' AND last_name = 'Smith';</code></pre>
+                <p>Basic UPDATE operations for modifying single or multiple fields in specific records.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: UPDATE with Calculations</h4>
+                <pre><code>-- Give percentage raise
+UPDATE employees 
+SET salary = salary * 1.1 
+WHERE department = 'Sales';
+
+-- Update based on conditions
+UPDATE employees 
+SET job_title = CASE 
+    WHEN salary > 60000 THEN 'Senior ' + job_title
+    WHEN salary > 45000 THEN 'Mid-Level ' + job_title
+    ELSE 'Junior ' + job_title
+END
+WHERE job_title NOT LIKE 'Senior%' 
+  AND job_title NOT LIKE 'Mid-Level%' 
+  AND job_title NOT LIKE 'Junior%';
+
+-- Update with subquery
+UPDATE employees 
+SET salary = (
+    SELECT AVG(salary) * 1.1 
+    FROM (SELECT salary FROM employees WHERE department = 'IT') AS avg_calc
+)
+WHERE department = 'IT' AND salary < 50000;</code></pre>
+                <p>Advanced UPDATE operations with calculations, conditional logic, and subqueries.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Bulk UPDATE Operations</h4>
+                <pre><code>-- Update multiple records with same values
+UPDATE employees 
+SET is_active = FALSE,
+    updated_at = CURRENT_TIMESTAMP
+WHERE hire_date < '2020-01-01';
+
+-- Update with JOIN
+UPDATE employees e
+JOIN departments d ON e.department_id = d.department_id
+SET e.salary = e.salary * 1.05
+WHERE d.budget > 400000;
+
+-- Conditional bulk update
+UPDATE employees 
+SET salary = CASE 
+    WHEN department = 'Sales' THEN salary * 1.08
+    WHEN department = 'IT' THEN salary * 1.12
+    WHEN department = 'Marketing' THEN salary * 1.06
+    ELSE salary * 1.03
+END
+WHERE is_active = TRUE;</code></pre>
+                <p>Bulk update operations for modifying multiple records efficiently with different conditions.</p>
+            </div>
+
+            <h3>4. DELETE - Removing Data</h3>
+            <div class="step">
+                <h4>Step 1: Basic DELETE Operations</h4>
+                <pre><code>-- Delete specific record
+DELETE FROM employees 
+WHERE employee_id = 10;
+
+-- Delete with multiple conditions
+DELETE FROM employees 
+WHERE department = 'Temp' AND hire_date < '2023-01-01';</code></pre>
+                <p>Basic DELETE operations for removing specific records based on conditions.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: Advanced DELETE Operations</h4>
+                <pre><code>-- Delete with subquery
+DELETE FROM employees 
+WHERE salary < (
+    SELECT AVG(salary) * 0.8 
+    FROM (SELECT salary FROM employees) AS avg_calc
+);
+
+-- Delete inactive employees
+DELETE FROM employees 
+WHERE is_active = FALSE 
+  AND DATEDIFF(CURRENT_DATE, updated_at) > 365;
+
+-- Delete with JOIN
+DELETE e FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE d.budget = 0;</code></pre>
+                <p>Advanced DELETE operations using subqueries, date functions, and JOIN operations.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Safe DELETE Practices</h4>
+                <pre><code>-- Always test with SELECT first
+SELECT * FROM employees 
+WHERE salary < 30000;
+
+-- Then execute DELETE
+DELETE FROM employees 
+WHERE salary < 30000;
+
+-- Use LIMIT for safety
+DELETE FROM employees 
+WHERE is_active = FALSE 
+LIMIT 10;
+
+-- Complete table cleanup (use with extreme caution)
+DELETE FROM employees;
+-- Better approach: TRUNCATE TABLE employees;</code></pre>
+                <p><strong>Important:</strong> Always test DELETE operations with SELECT first and use LIMIT when appropriate to prevent accidental data loss.</p>
+            </div>
+
+            <h3>5. Complete Real-World Example Workflow</h3>
+            <div class="step">
+                <h4>Complete Employee Management System</h4>
+                <pre><code>-- Step 1: View current employees
+SELECT 
+    e.employee_id,
+    CONCAT(e.first_name, ' ', e.last_name) AS full_name,
+    e.email,
+    e.salary,
+    d.department_name,
+    e.hire_date
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id
+ORDER BY e.hire_date DESC;
+
+-- Step 2: Add new employee to existing department
+INSERT INTO employees (
+    first_name, last_name, email, phone_number, 
+    hire_date, salary, department_id, job_title
+) VALUES (
+    'Alice', 'Brown', 'alice.brown&#64;company.com', '555-0199',
+    CURDATE(), 47000, 
+    (SELECT department_id FROM departments WHERE department_name = 'Marketing'),
+    'Marketing Coordinator'
+);
+
+-- Step 3: Update employee information after performance review
+UPDATE employees 
+SET salary = salary * 1.15,
+    job_title = 'Senior Marketing Coordinator',
+    updated_at = CURRENT_TIMESTAMP
+WHERE first_name = 'Alice' AND last_name = 'Brown';
+
+-- Step 4: Check the updated record with department info
+SELECT 
+    e.employee_id,
+    CONCAT(e.first_name, ' ', e.last_name) AS full_name,
+    e.email,
+    e.salary,
+    e.job_title,
+    d.department_name,
+    e.hire_date,
+    e.updated_at
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE e.first_name = 'Alice' AND e.last_name = 'Brown';
+
+-- Step 5: Generate department summary report
+SELECT 
+    d.department_name,
+    COUNT(e.employee_id) AS total_employees,
+    AVG(e.salary) AS average_salary,
+    MAX(e.salary) AS highest_salary,
+    MIN(e.salary) AS lowest_salary,
+    SUM(e.salary) AS total_payroll
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+WHERE e.is_active = TRUE
+GROUP BY d.department_id, d.department_name
+ORDER BY total_payroll DESC;
+
+-- Step 6: Archive inactive employees (soft delete)
+UPDATE employees 
+SET is_active = FALSE,
+    updated_at = CURRENT_TIMESTAMP
+WHERE DATEDIFF(CURRENT_DATE, hire_date) > 1825  -- 5 years
+  AND salary < 40000;
+
+-- Step 7: Clean up test data if needed
+DELETE FROM employees 
+WHERE email LIKE '%test%' OR first_name = 'Test';</code></pre>
+                <p>A comprehensive workflow demonstrating all CRUD operations in a realistic employee management scenario with proper relationships and business logic.</p>
+            </div>
+
+        </div>
+    </div>
+
+
+

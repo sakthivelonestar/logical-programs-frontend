@@ -1,0 +1,38 @@
+<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
+    <div class="wrapper">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <div class="header">
+            <p> <span class="question">What:</span>
+                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+            <p> <span class="question">Why:</span>
+                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+            <p> <span class="question">Where:</span>
+                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+        </div>
+    </div>
+
+    <div class="examples">
+          <div class="step">
+                <h4>Step 3: Sorting and Limiting Results</h4>
+                <pre><code>-- Sort by single column
+SELECT * FROM employees ORDER BY salary DESC;
+
+-- Sort by multiple columns
+SELECT * FROM employees ORDER BY department ASC, salary DESC;
+
+-- Limit number of results
+SELECT * FROM employees ORDER BY salary DESC LIMIT 10;
+
+-- Pagination with LIMIT and OFFSET
+SELECT * FROM employees ORDER BY employee_id LIMIT 10 OFFSET 20;
+
+-- Top earners in each department
+SELECT department, first_name, last_name, salary
+FROM employees 
+WHERE salary > 50000
+ORDER BY department, salary DESC;</code></pre>
+                <p>Sorting, limiting, and pagination techniques for better data presentation and performance.</p>
+            </div>
+    </div>
+</div>

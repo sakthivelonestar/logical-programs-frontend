@@ -1,0 +1,48 @@
+<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
+    <div class="wrapper">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <div class="header">
+            <p> <span class="question">What:</span>
+                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+            <p> <span class="question">Why:</span>
+                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+            <p> <span class="question">Where:</span>
+                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+        </div>
+    </div>
+
+    <div class="examples">
+         <div class="step">
+                <h4>Step 4: Aggregate Functions and Grouping</h4>
+                <pre><code>-- Basic aggregate functions
+SELECT COUNT(*) AS total_employees FROM employees;
+SELECT AVG(salary) AS average_salary FROM employees;
+SELECT MAX(salary) AS highest_salary FROM employees;
+SELECT MIN(salary) AS lowest_salary FROM employees;
+SELECT SUM(salary) AS total_payroll FROM employees;
+
+-- Grouping data
+SELECT department, COUNT(*) AS employee_count
+FROM employees 
+GROUP BY department;
+
+-- Grouping with conditions
+SELECT department, AVG(salary) AS avg_salary
+FROM employees 
+GROUP BY department
+HAVING AVG(salary) > 45000;
+
+-- Multiple aggregations
+SELECT 
+    department,
+    COUNT(*) AS employee_count,
+    AVG(salary) AS avg_salary,
+    MAX(salary) AS max_salary,
+    MIN(salary) AS min_salary
+FROM employees 
+GROUP BY department;</code></pre>
+                <p>Aggregate functions and grouping for statistical analysis and reporting.</p>
+            </div>
+    </div>
+</div>

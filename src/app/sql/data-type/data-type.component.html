@@ -1,0 +1,183 @@
+<div class="oveall-wraper" appMaximize #dataTypesTablesConcepts="maximize" id="dataTypesTablesConcepts">
+    <div class="wrapper">
+        <img class="swap" *ngIf="dataTypesTablesConcepts.checkfullscreen() ==  'hide'" (click)="dataTypesTablesConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+        <img class="swap" *ngIf="dataTypesTablesConcepts.checkfullscreen() !=  'hide'" (click)="dataTypesTablesConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <div class="header">
+            <p> <span class="question">What:</span>
+                SQL data types and tables are <strong>the fundamental building blocks of relational databases that define how data is stored, organized, and structured within database systems.</strong> </p>
+            <p> <span class="question">Why:</span>
+                Understanding data types and table structure is crucial because they <strong>ensure data integrity, optimize storage efficiency, enforce business rules, and enable effective query performance.</strong></p>
+            <p> <span class="question">Where:</span>
+                Data types and tables are used <strong>in database design, application development, data warehousing, and any system that requires structured data storage and retrieval.</strong></p>
+        </div>
+    </div>
+
+    <div class="examples">
+        <h3>Common SQL Data Types</h3>
+         <div class="step">
+                
+                <pre><code>-- Numeric Data Types:
+-- INT/INTEGER: Whole numbers (-2,147,483,648 to 2,147,483,647)
+-- BIGINT: Large integers for IDs and counters
+-- DECIMAL(p,s)/NUMERIC: Exact decimal numbers (salary: DECIMAL(10,2))
+-- FLOAT/REAL: Approximate floating-point numbers
+-- SMALLINT: Small integers (-32,768 to 32,767)
+
+-- String Data Types:
+-- VARCHAR(n): Variable-length strings up to n characters
+-- CHAR(n): Fixed-length strings, padded with spaces
+-- TEXT: Large text data (articles, descriptions)
+-- NVARCHAR(n): Unicode variable-length strings
+
+-- Date and Time Types:
+-- DATE: Date only (YYYY-MM-DD)
+-- TIME: Time only (HH:MM:SS)
+-- DATETIME/TIMESTAMP: Date and time combined
+-- YEAR: Year values (1901-2155)
+
+-- Other Important Types:
+-- BOOLEAN/BIT: True/false values
+-- BLOB: Binary large objects (images, files)
+-- JSON: JSON formatted data (modern databases)
+-- UUID: Universally unique identifiers</code></pre>
+                <p>Choosing the right data type is essential for data accuracy, storage optimization, and maintaining referential integrity across your database schema.</p>
+            </div>
+
+            <h3>0. Database Creation and Setup</h3>
+            <div class="step">
+                <h4>Step 1: Create Database</h4>
+                <pre><code>CREATE DATABASE company_management;</code></pre>
+                <p>Creates a new database named 'company_management' to store all our tables and data.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: Use Database</h4>
+                <pre><code>USE company_management;</code></pre>
+                <p>Switches to the company_management database to perform operations within it.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Show Existing Databases</h4>
+                <pre><code>SHOW DATABASES;</code></pre>
+                <p>Lists all available databases on the server to verify our database was created successfully.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 4: Drop Database (Use with Extreme Caution)</h4>
+                <pre><code>DROP DATABASE old_database_name;</code></pre>
+                <p><strong>Warning:</strong> This permanently deletes the entire database and all its contents. Use only when absolutely necessary.</p>
+            </div>
+
+            <h3>1. Table Creation Rules and Best Practices</h3>
+            <div class="step">
+                <h4>Naming Conventions</h4>
+                <pre><code>-- Table Names: Use plural, lowercase with underscores
+-- ✅ Good: employees, customer_orders, product_categories, user_profiles
+-- ❌ Bad: Employee, customerOrder, ProductCategory, UserProfile
+
+-- Column Names: Use lowercase with underscores, be descriptive
+-- ✅ Good: first_name, email_address, created_at, phone_number
+-- ❌ Bad: FirstName, email, date, phone
+
+-- Primary Keys: Use table_name + "_id" format
+-- ✅ Good: employee_id, order_id, customer_id
+-- ❌ Bad: id, emp_id, pk</code></pre>
+                <p>Follow consistent naming conventions for better code readability, maintenance, and team collaboration.</p>
+            </div>
+
+           <h3>2. Create Tables with Proper Structure</h3>
+            <div class="step">
+                <h4>Step 1: Basic Table Creation</h4>
+                <pre><code>CREATE TABLE employees (
+    employee_id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone_number VARCHAR(15),
+    hire_date DATE NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    department VARCHAR(50),
+    job_title VARCHAR(100),
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);</code></pre>
+                <p>Creates a comprehensive employees table with proper data types, constraints, and automatic timestamp tracking.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: Create Related Tables</h4>
+                <pre><code>CREATE TABLE departments (
+    department_id INT PRIMARY KEY AUTO_INCREMENT,
+    department_name VARCHAR(50) UNIQUE NOT NULL,
+    manager_id INT,
+    budget DECIMAL(12,2),
+    location VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE projects (
+    project_id INT PRIMARY KEY AUTO_INCREMENT,
+    project_name VARCHAR(100) NOT NULL,
+    description TEXT,
+    start_date DATE,
+    end_date DATE,
+    budget DECIMAL(12,2),
+    status ENUM('Planning', 'Active', 'Completed', 'Cancelled') DEFAULT 'Planning',
+    department_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+                <p>Creates additional tables to demonstrate relationships and different data types.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 3: Add Foreign Key Relationships</h4>
+                <pre><code>-- Add foreign key to employees table
+ALTER TABLE employees 
+ADD COLUMN department_id INT,
+ADD FOREIGN KEY (department_id) REFERENCES departments(department_id);
+
+-- Add foreign key to projects table
+ALTER TABLE projects 
+ADD FOREIGN KEY (department_id) REFERENCES departments(department_id);
+
+-- Create employee-project relationship table
+CREATE TABLE employee_projects (
+    employee_id INT,
+    project_id INT,
+    role VARCHAR(50),
+    start_date DATE,
+    end_date DATE,
+    PRIMARY KEY (employee_id, project_id),
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
+    FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);</code></pre>
+                <p>Establishes relationships between tables using foreign keys and creates a many-to-many relationship table.</p>
+            </div>
+
+              <div class="step">
+                <h4> View Table Structure</h4>
+                <pre><code>-- Show table structure
+DESCRIBE employees;
+DESCRIBE departments;
+DESCRIBE projects;
+
+-- Show all tables in database
+SHOW TABLES;
+
+-- Show detailed table information
+SHOW CREATE TABLE employees;
+
+-- Show foreign key relationships
+SELECT 
+    TABLE_NAME,
+    COLUMN_NAME,
+    CONSTRAINT_NAME,
+    REFERENCED_TABLE_NAME,
+    REFERENCED_COLUMN_NAME
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE REFERENCED_TABLE_SCHEMA = 'company_management';</code></pre>
+                <p>Commands to inspect table structure, relationships, and verify everything was created correctly.</p>
+            </div>
+    </div>
+</div>
