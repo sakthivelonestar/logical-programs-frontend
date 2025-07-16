@@ -3,7 +3,7 @@ p, h1, h2, h3, h4, h5, h6 {
     padding: 0px;
   }
  
-  .oveall-wraper {
+  .overall-wrapper {
     padding: 20px 20px 100px;
     display: flex;
     flex-direction: column;
@@ -44,6 +44,157 @@ p, h1, h2, h3, h4, h5, h6 {
     .examples {
       width: 100%;
       height: auto;
+
+       h3 {
+    color: #2c3e50;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 2rem 0 1rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 3px solid #3498db;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .step {
+    background: white;
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h4 {
+      color: #2c3e50;
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: "▶";
+        color: #3498db;
+        margin-right: 0.5rem;
+      }
+    }
+
+    pre {
+      background: #2c3e50;
+      color: #ecf0f1;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin: 1rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+
+      code {
+        background: transparent;
+        color: inherit;
+        padding: 0;
+        border-radius: 0;
+        font-size: inherit;
+        
+        // SQL syntax highlighting
+        .keyword {
+          color: #e74c3c;
+          font-weight: bold;
+        }
+        
+        .string {
+          color: #2ecc71;
+        }
+        
+        .number {
+          color: #f39c12;
+        }
+        
+        .comment {
+          color: #95a5a6;
+          font-style: italic;
+        }
+      }
+    }
+
+    p {
+      color: #34495e;
+      line-height: 1.6;
+      margin: 0.5rem 0 0 0;
+      font-size: 0.95rem;
+
+      strong {
+        color: #e74c3c;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .wrapper {
+    .header {
+      padding: 1rem;
+      
+      .question {
+        font-size: 1rem;
+      }
+      
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .examples {
+    padding: 1rem;
+    
+    h3 {
+      font-size: 1.3rem;
+    }
+    
+    .step {
+      padding: 1rem;
+      
+      h4 {
+        font-size: 1rem;
+      }
+      
+      pre {
+        font-size: 0.8rem;
+        padding: 0.75rem;
+      }
+      
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .examples {
+    padding: 0.75rem;
+    
+    .step {
+      padding: 0.75rem;
+      
+      pre {
+        font-size: 0.75rem;
+        overflow-x: scroll;
+      }
+    }
+  }
     }
 }
 

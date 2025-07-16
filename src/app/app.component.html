@@ -2,31 +2,32 @@
   <h1>Fullstack Technologies</h1>
 
   <div class="card-wraper">
-    <div class="card" routerLinkActive="active" (click)="navigateTo('javascript/controleflow')">
+    
+    <div class="card" routerLinkActive="active" routerLink="javascript/controleflow" (click)="navigateTo('javascript/controleflow')">
       JavaScript
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('typescript')">
+    <div class="card" routerLinkActive="active" routerLink="typescript" (click)="navigateTo('typescript')">
       TypeScript
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('angular')">
+    <div class="card" routerLinkActive="active" routerLink="angular" (click)="navigateTo('angular')">
       Angular
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('d3js')">
+    <div class="card" routerLinkActive="active" routerLink="d3js" (click)="navigateTo('d3js')">
       D3 Js
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('nodejs')">
+    <div class="card" routerLinkActive="active" routerLink="nodejs" (click)="navigateTo('nodejs')">
       Node Js
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('nestjs')">
+    <div class="card" routerLinkActive="active" routerLink="nestjs" (click)="navigateTo('nestjs')">
       Nest Js
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('sql/sql')">
+    <div class="card" routerLinkActive="active" routerLink="sql/sql" (click)="navigateTo('sql/sql')">
       sql
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('gitHub/gitprocess')">
+    <div class="card" routerLinkActive="active" routerLink="gitHub/gitprocess" (click)="navigateTo('gitHub/gitprocess')">
       Git Hub
     </div>
-    <div class="card" routerLinkActive="active" (click)="navigateTo('aws/deployment')">
+    <div class="card" routerLinkActive="active" routerLink="aws/deployment" (click)="navigateTo('aws/deployment')">
       Aws
     </div>
   </div>
@@ -34,4 +35,7 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+
+
 

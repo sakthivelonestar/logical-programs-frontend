@@ -4,17 +4,14 @@ p,h1,h2,h3,h4,h5,h6{
 }
 .wraper{
     width: 100vw;
-    height: 100vh;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    // gap: 20px;
     h1{
         padding-bottom: 10px;
         text-align: center;
     }
     .card-wraper{ 
-        // height: 5%;
         width: 100%;
         display: flex;
         justify-content: center; 
@@ -32,18 +29,16 @@ p,h1,h2,h3,h4,h5,h6{
             height: 50px;
             border-radius: 10px;    
     }
-
-    .active {
-        background-color: #007bff;
-        color: white;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-      }
+   
 } 
 .modules{
-    height: 95%;
-    width: 100%;
+    width: 99%;
     padding-top: 10px;
-    
-}    
+}  
+  
+}
+
+ .active{
+    background-color: red;
 }
 

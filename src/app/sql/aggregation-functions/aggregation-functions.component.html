@@ -1,48 +1,125 @@
-<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
-    <div class="wrapper">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+<div class="overall-wrapper" appMaximize #sqlAggregationFunctions="maximize" id="sqlAggregationFunctions">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() ==  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() !=  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <div class="header">
+                <p> <span class="question">What:</span>
+                SQL aggregation functions are <strong>built-in functions that perform calculations on a set of values and return a single result, enabling data summarization and statistical analysis across database records.</strong> </p>
             <p> <span class="question">Why:</span>
-                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+                SQL aggregation functions are important because they <strong>enable data analysis, statistical calculations, report generation, and business intelligence by summarizing large datasets into meaningful insights.</strong></p>
             <p> <span class="question">Where:</span>
-                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+                SQL aggregation functions are used <strong>in data analysis, reporting systems, business intelligence dashboards, and anywhere statistical summaries or calculations are needed from database records.</strong></p>
+            </div>
         </div>
-    </div>
-
     <div class="examples">
-         <div class="step">
-                <h4>Step 4: Aggregate Functions and Grouping</h4>
-                <pre><code>-- Basic aggregate functions
-SELECT COUNT(*) AS total_employees FROM employees;
-SELECT AVG(salary) AS average_salary FROM employees;
-SELECT MAX(salary) AS highest_salary FROM employees;
-SELECT MIN(salary) AS lowest_salary FROM employees;
-SELECT SUM(salary) AS total_payroll FROM employees;
+          <div class="step">
+                <h4>Step 1: Basic Aggregation Functions</h4>
+                <pre><code>-- COUNT - Returns the number of rows or non-null values
+SELECT COUNT(*) as total_employees FROM employees;
+SELECT COUNT(department_id) as employees_with_department FROM employees;
 
--- Grouping data
-SELECT department, COUNT(*) AS employee_count
-FROM employees 
-GROUP BY department;
+-- SUM - Returns the sum of numeric values
+SELECT SUM(salary) as total_payroll FROM employees;
+SELECT SUM(hours_worked) as total_hours FROM timesheets;
 
--- Grouping with conditions
-SELECT department, AVG(salary) AS avg_salary
-FROM employees 
-GROUP BY department
-HAVING AVG(salary) > 45000;
+-- AVG - Returns the average of numeric values
+SELECT AVG(salary) as average_salary FROM employees;
+SELECT AVG(age) as average_age FROM employees;
 
--- Multiple aggregations
+-- MIN - Returns the minimum value
+SELECT MIN(salary) as lowest_salary FROM employees;
+SELECT MIN(hire_date) as earliest_hire_date FROM employees;
+
+-- MAX - Returns the maximum value
+SELECT MAX(salary) as highest_salary FROM employees;
+SELECT MAX(hire_date) as latest_hire_date FROM employees;</code></pre>
+                <p>Basic aggregation functions for counting, summing, averaging, and finding minimum/maximum values.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: GROUP BY and Advanced Aggregation</h4>
+                <pre><code>-- GROUP BY with aggregation functions
+SELECT department_id, COUNT(*) as employee_count, AVG(salary) as avg_salary
+FROM employees
+GROUP BY department_id;
+
+-- Multiple grouping columns
+SELECT department_id, job_title, COUNT(*) as count, AVG(salary) as avg_salary
+FROM employees
+GROUP BY department_id, job_title;
+
+-- HAVING clause for filtering groups
+SELECT department_id, COUNT(*) as employee_count, AVG(salary) as avg_salary
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) > 5 AND AVG(salary) > 50000;
+
+-- String aggregation (GROUP_CONCAT/STRING_AGG)
+SELECT department_id, GROUP_CONCAT(first_name, ' ', last_name) as employees
+FROM employees
+GROUP BY department_id;
+
+-- Multiple aggregations in one query
 SELECT 
-    department,
-    COUNT(*) AS employee_count,
-    AVG(salary) AS avg_salary,
-    MAX(salary) AS max_salary,
-    MIN(salary) AS min_salary
-FROM employees 
-GROUP BY department;</code></pre>
-                <p>Aggregate functions and grouping for statistical analysis and reporting.</p>
+    department_id,
+    COUNT(*) as total_employees,
+    SUM(salary) as total_department_salary,
+    AVG(salary) as avg_salary,
+    MIN(salary) as min_salary,
+    MAX(salary) as max_salary,
+    STDDEV(salary) as salary_std_dev
+FROM employees
+GROUP BY department_id;</code></pre>
+                <p>Advanced aggregation techniques using GROUP BY, HAVING, and multiple aggregation functions together.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Complex Aggregations</h4>
+                <pre><code>
+
+-- Conditional aggregation with CASE statements
+SELECT 
+    department_id,
+    COUNT(*) as total_employees,
+    SUM(CASE WHEN salary > 60000 THEN 1 ELSE 0 END) as high_earners,
+    SUM(CASE WHEN salary <= 60000 THEN 1 ELSE 0 END) as regular_earners,
+    AVG(CASE WHEN job_title = 'Manager' THEN salary END) as avg_manager_salary
+FROM employees
+GROUP BY department_id;
+
+-- Complex aggregations with subqueries
+SELECT 
+    d.department_name,
+    COUNT(e.employee_id) as employee_count,
+    AVG(e.salary) as avg_salary,
+    (SELECT AVG(salary) FROM employees) as company_avg,
+    AVG(e.salary) - (SELECT AVG(salary) FROM employees) as salary_diff_from_avg
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+GROUP BY d.department_id, d.department_name;
+
+-- Date-based aggregations
+SELECT 
+    YEAR(hire_date) as hire_year,
+    MONTH(hire_date) as hire_month,
+    COUNT(*) as hires_count,
+    AVG(salary) as avg_starting_salary
+FROM employees
+GROUP BY YEAR(hire_date), MONTH(hire_date)
+ORDER BY hire_year, hire_month;
+
+-- Nested aggregations and statistical functions
+SELECT 
+    department_id,
+    COUNT(*) as employee_count,
+    AVG(salary) as mean_salary,
+    STDDEV(salary) as salary_std_dev,
+    VARIANCE(salary) as salary_variance,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY salary) as median_salary
+FROM employees
+GROUP BY department_id
+HAVING COUNT(*) >= 3;</code></pre>
+                <p>Advanced aggregation techniques including window functions, conditional aggregation, statistical functions, and complex analytical queries.</p>
             </div>
     </div>
 </div>

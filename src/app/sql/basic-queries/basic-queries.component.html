@@ -94,31 +94,8 @@ INSERT INTO departments (department_name, budget, location) VALUES
                 <p>Efficient bulk insertion of multiple records to populate tables with sample data.</p>
             </div>
 
-            <div class="step">
-                <h4>Step 3: Advanced INSERT Techniques</h4>
-                <pre><code>-- Insert with SELECT (copying data)
-INSERT INTO employees_backup 
-SELECT * FROM employees WHERE hire_date < '2024-01-01';
 
--- Insert with calculated values
-INSERT INTO employees (first_name, last_name, email, hire_date, salary, department) 
-VALUES (
-    'Alex', 'Thompson', 
-    CONCAT('alex.thompson&#64;company.com'), 
-    CURDATE(), 
-    (SELECT AVG(salary) FROM employees WHERE department = 'IT'), 
-    'IT'
-);
 
--- Insert on duplicate key update
-INSERT INTO employees (employee_id, email, salary)
-VALUES (1, 'updated.email&#64;company.com', 60000)
-ON DUPLICATE KEY UPDATE 
-    email = VALUES(email),
-    salary = VALUES(salary),
-    updated_at = CURRENT_TIMESTAMP;</code></pre>
-                <p>Advanced INSERT techniques including copying data, calculated values, and handling duplicates.</p>
-            </div>
 
             <h3>3. UPDATE - Modifying Existing Data</h3>
             <div class="step">
@@ -135,38 +112,9 @@ SET salary = 65000,
     updated_at = CURRENT_TIMESTAMP
 WHERE first_name = 'Jane' AND last_name = 'Smith';</code></pre>
                 <p>Basic UPDATE operations for modifying single or multiple fields in specific records.</p>
-            </div>
-            
+            </div>    
             <div class="step">
-                <h4>Step 2: UPDATE with Calculations</h4>
-                <pre><code>-- Give percentage raise
-UPDATE employees 
-SET salary = salary * 1.1 
-WHERE department = 'Sales';
-
--- Update based on conditions
-UPDATE employees 
-SET job_title = CASE 
-    WHEN salary > 60000 THEN 'Senior ' + job_title
-    WHEN salary > 45000 THEN 'Mid-Level ' + job_title
-    ELSE 'Junior ' + job_title
-END
-WHERE job_title NOT LIKE 'Senior%' 
-  AND job_title NOT LIKE 'Mid-Level%' 
-  AND job_title NOT LIKE 'Junior%';
-
--- Update with subquery
-UPDATE employees 
-SET salary = (
-    SELECT AVG(salary) * 1.1 
-    FROM (SELECT salary FROM employees WHERE department = 'IT') AS avg_calc
-)
-WHERE department = 'IT' AND salary < 50000;</code></pre>
-                <p>Advanced UPDATE operations with calculations, conditional logic, and subqueries.</p>
-            </div>
-            
-            <div class="step">
-                <h4>Step 3: Bulk UPDATE Operations</h4>
+                <h4>Step 2: Bulk UPDATE Operations</h4>
                 <pre><code>-- Update multiple records with same values
 UPDATE employees 
 SET is_active = FALSE,

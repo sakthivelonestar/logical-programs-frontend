@@ -1,17 +1,183 @@
-<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
-    <div class="wrapper">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
-            <p> <span class="question">Why:</span>
-                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
-            <p> <span class="question">Where:</span>
-                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+ <div class="overall-wrapper" appMaximize #sqlAggregationFunctions="maximize" id="sqlStoredProceduresFunctions">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() ==  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() !=  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            
+            <div class="header">
+                <p><span class="question">What:</span> SQL indexes and constraints are <strong>database objects that optimize query performance and enforce data integrity, ensuring efficient data retrieval and adherence to business rules.</strong></p>
+                <p><span class="question">Why:</span> Indexes and constraints are critical for <strong>improving query performance, ensuring data uniqueness, maintaining referential integrity, and enforcing validation rules to prevent invalid data in mission-critical applications.</strong></p>
+                <p><span class="question">Where:</span> SQL indexes and constraints are used <strong>in enterprise applications, data warehouses, reporting systems, and any database requiring fast data access and strict data integrity, such as financial or inventory systems.</strong></p>
+            </div>
+        </div>
+        <div class="examples">
+            <div class="step">
+                <h4>Step 1: Basic Indexes and Primary Key Constraints</h4>
+                <pre><code>-- Creating a table with a primary key constraint
+CREATE TABLE employees (
+    employee_id INT NOT NULL,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    salary DECIMAL(10,2),
+    department_id INT,
+    CONSTRAINT pk_employee PRIMARY KEY (employee_id)
+);
+
+-- Creating a basic index on salary column
+CREATE INDEX idx_employee_salary ON employees(salary);
+
+-- Creating a composite index on department_id and last_name
+CREATE INDEX idx_employee_dept_name ON employees(department_id, last_name);
+
+-- Query utilizing the index
+SELECT employee_id, first_name, last_name, salary
+FROM employees
+WHERE salary > 50000
+ORDER BY salary DESC;
+
+-- Query utilizing composite index
+SELECT employee_id, first_name, last_name
+FROM employees
+WHERE department_id = 1 AND last_name LIKE 'S%';
+</code></pre>
+                <p>Primary key constraints ensure <strong>uniqueness</strong> and <strong>non-nullability</strong> for employee_id, while indexes on salary and composite fields (department_id, last_name) improve query performance by reducing data scan time.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 2: Constraints for Data Integrity</h4>
+                <pre><code>-- Creating a table with multiple constraints
+CREATE TABLE departments (
+    department_id INT NOT NULL,
+    department_name VARCHAR(100) NOT NULL,
+    location VARCHAR(50),
+    CONSTRAINT pk_department PRIMARY KEY (department_id),
+    CONSTRAINT uk_dept_name UNIQUE (department_name),
+    CONSTRAINT chk_location CHECK (location IN ('New York', 'London', 'Tokyo'))
+);
+
+-- Adding foreign key constraint to employees table
+ALTER TABLE employees
+ADD CONSTRAINT fk_employee_dept FOREIGN KEY (department_id)
+REFERENCES departments(department_id);
+
+-- Creating a stored procedure to insert employee with constraint validation
+CREATE PROCEDURE dbo.AddEmployee
+    &#64;employee_id INT,
+    &#64;first_name VARCHAR(50),
+    &#64;last_name VARCHAR(50),
+    &#64;salary DECIMAL(10,2),
+    &#64;department_id INT
+AS
+BEGIN
+    BEGIN TRY
+        INSERT INTO employees (employee_id, first_name, last_name, salary, department_id)
+        VALUES (&#64;employee_id, &#64;first_name, &#64;last_name, &#64;salary, &#64;department_id);
+        
+        SELECT 
+            employee_id,
+            first_name,
+            last_name,
+            salary,
+            department_id
+        FROM employees
+        WHERE employee_id = &#64;employee_id;
+    END TRY
+    BEGIN CATCH
+        DECLARE &#64;ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR (&#64;ErrorMessage, 16, 1);
+    END CATCH;
+END;
+
+-- Creating a unique index to enforce uniqueness
+CREATE UNIQUE INDEX idx_employee_email ON employees(email)
+WHERE email IS NOT NULL;
+
+-- Usage examples
+EXEC dbo.AddEmployee &#64;employee_id = 101, &#64;first_name = 'John', &#64;last_name = 'Doe', &#64;salary = 60000, &#64;department_id = 1;
+-- This will fail if department_id doesn't exist due to foreign key constraint
+EXEC dbo.AddEmployee &#64;employee_id = 102, &#64;first_name = 'Jane', &#64;last_name = 'Smith', &#64;salary = 65000, &#64;department_id = 999;
+</code></pre>
+                <p>Constraints like <strong>PRIMARY KEY</strong>, <strong>UNIQUE</strong>, <strong>FOREIGN KEY</strong>, and <strong>CHECK</strong> ensure data integrity by enforcing uniqueness, referential integrity, and valid data values. Unique indexes further support efficient uniqueness checks.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 3: Advanced Indexing and Constraint Techniques</h4>
+                <pre><code>-- Creating a clustered index (affects physical data storage)
+CREATE CLUSTERED INDEX idx_employee_dept_salary ON employees(department_id, salary);
+
+-- Creating a filtered index for active employees
+CREATE INDEX idx_active_employees ON employees(last_name, first_name)
+WHERE termination_date IS NULL;
+
+-- Creating a stored procedure with constraint and index optimization
+CREATE PROCEDURE dbo.GetTopEarnersByDepartment
+    &#64;department_id INT,
+    &#64;top_n INT = 5
+AS
+BEGIN
+    SELECT 
+        e.employee_id,
+        e.first_name,
+        e.last_name,
+        e.salary,
+        d.department_name
+    FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    WHERE e.department_id = &#64;department_id
+    AND e.termination_date IS NULL
+    ORDER BY e.salary DESC
+    OFFSET 0 ROWS FETCH NEXT &#64;top_n ROWS ONLY;
+END;
+
+-- Creating a stored procedure to update employee with constraint validation
+CREATE PROCEDURE dbo.UpdateEmployeeSalary
+    &#64;employee_id INT,
+    &#64;new_salary DECIMAL(10,2)
+AS
+BEGIN
+    BEGIN TRY
+        -- Validate salary range
+        IF &#64;new_salary <= 0
+        BEGIN
+            RAISERROR ('Salary must be positive', 16, 1);
+        END
+        
+        UPDATE employees
+        SET salary = &#64;new_salary
+        WHERE employee_id = &#64;employee_id;
+        
+        SELECT 
+            employee_id,
+            first_name,
+            last_name,
+            salary as new_salary
+        FROM employees
+        WHERE employee_id = &#64;employee_id;
+    END TRY
+    BEGIN CATCH
+        DECLARE &#64;ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR (&#64;ErrorMessage, 16, 1);
+    END CATCH;
+END;
+
+-- Creating a table with composite primary key and index
+CREATE TABLE employee_projects (
+    employee_id INT,
+    project_id INT,
+    assignment_date DATE,
+    CONSTRAINT pk_employee_project PRIMARY KEY (employee_id, project_id),
+    CONSTRAINT fk_employee FOREIGN KEY (employee_id) REFERENCES employees(employee_id),
+    CONSTRAINT fk_project FOREIGN KEY (project_id) REFERENCES projects(project_id)
+);
+
+-- Creating a covering index for query optimization
+CREATE INDEX idx_employee_projects_covering ON employee_projects(employee_id, project_id, assignment_date)
+INCLUDE (role, hours_worked);
+
+-- Usage examples
+EXEC dbo.GetTopEarnersByDepartment &#64;department_id = 1, &#64;top_n = 3;
+EXEC dbo.UpdateEmployeeSalary &#64;employee_id = 101, &#64;new_salary = 70000;
+</code></pre>
+                <p>Advanced indexing techniques like <strong>clustered</strong>, <strong>filtered</strong>, and <strong>covering indexes</strong> optimize query performance, while composite primary keys and foreign keys enforce complex data relationships, ensuring <strong>integrity</strong> and efficient data retrieval.</p>
+            </div>
         </div>
     </div>
-
-    <div class="examples">
-    </div>
-</div>

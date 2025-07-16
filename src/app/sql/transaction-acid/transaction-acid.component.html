@@ -1,17 +1,251 @@
-<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
-    <div class="wrapper">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
-            <p> <span class="question">Why:</span>
-                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
-            <p> <span class="question">Where:</span>
-                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+ <div class="overall-wrapper" appMaximize #sqlAggregationFunctions="maximize" id="sqlStoredProceduresFunctions">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() ==  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() !=  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            
+            <div class="header">
+                <p><span class="question">What:</span> SQL stored procedures and functions are <strong>precompiled database objects that encapsulate transactional logic, ensuring data integrity and reliability through ACID properties (Atomicity, Consistency, Isolation, Durability).</strong></p>
+                <p><span class="question">Why:</span> SQL stored procedures and functions are critical for <strong>enforcing ACID compliance, managing complex transactions, preventing data corruption, ensuring consistent database states, and providing robust error handling in mission-critical applications.</strong></p>
+                <p><span class="question">Where:</span> SQL stored procedures and functions with transaction control are used <strong>in financial systems, inventory management, e-commerce platforms, and any application requiring guaranteed data consistency and reliable transaction processing.</strong></p>
+            </div>
+            
+        </div>
+        <div class="examples">
+            <div class="step">
+                <h4>Step 1: Transaction Basics in Functions</h4>
+                <pre><code>-- Scalar function with transaction context for salary calculation
+CREATE FUNCTION dbo.GetDepartmentAvgSalary(&#64;department_id INT)
+RETURNS DECIMAL(10,2)
+AS
+BEGIN
+    DECLARE &#64;avg_salary DECIMAL(10,2);
+    BEGIN TRY
+        -- Begin transaction to ensure consistent reads
+        BEGIN TRANSACTION;
+        
+        SELECT &#64;avg_salary = AVG(salary) 
+        FROM employees 
+        WHERE department_id = &#64;department_id;
+        
+        COMMIT TRANSACTION;
+        RETURN &#64;avg_salary;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH;
+END;
+
+-- Table-valued function with transaction isolation
+CREATE FUNCTION dbo.GetEmployeesAboveAverage()
+RETURNS TABLE
+AS
+RETURN (
+    SELECT 
+        employee_id,
+        first_name,
+        last_name,
+        salary,
+        dbo.GetDepartmentAvgSalary(department_id) as dept_avg_salary
+    FROM employees
+    WHERE salary > dbo.GetDepartmentAvgSalary(department_id)
+);
+
+-- Usage example with transaction isolation
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+SELECT * FROM dbo.GetEmployeesAboveAverage();</code></pre>
+                <p>Functions wrapped in transactions ensure <strong>Atomicity</strong> (all operations complete successfully or none do) and <strong>Consistency</strong> (data remains valid). Using appropriate isolation levels (e.g., READ COMMITTED) ensures <strong>Isolation</strong> by preventing dirty reads during concurrent access.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 2: Stored Procedures with Transaction Control</h4>
+                <pre><code>-- Stored procedure with transaction for salary adjustments
+CREATE PROCEDURE dbo.ProcessEmployeeSalaryAdjustment
+    &#64;department_id INT,
+    &#64;adjustment_percentage DECIMAL(5,2)
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; -- Ensure Isolation
+    BEGIN TRANSACTION;
+    
+    BEGIN TRY
+        -- Log the operation for audit (Durability)
+        INSERT INTO salary_adjustment_log (department_id, adjustment_percentage, processed_date)
+        VALUES (&#64;department_id, &#64;adjustment_percentage, GETDATE());
+        
+        -- Update salaries
+        UPDATE employees
+        SET salary = salary * (1 + &#64;adjustment_percentage / 100)
+        WHERE department_id = &#64;department_id;
+        
+        -- Return updated employees
+        SELECT 
+            employee_id,
+            first_name,
+            last_name,
+            salary as new_salary,
+            &#64;adjustment_percentage as adjustment_applied
+        FROM employees
+        WHERE department_id = &#64;department_id;
+        
+        COMMIT TRANSACTION; -- Ensures Atomicity and Durability
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION; -- Ensures Atomicity on failure
+        DECLARE &#64;ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        DECLARE &#64;ErrorSeverity INT = ERROR_SEVERITY();
+        DECLARE &#64;ErrorState INT = ERROR_STATE();
+        RAISERROR (&#64;ErrorMessage, &#64;ErrorSeverity, &#64;ErrorState);
+    END CATCH;
+END;
+
+-- Stored procedure with transaction for department transfer
+CREATE PROCEDURE dbo.TransferEmployee
+    &#64;employee_id INT,
+    &#64;new_department_id INT
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ; -- Prevent non-repeatable reads
+    BEGIN TRANSACTION;
+    
+    BEGIN TRY
+        -- Validate department exists
+        IF NOT EXISTS (SELECT 1 FROM departments WHERE department_id = &#64;new_department_id)
+        BEGIN
+            THROW 50001, 'Invalid department ID', 1;
+        END
+        
+        -- Update employee department
+        UPDATE employees
+        SET department_id = &#64;new_department_id
+        WHERE employee_id = &#64;employee_id;
+        
+        -- Log transfer
+        INSERT INTO employee_transfer_log (employee_id, old_department_id, new_department_id, transfer_date)
+        SELECT employee_id, department_id, &#64;new_department_id, GETDATE()
+        FROM employees
+        WHERE employee_id = &#64;employee_id;
+        
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH;
+END;
+
+-- Usage examples
+EXEC dbo.ProcessEmployeeSalaryAdjustment &#64;department_id = 1, &#64;adjustment_percentage = 5.0;
+EXEC dbo.TransferEmployee &#64;employee_id = 101, &#64;new_department_id = 2;</code></pre>
+                <p>Stored procedures use transactions to ensure <strong>Atomicity</strong> (all steps complete or none do), <strong>Consistency</strong> (data integrity via validation), <strong>Isolation</strong> (via SERIALIZABLE or REPEATABLE READ levels), and <strong>Durability</strong> (changes are permanently saved on commit). Error handling with TRY-CATCH and ROLLBACK ensures no partial updates.</p>
+            </div>
+
+            <div class="step">
+                <h4>Step 3: Advanced Transactional Processing and ACID Compliance</h4>
+                <pre><code>-- Stored procedure with nested transactions for complex updates
+CREATE PROCEDURE dbo.UpdateEmployeeAndDepartment
+    &#64;employee_id INT,
+    &#64;new_salary DECIMAL(10,2),
+    &#64;new_department_id INT
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+    BEGIN TRANSACTION MainTransaction;
+    
+    SAVE TRANSACTION EmployeeUpdate; -- Savepoint for partial rollback
+    BEGIN TRY
+        -- Update employee salary
+        UPDATE employees
+        SET salary = &#64;new_salary
+        WHERE employee_id = &#64;employee_id;
+        
+        -- Validate and update department
+        IF NOT EXISTS (SELECT 1 FROM departments WHERE department_id = &#64;new_department_id)
+        BEGIN
+            THROW 50002, 'Invalid department ID', 1;
+        END
+        
+        UPDATE employees
+        SET department_id = &#64;new_department_id
+        WHERE employee_id = &#64;employee_id;
+        
+        -- Log changes for audit
+        INSERT INTO employee_change_log (employee_id, change_type, change_date)
+        VALUES (&#64;employee_id, 'Salary and Department Update', GETDATE());
+        
+        COMMIT TRANSACTION MainTransaction; -- Ensures Durability
+    END TRY
+    BEGIN CATCH
+        IF &#64;&#64;TRANCOUNT > 0
+        BEGIN
+            ROLLBACK TRANSACTION EmployeeUpdate; -- Rollback to savepoint
+            COMMIT TRANSACTION MainTransaction; -- Commit remaining transaction
+            THROW; -- Re-throw error for logging
+        END
+    END CATCH;
+END;
+
+-- Stored procedure for batch processing with transaction
+CREATE PROCEDURE dbo.BatchProcessEmployeeBonuses
+    &#64;bonus_percentage DECIMAL(5,2)
+AS
+BEGIN
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    BEGIN TRANSACTION;
+    
+    BEGIN TRY
+        -- Create temporary table for processing
+        CREATE TABLE #bonus_processing (
+            employee_id INT,
+            original_salary DECIMAL(10,2),
+            bonus_amount DECIMAL(10,2)
+        );
+        
+        -- Calculate bonuses
+        INSERT INTO #bonus_processing
+        SELECT 
+            employee_id,
+            salary,
+            salary * (&#64;bonus_percentage / 100) as bonus_amount
+        FROM employees;
+        
+        -- Update salaries
+        UPDATE e
+        SET salary = e.salary + bp.bonus_amount
+        FROM employees e
+        JOIN #bonus_processing bp ON e.employee_id = bp.employee_id;
+        
+        -- Log bonus distribution
+        INSERT INTO bonus_log (employee_id, bonus_amount, processed_date)
+        SELECT employee_id, bonus_amount, GETDATE()
+        FROM #bonus_processing;
+        
+        -- Return results
+        SELECT 
+            bp.employee_id,
+            e.first_name,
+            e.last_name,
+            bp.original_salary,
+            bp.bonus_amount,
+            e.salary as new_salary
+        FROM #bonus_processing bp
+        JOIN employees e ON bp.employee_id = bp.employee_id;
+        
+        COMMIT TRANSACTION;
+        DROP TABLE #bonus_processing;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        IF OBJECT_ID('tempdb..#bonus_processing') IS NOT NULL
+            DROP TABLE #bonus_processing;
+        THROW;
+    END CATCH;
+END;
+
+-- Usage examples
+EXEC dbo.UpdateEmployeeAndDepartment &#64;employee_id = 101, &#64;new_salary = 75000, &#64;new_department_id = 2;
+EXEC dbo.BatchProcessEmployeeBonuses &#64;bonus_percentage = 10.0;</code></pre>
+                <p>Advanced stored procedures implement nested transactions and savepoints to ensure <strong>Atomicity</strong> and <strong>Durability</strong>, with SERIALIZABLE isolation to prevent concurrency issues, maintaining <strong>Consistency</strong> across complex updates.</p>
+            </div>
         </div>
     </div>
-
-    <div class="examples">
-    </div>
-</div>

@@ -1,19 +1,69 @@
-<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
-    <div class="wrapper">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+ <div class="overall-wrapper" appMaximize #sqlBasicsConcepts="maximize" id="sqlBasicsConcepts">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlBasicsConcepts.checkfullscreen() ==  'hide'" (click)="sqlBasicsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlBasicsConcepts.checkfullscreen() !=  'hide'" (click)="sqlBasicsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <div class="header">
+                <p> <span class="question">What:</span>
+                SQL sorting and filtering are <strong>database operations used to organize and retrieve specific data from tables based on criteria and ordering requirements.</strong> </p>
             <p> <span class="question">Why:</span>
-                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+                SQL sorting and filtering are important because they <strong>enable efficient data retrieval, improve query performance, and allow precise data selection from large datasets.</strong></p>
             <p> <span class="question">Where:</span>
-                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+                SQL sorting and filtering are used <strong>in database queries, data analysis, reporting systems, and anywhere structured data needs to be organized and filtered.</strong></p>
+            </div>
         </div>
-    </div>
-
     <div class="examples">
           <div class="step">
+                <h4>Step 1: Basic SQL Filtering</h4>
+                <pre><code>-- Filter by single condition
+SELECT * FROM employees WHERE salary > 50000;
+
+-- Filter by multiple conditions
+SELECT * FROM employees WHERE department = 'IT' AND salary > 60000;
+
+-- Filter with OR conditions
+SELECT * FROM employees WHERE department = 'IT' OR department = 'HR';
+
+-- Filter with IN operator
+SELECT * FROM employees WHERE department IN ('IT', 'Finance', 'Marketing');
+
+-- Filter with LIKE operator for text matching
+SELECT * FROM employees WHERE first_name LIKE 'J%';
+
+-- Filter with BETWEEN for ranges
+SELECT * FROM employees WHERE salary BETWEEN 40000 AND 80000;
+
+-- Filter with NOT operator
+SELECT * FROM employees WHERE department != 'HR';</code></pre>
+                <p>Basic SQL filtering techniques using WHERE clause with various operators and conditions.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: SQL Sorting Techniques</h4>
+                <pre><code>-- Sort by single column (ascending - default)
+SELECT * FROM employees ORDER BY salary;
+
+-- Sort by single column (descending)
+SELECT * FROM employees ORDER BY salary DESC;
+
+-- Sort by multiple columns
+SELECT * FROM employees ORDER BY department ASC, salary DESC;
+
+-- Sort by calculated values
+SELECT first_name, last_name, salary, salary * 12 as annual_salary
+FROM employees ORDER BY annual_salary DESC;
+
+-- Sort with NULL handling
+SELECT * FROM employees ORDER BY bonus_amount DESC NULLS LAST;
+
+-- Sort by string length
+SELECT * FROM employees ORDER BY LENGTH(first_name);
+
+-- Sort by date
+SELECT * FROM employees ORDER BY hire_date DESC;</code></pre>
+                <p>Various SQL sorting techniques using ORDER BY clause with different data types and conditions.</p>
+            </div>
+            
+            <div class="step">
                 <h4>Step 3: Sorting and Limiting Results</h4>
                 <pre><code>-- Sort by single column
 SELECT * FROM employees ORDER BY salary DESC;
@@ -31,7 +81,15 @@ SELECT * FROM employees ORDER BY employee_id LIMIT 10 OFFSET 20;
 SELECT department, first_name, last_name, salary
 FROM employees 
 WHERE salary > 50000
-ORDER BY department, salary DESC;</code></pre>
+ORDER BY department, salary DESC;
+
+-- Advanced filtering and sorting
+SELECT employee_id, first_name, last_name, department, salary
+FROM employees 
+WHERE hire_date > '2020-01-01' 
+  AND salary BETWEEN 45000 AND 100000
+ORDER BY department ASC, salary DESC
+LIMIT 15;</code></pre>
                 <p>Sorting, limiting, and pagination techniques for better data presentation and performance.</p>
             </div>
     </div>

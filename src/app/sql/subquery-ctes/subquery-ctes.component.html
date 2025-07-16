@@ -1,17 +1,284 @@
-<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
-    <div class="wrapper">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+<div class="overall-wrapper" appMaximize #sqlSubqueriesCTEs="maximize" id="sqlSubqueriesCTEs">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlSubqueriesCTEs.checkfullscreen() ==  'hide'" (click)="sqlSubqueriesCTEs.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlSubqueriesCTEs.checkfullscreen() !=  'hide'" (click)="sqlSubqueriesCTEs.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <div class="header">
+                <p> <span class="question">What:</span>
+                SQL subqueries and CTEs are <strong>nested queries and temporary named result sets that enable complex data retrieval, filtering, and analysis by breaking down complex problems into manageable, reusable components.</strong> </p>
             <p> <span class="question">Why:</span>
-                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+                SQL subqueries and CTEs are important because they <strong>improve query readability, enable complex filtering and calculations, support hierarchical data processing, and allow for modular query construction.</strong></p>
             <p> <span class="question">Where:</span>
-                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+                SQL subqueries and CTEs are used <strong>in complex reporting systems, data analysis, hierarchical data processing, and anywhere multi-step data transformations or complex filtering logic is required.</strong></p>
+            </div>
         </div>
-    </div>
-
     <div class="examples">
+          <div class="step">
+                <h4>Step 1: Basic Subqueries and Types</h4>
+                <pre><code>-- Scalar subquery - Returns single value
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    salary,
+    (SELECT AVG(salary) FROM employees) as company_avg_salary,
+    salary - (SELECT AVG(salary) FROM employees) as salary_difference
+FROM employees
+WHERE salary > (SELECT AVG(salary) FROM employees);
+
+-- Column subquery - Returns single column, multiple rows
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    department_id
+FROM employees
+WHERE department_id IN (
+    SELECT department_id 
+    FROM departments 
+    WHERE location = 'New York'
+);
+
+-- Row subquery - Returns multiple columns, single row
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    salary
+FROM employees
+WHERE (department_id, salary) = (
+    SELECT department_id, MAX(salary)
+    FROM employees
+    GROUP BY department_id
+    ORDER BY MAX(salary) DESC
+    LIMIT 1
+);
+
+-- Table subquery - Returns multiple rows and columns
+SELECT 
+    d.department_name,
+    dept_stats.avg_salary,
+    dept_stats.employee_count
+FROM departments d
+JOIN (
+    SELECT 
+        department_id,
+        AVG(salary) as avg_salary,
+        COUNT(*) as employee_count
+    FROM employees
+    GROUP BY department_id
+) dept_stats ON d.department_id = dept_stats.department_id;</code></pre>
+                <p>Basic subquery types including scalar, column, row, and table subqueries with practical examples of their usage.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: Correlated Subqueries and EXISTS</h4>
+                <pre><code>-- Correlated subquery - Inner query references outer query
+SELECT 
+    e1.employee_id,
+    e1.first_name,
+    e1.last_name,
+    e1.salary,
+    e1.department_id
+FROM employees e1
+WHERE e1.salary > (
+    SELECT AVG(e2.salary)
+    FROM employees e2
+    WHERE e2.department_id = e1.department_id
+);
+
+-- EXISTS - Checks for existence of rows in subquery
+SELECT 
+    d.department_id,
+    d.department_name,
+    d.location
+FROM departments d
+WHERE EXISTS (
+    SELECT 1
+    FROM employees e
+    WHERE e.department_id = d.department_id
+    AND e.salary > 75000
+);
+
+-- NOT EXISTS - Finds records without matching rows
+SELECT 
+    d.department_id,
+    d.department_name,
+    d.location
+FROM departments d
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM employees e
+    WHERE e.department_id = d.department_id
+);
+
+-- ALL operator - Compares against all values in subquery
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    salary
+FROM employees
+WHERE salary > ALL (
+    SELECT salary
+    FROM employees
+    WHERE department_id = 3
+);
+
+-- ANY/SOME operator - Compares against any value in subquery
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    salary,
+    department_id
+FROM employees
+WHERE salary > ANY (
+    SELECT AVG(salary)
+    FROM employees
+    GROUP BY department_id
+);
+
+-- Complex correlated subquery with multiple conditions
+SELECT 
+    e.employee_id,
+    e.first_name,
+    e.last_name,
+    e.salary,
+    (SELECT COUNT(*) FROM employees e2 WHERE e2.department_id = e.department_id) as dept_size,
+    (SELECT COUNT(*) FROM employees e2 WHERE e2.department_id = e.department_id AND e2.salary > e.salary) as higher_paid_colleagues
+FROM employees e
+WHERE e.salary > (
+    SELECT AVG(salary) * 1.1
+    FROM employees e2
+    WHERE e2.department_id = e.department_id
+);</code></pre>
+                <p>Correlated subqueries and existence checks using EXISTS, NOT EXISTS, ALL, ANY operators for complex filtering and validation.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Common Table Expressions (CTEs) and Advanced Techniques</h4>
+                <pre><code>-- Basic CTE - Single named temporary result set
+WITH department_stats AS (
+    SELECT 
+        department_id,
+        AVG(salary) as avg_salary,
+        COUNT(*) as employee_count,
+        MAX(salary) as max_salary,
+        MIN(salary) as min_salary
+    FROM employees
+    GROUP BY department_id
+)
+SELECT 
+    d.department_name,
+    ds.avg_salary,
+    ds.employee_count,
+    ds.max_salary,
+    ds.min_salary
+FROM departments d
+JOIN department_stats ds ON d.department_id = ds.department_id;
+
+-- Multiple CTEs - Chain multiple temporary result sets
+WITH high_earners AS (
+    SELECT employee_id, first_name, last_name, salary, department_id
+    FROM employees
+    WHERE salary > 70000
+),
+department_summary AS (
+    SELECT 
+        department_id,
+        COUNT(*) as high_earner_count,
+        AVG(salary) as avg_high_earner_salary
+    FROM high_earners
+    GROUP BY department_id
+)
+SELECT 
+    d.department_name,
+    ds.high_earner_count,
+    ds.avg_high_earner_salary,
+    he.first_name,
+    he.last_name,
+    he.salary
+FROM departments d
+JOIN department_summary ds ON d.department_id = ds.department_id
+JOIN high_earners he ON ds.department_id = he.department_id
+ORDER BY d.department_name, he.salary DESC;
+
+-- Recursive CTE - For hierarchical data processing
+WITH RECURSIVE employee_hierarchy AS (
+    -- Base case: Top-level managers (no manager)
+    SELECT 
+        employee_id,
+        first_name,
+        last_name,
+        manager_id,
+        1 as level,
+        CAST(first_name + ' ' + last_name AS VARCHAR(1000)) as hierarchy_path
+    FROM employees
+    WHERE manager_id IS NULL
+    
+    UNION ALL
+    
+    -- Recursive case: Employees with managers
+    SELECT 
+        e.employee_id,
+        e.first_name,
+        e.last_name,
+        e.manager_id,
+        eh.level + 1,
+        eh.hierarchy_path + ' -> ' + e.first_name + ' ' + e.last_name
+    FROM employees e
+    JOIN employee_hierarchy eh ON e.manager_id = eh.employee_id
+)
+SELECT 
+    employee_id,
+    first_name,
+    last_name,
+    level,
+    hierarchy_path
+FROM employee_hierarchy
+ORDER BY level, last_name;
+
+-- Complex CTE with window functions and subqueries
+WITH ranked_employees AS (
+    SELECT 
+        employee_id,
+        first_name,
+        last_name,
+        salary,
+        department_id,
+        ROW_NUMBER() OVER(PARTITION BY department_id ORDER BY salary DESC) as dept_rank,
+        DENSE_RANK() OVER(ORDER BY salary DESC) as overall_rank
+    FROM employees
+),
+department_analysis AS (
+    SELECT 
+        department_id,
+        COUNT(*) as total_employees,
+        AVG(salary) as avg_salary,
+        (SELECT COUNT(*) FROM ranked_employees WHERE dept_rank = 1) as top_earners_count
+    FROM ranked_employees
+    GROUP BY department_id
+)
+SELECT 
+    d.department_name,
+    re.first_name,
+    re.last_name,
+    re.salary,
+    re.dept_rank,
+    re.overall_rank,
+    da.avg_salary,
+    da.total_employees,
+    CASE 
+        WHEN re.dept_rank = 1 THEN 'Top Earner in Department'
+        WHEN re.overall_rank <= 10 THEN 'Top 10 Company-wide'
+        ELSE 'Regular Employee'
+    END as employee_status
+FROM departments d
+JOIN ranked_employees re ON d.department_id = re.department_id
+JOIN department_analysis da ON d.department_id = da.department_id
+WHERE re.dept_rank <= 3
+ORDER BY d.department_name, re.dept_rank;</code></pre>
+                <p>Common Table Expressions (CTEs) including basic CTEs, multiple CTEs, recursive CTEs for hierarchical data, and complex analytical queries combining CTEs with window functions.</p>
+            </div>
     </div>
 </div>

@@ -1,17 +1,117 @@
-<div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
-    <div class="wrapper">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() ==  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() !=  'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                Array methods in JavaScript are <strong>built-in functions that can be used on arrays to manipulate, transform, and extract data from them.</strong> </p>
+<div class="overall-wrapper" appMaximize #sqlJoinsRelationships="maximize" id="sqlJoinsRelationships">
+        <div class="wrapper">
+            <img class="swap" *ngIf="sqlJoinsRelationships.checkfullscreen() ==  'hide'" (click)="sqlJoinsRelationships.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="sqlJoinsRelationships.checkfullscreen() !=  'hide'" (click)="sqlJoinsRelationships.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <div class="header">
+                <p> <span class="question">What:</span>
+                SQL joins and relationships are <strong>database operations used to combine data from multiple tables based on related columns, enabling access to interconnected information across normalized database structures.</strong> </p>
             <p> <span class="question">Why:</span>
-                Array methods are important because they <strong>provide efficient ways to work with collections of data, reduce code complexity, and enable functional programming patterns.</strong></p>
+                SQL joins and relationships are important because they <strong>eliminate data redundancy, maintain data integrity, enable complex queries across multiple tables, and support relational database design principles.</strong></p>
             <p> <span class="question">Where:</span>
-                Array methods are used <strong>throughout JavaScript applications for data processing, filtering, sorting, transformation operations, and whenever working with collections of items.</strong></p>
+                SQL joins and relationships are used <strong>in relational databases, data warehouses, reporting systems, and anywhere normalized data structures require combining information from multiple related tables.</strong></p>
+            </div>
         </div>
-    </div>
-
     <div class="examples">
+          <div class="step">
+                <h4>Step 1: Basic SQL Joins</h4>
+                <pre><code>-- INNER JOIN - Returns records that have matching values in both tables
+SELECT e.employee_id, e.first_name, e.last_name, d.department_name
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.department_id;
+
+-- LEFT JOIN - Returns all records from left table, matched records from right table
+SELECT e.employee_id, e.first_name, d.department_name
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id;
+
+-- RIGHT JOIN - Returns all records from right table, matched records from left table
+SELECT e.first_name, d.department_name
+FROM employees e
+RIGHT JOIN departments d ON e.department_id = d.department_id;
+
+-- FULL OUTER JOIN - Returns all records when there's a match in either table
+SELECT e.first_name, d.department_name
+FROM employees e
+FULL OUTER JOIN departments d ON e.department_id = d.department_id;
+
+-- CROSS JOIN - Returns Cartesian product of both tables (possible combinations)
+SELECT e.first_name, d.department_name
+FROM employees e
+CROSS JOIN departments d;</code></pre>
+                <p>Basic SQL join types demonstrating different ways to combine data from related tables.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 2: Advanced Join Techniques</h4>
+                <pre><code>-- Multiple table joins
+SELECT e.first_name, e.last_name, d.department_name, p.project_name
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.department_id
+INNER JOIN employee_projects ep ON e.employee_id = ep.employee_id
+INNER JOIN projects p ON ep.project_id = p.project_id;
+
+-- Self JOIN - Join table with itself
+SELECT e1.first_name AS employee, e2.first_name AS manager
+FROM employees e1
+LEFT JOIN employees e2 ON e1.manager_id = e2.employee_id;
+
+-- Join with aggregation
+SELECT d.department_name, COUNT(e.employee_id) as employee_count, AVG(e.salary) as avg_salary
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+GROUP BY d.department_id, d.department_name;
+
+-- Join with conditions in WHERE clause
+SELECT e.first_name, e.last_name, d.department_name, e.salary
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.department_id
+WHERE e.salary > 60000 AND d.department_name IN ('IT', 'Finance');
+
+-- Join with subqueries
+SELECT e.first_name, e.last_name, d.department_name
+FROM employees e
+INNER JOIN departments d ON e.department_id = d.department_id
+WHERE e.salary > (SELECT AVG(salary) FROM employees);</code></pre>
+                <p>Advanced join techniques including multiple tables, self-joins, aggregations, and complex conditions.</p>
+            </div>
+            
+            <div class="step">
+                <h4>Step 3: Database Relationships and Constraints</h4>
+                <pre><code>-- One-to-Many relationship example
+-- Each department has many employees
+SELECT d.department_name, COUNT(e.employee_id) as total_employees
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+GROUP BY d.department_id, d.department_name;
+
+-- Many-to-Many relationship example
+-- Employees can work on multiple projects, projects can have multiple employees
+SELECT e.first_name, e.last_name, p.project_name, ep.role, ep.hours_allocated
+FROM employees e
+INNER JOIN employee_projects ep ON e.employee_id = ep.employee_id
+INNER JOIN projects p ON ep.project_id = p.project_id
+ORDER BY e.last_name, p.project_name;
+
+-- One-to-One relationship example
+-- Each employee has one employee profile
+SELECT e.first_name, e.last_name, ep.phone_number, ep.address, ep.emergency_contact
+FROM employees e
+LEFT JOIN employee_profiles ep ON e.employee_id = ep.employee_id;
+
+-- Complex relationship queries
+SELECT 
+    d.department_name,
+    COUNT(DISTINCT e.employee_id) as employee_count,
+    COUNT(DISTINCT p.project_id) as project_count,
+    AVG(e.salary) as avg_department_salary
+FROM departments d
+LEFT JOIN employees e ON d.department_id = e.department_id
+LEFT JOIN employee_projects ep ON e.employee_id = ep.employee_id
+LEFT JOIN projects p ON ep.project_id = p.project_id
+GROUP BY d.department_id, d.department_name
+HAVING COUNT(DISTINCT e.employee_id) > 5
+ORDER BY avg_department_salary DESC;</code></pre>
+                <p>Database relationship patterns and complex queries demonstrating one-to-many, many-to-many, and one-to-one relationships.</p>
+            </div>
     </div>
 </div>

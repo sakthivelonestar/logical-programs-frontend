@@ -7,7 +7,7 @@ import { MaximizeDirective } from '../../directives/maximize.directive';
   standalone: true,
   imports: [CommonModule, MaximizeDirective],
   templateUrl: './transaction-acid.component.html',
-  styleUrl: './transaction-acid.component.scss'
+  styleUrls: ['./transaction-acid.component.scss']
 })
 export class TransactionAcidComponent {
 
