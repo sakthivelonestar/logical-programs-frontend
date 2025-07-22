@@ -22,13 +22,13 @@ const routes: Routes = [
           path: '',
           component:DataTypeComponent 
         },
-        {
-          path: 'basic-queries',
-          component:BasicQueriesComponent 
-        },
          {
           path: 'data-types',
           component:DataTypeComponent 
+        },
+        {
+          path: 'basic-queries',
+          component:BasicQueriesComponent 
         },
          {
           path: 'filtering',
