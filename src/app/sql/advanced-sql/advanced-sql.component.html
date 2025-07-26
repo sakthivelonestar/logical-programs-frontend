@@ -1,5 +1,33 @@
 <div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
     <div class="examples">
-        <h2>Interview questions</h2>
-    </div>
+  <h2>Interview Questions</h2>
+
+  <div class="question-answer">
+    <h4>1) What is Indexing? Create Syntax and Drop Syntax</h4>
+    <p>
+      <strong>Answer:</strong> An index is a database structure that improves the speed of data retrieval operations on a table. Think of it like an index in a book - it helps you quickly find specific information without scanning every page.<br>
+
+      <strong>Create Index Syntax:</strong><br>
+      <code>CREATE INDEX index_name ON table_name(column_name);</code><br>
+
+      <strong>Drop Index Syntax:</strong><br>
+      <code>DROP INDEX index_name ON table_name;</code>
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>2) What are Constraints? Syntax and How to Drop</h4>
+    <p>
+      <strong>Answer:</strong>Constraints are rules applied to database tables to ensure data integrity and enforce business rules. They prevent invalid data from being inserted into the database. Common constraints include <code>NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, and DEFAULT.</code><br>
+
+      <strong>Syntax to Add Constraint (Example):</strong><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT constraint_name CHECK (column_name > 0);</code><br>
+
+      <strong>Syntax to Drop Constraint (MySQL Example):</strong><br>
+      <code>ALTER TABLE table_name DROP CONSTRAINT constraint_name;</code> <br>
+      <small>Note: In MySQL, for foreign keys you use <code>DROP FOREIGN KEY</code>.</small>
+    </p>
+  </div>
+</div>
+
 </div>
