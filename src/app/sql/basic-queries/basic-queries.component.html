@@ -2,13 +2,16 @@
         <div class="wrapper">
             <img class="swap" *ngIf="sqlBasicsConcepts.checkfullscreen() ==  'hide'" (click)="sqlBasicsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
             <img class="swap" *ngIf="sqlBasicsConcepts.checkfullscreen() !=  'hide'" (click)="sqlBasicsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-            <div class="header">
+           <div class="header">
                 <p><span class="question">What:</span>
-                    Basic SQL queries are <strong>fundamental database operations that allow you to retrieve, add, modify, and remove data from database tables using structured commands.</strong></p>
+                    SQL CRUD operations are basic actions used to <strong>Create</strong>, <strong>Read</strong>, <strong>Update</strong>, and <strong>Delete</strong> data in a database.
+                </p>
                 <p><span class="question">Why:</span>
-                    SQL queries are essential because they <strong>form the foundation of all database interactions, enable efficient data manipulation and retrieval, power business applications, and are critical for data-driven decision making.</strong></p>
+                    CRUD operations are important because they let you manage data easily — adding new records, viewing them, editing, or removing when needed.
+                </p>
                 <p><span class="question">Where:</span>
-                    SQL is used <strong>in web applications, mobile apps, data analytics platforms, business intelligence systems, e-commerce sites, banking systems, and any application that needs to store or retrieve structured data.</strong></p>
+                    CRUD operations are used in almost every application — like user registration, profile updates, product listings, orders, and reports in websites, apps, and business systems.
+                </p>
             </div>
         </div>
 

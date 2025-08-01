@@ -4,248 +4,411 @@
             <img class="swap" *ngIf="sqlAggregationFunctions.checkfullscreen() !=  'hide'" (click)="sqlAggregationFunctions.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
             
             <div class="header">
-                <p><span class="question">What:</span> SQL stored procedures and functions are <strong>precompiled database objects that encapsulate transactional logic, ensuring data integrity and reliability through ACID properties (Atomicity, Consistency, Isolation, Durability).</strong></p>
-                <p><span class="question">Why:</span> SQL stored procedures and functions are critical for <strong>enforcing ACID compliance, managing complex transactions, preventing data corruption, ensuring consistent database states, and providing robust error handling in mission-critical applications.</strong></p>
-                <p><span class="question">Where:</span> SQL stored procedures and functions with transaction control are used <strong>in financial systems, inventory management, e-commerce platforms, and any application requiring guaranteed data consistency and reliable transaction processing.</strong></p>
+                <p><span class="question">What:</span> SQL transactions are <strong>groups of database operations that follow ACID properties (Atomicity, Consistency, Isolation, Durability) to ensure data integrity and reliability.</strong></p>
+                <p><span class="question">Why:</span> SQL transactions with ACID properties are critical for <strong>preventing data corruption, ensuring all operations complete together or not at all, maintaining data accuracy, and providing reliable database operations.</strong></p>
+                <p><span class="question">Where:</span> SQL transactions with ACID compliance are used <strong>in banking systems, e-commerce platforms, inventory management, financial applications, and any system requiring guaranteed data consistency.</strong></p>
             </div>
             
         </div>
         <div class="examples">
             <div class="step">
-                <h4>Step 1: Transaction Basics in Functions</h4>
-                <pre><code>-- Scalar function with transaction context for salary calculation
-CREATE FUNCTION dbo.GetDepartmentAvgSalary(&#64;department_id INT)
-RETURNS DECIMAL(10,2)
-AS
-BEGIN
-    DECLARE &#64;avg_salary DECIMAL(10,2);
-    BEGIN TRY
-        -- Begin transaction to ensure consistent reads
-        BEGIN TRANSACTION;
-        
-        SELECT &#64;avg_salary = AVG(salary) 
-        FROM employees 
-        WHERE department_id = &#64;department_id;
-        
+                <h4>Step 1: Understanding ACID Properties with Simple Transactions</h4>
+                <pre><code>-- ATOMICITY: All operations succeed together or all fail together
+BEGIN TRANSACTION;
+
+    -- Transfer money from Account A to Account B
+    UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+    UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+    
+    -- If both updates succeed, save the changes
+    COMMIT TRANSACTION;
+    
+-- If any operation fails, everything is cancelled automatically
+
+-- ATOMICITY Example with Error Handling
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- Check if Account A has enough money
+    IF (SELECT balance FROM accounts WHERE account_id = 'A') < 100
+    BEGIN
+        THROW 50001, 'Insufficient funds', 1;
+    END
+    
+    -- Transfer the money
+    UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+    UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+    
+    COMMIT TRANSACTION; -- Save changes (DURABILITY)
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION; -- Cancel all changes (ATOMICITY)
+    PRINT 'Transaction failed: ' + ERROR_MESSAGE();
+END CATCH
+
+-- CONSISTENCY: Data rules are always maintained
+BEGIN TRANSACTION;
+    -- This transaction maintains consistency
+    -- Total money before = Total money after
+    DECLARE &#64;total_before DECIMAL(10,2);
+    DECLARE &#64;total_after DECIMAL(10,2);
+    
+    SELECT &#64;total_before = SUM(balance) FROM accounts;
+    
+    UPDATE accounts SET balance = balance - 50 WHERE account_id = 'A';
+    UPDATE accounts SET balance = balance + 50 WHERE account_id = 'B';
+    
+    SELECT &#64;total_after = SUM(balance) FROM accounts;
+    
+    -- Check consistency: totals should be equal
+    IF &#64;total_before = &#64;total_after
         COMMIT TRANSACTION;
-        RETURN &#64;avg_salary;
-    END TRY
-    BEGIN CATCH
+    ELSE
         ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH;
-END;
+COMMIT;</code></pre>
+                <p><strong>Atomicity</strong> means all operations in a transaction complete successfully or none complete. <strong>Consistency</strong> ensures data rules (like account balances being valid) are never violated. <strong>Durability</strong> means committed changes are permanently saved.</p>
+            </div>
 
--- Table-valued function with transaction isolation
-CREATE FUNCTION dbo.GetEmployeesAboveAverage()
-RETURNS TABLE
-AS
-RETURN (
-    SELECT 
-        employee_id,
-        first_name,
-        last_name,
-        salary,
-        dbo.GetDepartmentAvgSalary(department_id) as dept_avg_salary
-    FROM employees
-    WHERE salary > dbo.GetDepartmentAvgSalary(department_id)
-);
+            <div class="step">
+                <h4>Step 2: ISOLATION - Controlling Transaction Interference</h4>
+                <pre><code>-- ISOLATION LEVEL: READ UNCOMMITTED (Lowest isolation)
+-- Can read data that other transactions haven't committed yet
+SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+BEGIN TRANSACTION;
+    SELECT * FROM accounts; -- May see uncommitted changes from other transactions
+COMMIT TRANSACTION;
 
--- Usage example with transaction isolation
+-- ISOLATION LEVEL: READ COMMITTED (Default level)
+-- Can only read data that has been committed by other transactions
 SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
-SELECT * FROM dbo.GetEmployeesAboveAverage();</code></pre>
-                <p>Functions wrapped in transactions ensure <strong>Atomicity</strong> (all operations complete successfully or none do) and <strong>Consistency</strong> (data remains valid). Using appropriate isolation levels (e.g., READ COMMITTED) ensures <strong>Isolation</strong> by preventing dirty reads during concurrent access.</p>
+BEGIN TRANSACTION;
+    SELECT balance FROM accounts WHERE account_id = 'A'; -- Only sees committed data
+    -- Other transactions can modify data between reads
+    SELECT balance FROM accounts WHERE account_id = 'A'; -- Might see different value
+COMMIT TRANSACTION;
+
+-- ISOLATION LEVEL: REPEATABLE READ
+-- Data read in transaction remains the same throughout the transaction
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN TRANSACTION;
+    SELECT balance FROM accounts WHERE account_id = 'A'; -- First read
+    WAITFOR DELAY '00:00:05'; -- Wait 5 seconds
+    SELECT balance FROM accounts WHERE account_id = 'A'; -- Same value as first read
+COMMIT TRANSACTION;
+
+-- ISOLATION LEVEL: SERIALIZABLE (Highest isolation)
+-- Complete isolation - no other transactions can interfere
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN TRANSACTION;
+    SELECT COUNT(*) FROM accounts; -- Lock the entire table
+    UPDATE accounts SET balance = balance + 10 WHERE account_id = 'A';
+    -- No other transaction can read or modify accounts table
+COMMIT TRANSACTION;
+
+-- Practical Example: Bank Transfer with Proper Isolation
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; -- Prevent any interference
+BEGIN TRANSACTION;
+BEGIN TRY
+    DECLARE &#64;balance_A DECIMAL(10,2);
+    DECLARE &#64;balance_B DECIMAL(10,2);
+    
+    -- Read balances (locked from other transactions)
+    SELECT &#64;balance_A = balance FROM accounts WHERE account_id = 'A';
+    SELECT &#64;balance_B = balance FROM accounts WHERE account_id = 'B';
+    
+    -- Check if transfer is possible
+    IF &#64;balance_A >= 100
+    BEGIN
+        UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+        UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+        
+        PRINT 'Transfer completed successfully';
+        COMMIT TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        PRINT 'Insufficient funds';
+        ROLLBACK TRANSACTION;
+    END
+END TRY
+BEGIN CATCH
+    ROLLBACK TRANSACTION;
+    PRINT 'Transfer failed: ' + ERROR_MESSAGE();
+END CATCH</code></pre>
+                <p><strong>Isolation</strong> prevents transactions from interfering with each other. Higher isolation levels provide more protection but may slow down performance. <strong>SERIALIZABLE</strong> gives complete isolation, <strong>READ COMMITTED</strong> is the most common, and <strong>READ UNCOMMITTED</strong> is the fastest but least safe.</p>
             </div>
 
             <div class="step">
-                <h4>Step 2: Stored Procedures with Transaction Control</h4>
-                <pre><code>-- Stored procedure with transaction for salary adjustments
-CREATE PROCEDURE dbo.ProcessEmployeeSalaryAdjustment
-    &#64;department_id INT,
-    &#64;adjustment_percentage DECIMAL(5,2)
-AS
-BEGIN
-    SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; -- Ensure Isolation
-    BEGIN TRANSACTION;
+                <h4>Step 3: Advanced Transaction Control and ACID Implementation</h4>
+                <pre><code>-- Nested Transactions with Savepoints
+BEGIN TRANSACTION OuterTransaction;
+BEGIN TRY
+    -- First operation
+    UPDATE products SET price = price * 1.1 WHERE category = 'Electronics';
     
-    BEGIN TRY
-        -- Log the operation for audit (Durability)
-        INSERT INTO salary_adjustment_log (department_id, adjustment_percentage, processed_date)
-        VALUES (&#64;department_id, &#64;adjustment_percentage, GETDATE());
-        
-        -- Update salaries
-        UPDATE employees
-        SET salary = salary * (1 + &#64;adjustment_percentage / 100)
-        WHERE department_id = &#64;department_id;
-        
-        -- Return updated employees
-        SELECT 
-            employee_id,
-            first_name,
-            last_name,
-            salary as new_salary,
-            &#64;adjustment_percentage as adjustment_applied
-        FROM employees
-        WHERE department_id = &#64;department_id;
-        
-        COMMIT TRANSACTION; -- Ensures Atomicity and Durability
-    END TRY
-    BEGIN CATCH
-        ROLLBACK TRANSACTION; -- Ensures Atomicity on failure
-        DECLARE &#64;ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
-        DECLARE &#64;ErrorSeverity INT = ERROR_SEVERITY();
-        DECLARE &#64;ErrorState INT = ERROR_STATE();
-        RAISERROR (&#64;ErrorMessage, &#64;ErrorSeverity, &#64;ErrorState);
-    END CATCH;
-END;
-
--- Stored procedure with transaction for department transfer
-CREATE PROCEDURE dbo.TransferEmployee
-    &#64;employee_id INT,
-    &#64;new_department_id INT
-AS
-BEGIN
-    SET TRANSACTION ISOLATION LEVEL REPEATABLE READ; -- Prevent non-repeatable reads
-    BEGIN TRANSACTION;
+    -- Create a savepoint
+    SAVE TRANSACTION PriceUpdate;
     
+    -- Second operation (might fail)
     BEGIN TRY
-        -- Validate department exists
-        IF NOT EXISTS (SELECT 1 FROM departments WHERE department_id = &#64;new_department_id)
+        UPDATE products SET stock = stock - 100 WHERE product_id = 1001;
+        
+        -- Check if stock went negative (violates business rule)
+        IF EXISTS (SELECT 1 FROM products WHERE stock < 0)
         BEGIN
-            THROW 50001, 'Invalid department ID', 1;
+            THROW 50003, 'Stock cannot be negative', 1;
         END
         
-        -- Update employee department
-        UPDATE employees
-        SET department_id = &#64;new_department_id
-        WHERE employee_id = &#64;employee_id;
-        
-        -- Log transfer
-        INSERT INTO employee_transfer_log (employee_id, old_department_id, new_department_id, transfer_date)
-        SELECT employee_id, department_id, &#64;new_department_id, GETDATE()
-        FROM employees
-        WHERE employee_id = &#64;employee_id;
-        
-        COMMIT TRANSACTION;
     END TRY
     BEGIN CATCH
-        ROLLBACK TRANSACTION;
-        THROW;
-    END CATCH;
-END;
+        -- Rollback only to savepoint, keep price update
+        ROLLBACK TRANSACTION PriceUpdate;
+        PRINT 'Stock update failed, but price update kept';
+    END CATCH
+    
+    COMMIT TRANSACTION OuterTransaction;
+END TRY
+BEGIN CATCH
+    -- Rollback entire transaction
+    ROLLBACK TRANSACTION OuterTransaction;
+    PRINT 'Entire transaction failed';
+END CATCH
 
--- Usage examples
-EXEC dbo.ProcessEmployeeSalaryAdjustment &#64;department_id = 1, &#64;adjustment_percentage = 5.0;
-EXEC dbo.TransferEmployee &#64;employee_id = 101, &#64;new_department_id = 2;</code></pre>
-                <p>Stored procedures use transactions to ensure <strong>Atomicity</strong> (all steps complete or none do), <strong>Consistency</strong> (data integrity via validation), <strong>Isolation</strong> (via SERIALIZABLE or REPEATABLE READ levels), and <strong>Durability</strong> (changes are permanently saved on commit). Error handling with TRY-CATCH and ROLLBACK ensures no partial updates.</p>
+-- Complex Transaction with Multiple Tables (ACID Compliance)
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE; -- Maximum isolation
+BEGIN TRANSACTION ComplexOrder;
+BEGIN TRY
+    DECLARE &#64;order_id INT;
+    DECLARE &#64;product_stock INT;
+    DECLARE &#64;customer_credit DECIMAL(10,2);
+    
+    -- Step 1: Create order record
+    INSERT INTO orders (customer_id, order_date, status)
+    VALUES (1001, GETDATE(), 'Processing');
+    
+    SET &#64;order_id = SCOPE_IDENTITY();
+    
+    -- Step 2: Check product availability
+    SELECT &#64;product_stock = stock_quantity 
+    FROM products 
+    WHERE product_id = 2001;
+    
+    IF &#64;product_stock < 5
+    BEGIN
+        THROW 50004, 'Insufficient stock', 1;
+    END
+    
+    -- Step 3: Check customer credit limit
+    SELECT &#64;customer_credit = credit_limit - credit_used
+    FROM customers 
+    WHERE customer_id = 1001;
+    
+    IF &#64;customer_credit < 500
+    BEGIN
+        THROW 50005, 'Credit limit exceeded', 1;
+    END
+    
+    -- Step 4: Update inventory
+    UPDATE products 
+    SET stock_quantity = stock_quantity - 5 
+    WHERE product_id = 2001;
+    
+    -- Step 5: Add order items
+    INSERT INTO order_items (order_id, product_id, quantity, price)
+    VALUES (&#64;order_id, 2001, 5, 100);
+    
+    -- Step 6: Update customer credit usage
+    UPDATE customers 
+    SET credit_used = credit_used + 500 
+    WHERE customer_id = 1001;
+    
+    -- Step 7: Update order status
+    UPDATE orders 
+    SET status = 'Confirmed', total_amount = 500 
+    WHERE order_id = &#64;order_id;
+    
+    -- All operations successful - commit everything
+    COMMIT TRANSACTION ComplexOrder;
+    
+    PRINT 'Order ' + CAST(&#64;order_id AS VARCHAR) + ' completed successfully';
+    
+END TRY
+BEGIN CATCH
+    -- Any failure cancels entire order
+    ROLLBACK TRANSACTION ComplexOrder;
+    PRINT 'Order failed: ' + ERROR_MESSAGE();
+END CATCH
+
+-- Transaction with Deadlock Handling
+BEGIN TRANSACTION;
+BEGIN TRY
+    -- Operations that might cause deadlock
+    UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+    WAITFOR DELAY '00:00:02'; -- Simulate processing time
+    UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+    
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    -- Check if error is deadlock
+    IF ERROR_NUMBER() = 1205
+    BEGIN
+        ROLLBACK TRANSACTION;
+        PRINT 'Deadlock detected, transaction rolled back';
+        -- Could retry the transaction here
+    END
+    ELSE
+    BEGIN
+        ROLLBACK TRANSACTION;
+        PRINT 'Transaction error: ' + ERROR_MESSAGE();
+    END
+END CATCH</code></pre>
+                <p>Advanced transactions use <strong>savepoints</strong> for partial rollbacks, <strong>nested transactions</strong> for complex operations, and <strong>deadlock handling</strong>. All ACID properties work together: <strong>Atomicity</strong> ensures complete success or failure, <strong>Consistency</strong> maintains data integrity, <strong>Isolation</strong> prevents interference, and <strong>Durability</strong> guarantees permanent storage.</p>
             </div>
 
             <div class="step">
-                <h4>Step 3: Advanced Transactional Processing and ACID Compliance</h4>
-                <pre><code>-- Stored procedure with nested transactions for complex updates
-CREATE PROCEDURE dbo.UpdateEmployeeAndDepartment
-    &#64;employee_id INT,
-    &#64;new_salary DECIMAL(10,2),
-    &#64;new_department_id INT
+                <h4>Step 4: Real-World Example - Order Processing</h4>
+                
+                <div class="example-scenario">
+                    <h5>🛒 Scenario: E-commerce Order Processing</h5>
+                    <p>When a customer places an order, we need to:</p>
+                    <ol>
+                        <li>Check product availability</li>
+                        <li>Reduce product inventory</li>
+                        <li>Create order record</li>
+                        <li>Calculate total price</li>
+                        <li>Process payment</li>
+                    </ol>
+                    <p>If any step fails, the entire order must be cancelled!</p>
+                </div>
+
+                <pre><code>CREATE PROCEDURE ProcessOrder
+    &#64;customer_id INT,
+    &#64;product_id INT,
+    &#64;quantity INT
 AS
 BEGIN
+    DECLARE &#64;available_stock INT;
+    DECLARE &#64;product_price DECIMAL(10,2);
+    DECLARE &#64;total_amount DECIMAL(10,2);
+    DECLARE &#64;order_id INT;
+    
+    -- Use high isolation to prevent stock issues
     SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
-    BEGIN TRANSACTION MainTransaction;
-    
-    SAVE TRANSACTION EmployeeUpdate; -- Savepoint for partial rollback
-    BEGIN TRY
-        -- Update employee salary
-        UPDATE employees
-        SET salary = &#64;new_salary
-        WHERE employee_id = &#64;employee_id;
-        
-        -- Validate and update department
-        IF NOT EXISTS (SELECT 1 FROM departments WHERE department_id = &#64;new_department_id)
-        BEGIN
-            THROW 50002, 'Invalid department ID', 1;
-        END
-        
-        UPDATE employees
-        SET department_id = &#64;new_department_id
-        WHERE employee_id = &#64;employee_id;
-        
-        -- Log changes for audit
-        INSERT INTO employee_change_log (employee_id, change_type, change_date)
-        VALUES (&#64;employee_id, 'Salary and Department Update', GETDATE());
-        
-        COMMIT TRANSACTION MainTransaction; -- Ensures Durability
-    END TRY
-    BEGIN CATCH
-        IF &#64;&#64;TRANCOUNT > 0
-        BEGIN
-            ROLLBACK TRANSACTION EmployeeUpdate; -- Rollback to savepoint
-            COMMIT TRANSACTION MainTransaction; -- Commit remaining transaction
-            THROW; -- Re-throw error for logging
-        END
-    END CATCH;
-END;
-
--- Stored procedure for batch processing with transaction
-CREATE PROCEDURE dbo.BatchProcessEmployeeBonuses
-    &#64;bonus_percentage DECIMAL(5,2)
-AS
-BEGIN
-    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
     BEGIN TRANSACTION;
     
     BEGIN TRY
-        -- Create temporary table for processing
-        CREATE TABLE #bonus_processing (
-            employee_id INT,
-            original_salary DECIMAL(10,2),
-            bonus_amount DECIMAL(10,2)
-        );
+        -- Step 1: Check product availability
+        SELECT &#64;available_stock = stock_quantity,
+               &#64;product_price = price
+        FROM products 
+        WHERE product_id = &#64;product_id;
         
-        -- Calculate bonuses
-        INSERT INTO #bonus_processing
-        SELECT 
-            employee_id,
-            salary,
-            salary * (&#64;bonus_percentage / 100) as bonus_amount
-        FROM employees;
+        IF &#64;available_stock < &#64;quantity
+        BEGIN
+            THROW 50002, 'Insufficient stock available!', 1;
+        END
         
-        -- Update salaries
-        UPDATE e
-        SET salary = e.salary + bp.bonus_amount
-        FROM employees e
-        JOIN #bonus_processing bp ON e.employee_id = bp.employee_id;
+        -- Step 2: Calculate total
+        SET &#64;total_amount = &#64;product_price * &#64;quantity;
         
-        -- Log bonus distribution
-        INSERT INTO bonus_log (employee_id, bonus_amount, processed_date)
-        SELECT employee_id, bonus_amount, GETDATE()
-        FROM #bonus_processing;
+        -- Step 3: Reduce inventory
+        UPDATE products 
+        SET stock_quantity = stock_quantity - &#64;quantity 
+        WHERE product_id = &#64;product_id;
         
-        -- Return results
-        SELECT 
-            bp.employee_id,
-            e.first_name,
-            e.last_name,
-            bp.original_salary,
-            bp.bonus_amount,
-            e.salary as new_salary
-        FROM #bonus_processing bp
-        JOIN employees e ON bp.employee_id = bp.employee_id;
+        -- Step 4: Create order
+        INSERT INTO orders (customer_id, product_id, quantity, total_amount, order_date, status)
+        VALUES (&#64;customer_id, &#64;product_id, &#64;quantity, &#64;total_amount, GETDATE(), 'Processing');
         
+        SET &#64;order_id = SCOPE_IDENTITY();
+        
+        -- Step 5: Log inventory change
+        INSERT INTO inventory_log (product_id, quantity_changed, change_type, change_date)
+        VALUES (&#64;product_id, -&#64;quantity, 'Order', GETDATE());
+        
+        -- All steps completed successfully
         COMMIT TRANSACTION;
-        DROP TABLE #bonus_processing;
+        
+        -- Return order confirmation
+        SELECT &#64;order_id as OrderID, 
+               &#64;total_amount as TotalAmount,
+               'Order placed successfully!' as Message;
+               
     END TRY
     BEGIN CATCH
+        -- Something went wrong - cancel everything
         ROLLBACK TRANSACTION;
-        IF OBJECT_ID('tempdb..#bonus_processing') IS NOT NULL
-            DROP TABLE #bonus_processing;
-        THROW;
-    END CATCH;
-END;
+        
+        SELECT 0 as OrderID,
+               0 as TotalAmount,
+               'Order failed: ' + ERROR_MESSAGE() as Message;
+    END CATCH
+END;</code></pre>
 
--- Usage examples
-EXEC dbo.UpdateEmployeeAndDepartment &#64;employee_id = 101, &#64;new_salary = 75000, &#64;new_department_id = 2;
-EXEC dbo.BatchProcessEmployeeBonuses &#64;bonus_percentage = 10.0;</code></pre>
-                <p>Advanced stored procedures implement nested transactions and savepoints to ensure <strong>Atomicity</strong> and <strong>Durability</strong>, with SERIALIZABLE isolation to prevent concurrency issues, maintaining <strong>Consistency</strong> across complex updates.</p>
+                <div class="concept-box">
+                    <h5>✅ Complete ACID Compliance Achieved:</h5>
+                    <ul>
+                        <li><span class="highlight">Atomicity:</span> All 5 steps complete together or none complete</li>
+                        <li><span class="highlight">Consistency:</span> Stock never goes negative, orders are always valid</li>
+                        <li><span class="highlight">Isolation:</span> SERIALIZABLE level prevents other orders from interfering</li>
+                        <li><span class="highlight">Durability:</span> Once committed, the order and inventory changes are permanent</li>
+                    </ul>
+                </div>
+
+                <pre><code>-- Using the order procedure
+EXEC ProcessOrder &#64;customer_id = 1001, &#64;product_id = 2001, &#64;quantity = 2;</code></pre>
+            </div>
+
+            <div class="step">
+                <h4>Step 5: Key Takeaways and Best Practices</h4>
+                
+                <div class="concept-box">
+                    <h5>🎯 ACID Summary in Simple Terms:</h5>
+                    <ul>
+                        <li><strong>Atomicity:</strong> "All or Nothing" - Complete success or complete failure</li>
+                        <li><strong>Consistency:</strong> "Valid Data Always" - Rules and constraints are never broken</li>
+                        <li><strong>Isolation:</strong> "No Interference" - Transactions don't mess with each other</li>
+                        <li><strong>Durability:</strong> "Permanent Changes" - Saved data stays saved forever</li>
+                    </ul>
+                </div>
+
+                <div class="example-scenario">
+                    <h5>📋 Best Practices Checklist:</h5>
+                    <ul>
+                        <li>✅ Always use BEGIN TRANSACTION and COMMIT/ROLLBACK</li>
+                        <li>✅ Use TRY-CATCH blocks for error handling</li>
+                        <li>✅ Choose appropriate isolation levels</li>
+                        <li>✅ Keep transactions as short as possible</li>
+                        <li>✅ Validate data before making changes</li>
+                        <li>✅ Log important operations for auditing</li>
+                    </ul>
+                </div>
+
+                <pre><code>-- Template for ACID-compliant procedures
+CREATE PROCEDURE YourProcedureName
+    &#64;parameter1 INT,
+    &#64;parameter2 VARCHAR(50)
+AS
+BEGIN
+    -- Set isolation level if needed
+    SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+    
+    BEGIN TRANSACTION;
+    
+    BEGIN TRY
+        -- Your business logic here
+        -- Step 1: Validate inputs
+        -- Step 2: Perform operations
+        -- Step 3: Log changes
+        
+        COMMIT TRANSACTION;  -- Save all changes
+        
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;  -- Cancel all changes
+        THROW;  -- Re-throw the error
+    END CATCH
+END;</code></pre>
             </div>
         </div>
-    </div>
+</div>

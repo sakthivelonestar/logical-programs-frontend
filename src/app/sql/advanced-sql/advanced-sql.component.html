@@ -18,16 +18,568 @@
   <div class="question-answer">
     <h4>2) What are Constraints? Syntax and How to Drop</h4>
     <p>
-      <strong>Answer:</strong>Constraints are rules applied to database tables to ensure data integrity and enforce business rules. They prevent invalid data from being inserted into the database. Common constraints include <code>NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, and DEFAULT.</code><br>
+      <strong>Answer:</strong>  
+      Constraints are rules applied to database tables to ensure data integrity and enforce business rules. They prevent invalid data from being inserted into the database.  
+      Common constraints include:  
+      <code>NOT NULL, UNIQUE, PRIMARY KEY, FOREIGN KEY, CHECK, DEFAULT</code><br>
 
-      <strong>Syntax to Add Constraint (Example):</strong><br>
-      <code>ALTER TABLE table_name ADD CONSTRAINT constraint_name CHECK (column_name > 0);</code><br>
+      <strong>Syntax to Add Constraint (Examples):</strong><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT constraint_name CHECK (column_name &gt; 0);</code><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT constraint_name UNIQUE (column_name);</code><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT constraint_name PRIMARY KEY (column_name);</code><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT constraint_name FOREIGN KEY (column_name) REFERENCES other_table(column);</code><br>
 
-      <strong>Syntax to Drop Constraint (MySQL Example):</strong><br>
-      <code>ALTER TABLE table_name DROP CONSTRAINT constraint_name;</code> <br>
-      <small>Note: In MySQL, for foreign keys you use <code>DROP FOREIGN KEY</code>.</small>
+      <strong>Syntax to Drop Constraint (MySQL Examples):</strong><br>
+      🔹 <strong>Drop CHECK / UNIQUE / PRIMARY KEY:</strong><br>
+      <code>ALTER TABLE table_name DROP CONSTRAINT constraint_name;</code><br>
+
+      🔹 <strong>Drop FOREIGN KEY (MySQL-specific):</strong><br>
+      <code>ALTER TABLE table_name DROP FOREIGN KEY constraint_name;</code><br>
+
+      🔹 <strong>Drop DEFAULT (column-level default value):</strong><br>
+      <code>ALTER TABLE table_name ALTER COLUMN column_name DROP DEFAULT;</code><br>
+
+      🔹 <strong>Drop NOT NULL:</strong><br>
+      <code>ALTER TABLE table_name MODIFY column_name datatype NULL;</code><br>
+      
+      <strong>🧠 Tips:</strong><br>
+      ✔️ Use <code>SHOW CREATE TABLE table_name;</code> to see constraint names in MySQL.<br>
     </p>
   </div>
-</div>
 
+  <div class="question-answer">
+    <h4>3) What is Normalization? Explain Different Normal Forms</h4>
+    <p>
+      <strong>Answer:</strong> Normalization is the process of organizing data in a database to reduce data redundancy and improve data integrity. It involves dividing large tables into smaller, related tables.<br>
+
+      <strong>🔹 First Normal Form (1NF):</strong><br>
+      • Each column contains atomic (indivisible) values<br>
+      • No repeating groups or arrays<br>
+      • Each row is unique<br>
+
+      <strong>🔹 Second Normal Form (2NF):</strong><br>
+      • Must be in 1NF<br>
+      • All non-key attributes are fully dependent on the primary key<br>
+      • No partial dependencies<br>
+
+      <strong>🔹 Third Normal Form (3NF):</strong><br>
+      • Must be in 2NF<br>
+      • No transitive dependencies<br>
+      • Non-key attributes depend only on the primary key<br>
+
+      <strong>🔹 BCNF (Boyce-Codd Normal Form):</strong><br>
+      • Every determinant is a candidate key<br>
+      • Stricter version of 3NF
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>4) What are Joins? Types of Joins with Syntax</h4>
+    <p>
+      <strong>Answer:</strong> Joins are used to combine rows from two or more tables based on a related column between them.<br>
+
+      <strong>🔹 INNER JOIN:</strong><br>
+      <code>SELECT * FROM table1 INNER JOIN table2 ON table1.id = table2.id;</code><br>
+      <em>Returns only matching records from both tables</em><br>
+
+      <strong>🔹 LEFT JOIN (LEFT OUTER JOIN):</strong><br>
+      <code>SELECT * FROM table1 LEFT JOIN table2 ON table1.id = table2.id;</code><br>
+      <em>Returns all records from left table and matching records from right table</em><br>
+
+      <strong>🔹 RIGHT JOIN (RIGHT OUTER JOIN):</strong><br>
+      <code>SELECT * FROM table1 RIGHT JOIN table2 ON table1.id = table2.id;</code><br>
+      <em>Returns all records from right table and matching records from left table</em><br>
+
+      <strong>🔹 FULL OUTER JOIN:</strong><br>
+      <code>SELECT * FROM table1 FULL OUTER JOIN table2 ON table1.id = table2.id;</code><br>
+      <em>Returns all records when there's a match in either table</em><br>
+
+      <strong>🔹 CROSS JOIN:</strong><br>
+      <code>SELECT * FROM table1 CROSS JOIN table2;</code><br>
+      <em>Returns Cartesian product of both tables</em>
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>5) What is a Transaction? Explain ACID Properties</h4>
+    <p>
+      <strong>Answer:</strong> A transaction is a sequence of database operations that are treated as a single unit of work. It either completes entirely or fails completely.<br>
+
+      <strong>🔹 ACID Properties:</strong><br>
+
+      <strong>⚡ Atomicity:</strong><br>
+      • All operations in a transaction succeed or all fail<br>
+      • "All or nothing" principle<br>
+
+      <strong>🔒 Consistency:</strong><br>
+      • Database remains in a valid state before and after transaction<br>
+      • All integrity constraints are satisfied<br>
+
+      <strong>🏝️ Isolation:</strong><br>
+      • Concurrent transactions don't interfere with each other<br>
+      • Each transaction appears to execute in isolation<br>
+
+      <strong>💾 Durability:</strong><br>
+      • Once committed, changes are permanent<br>
+      • Data survives system failures<br>
+
+      <strong>Transaction Control Commands:</strong><br>
+      <code>BEGIN TRANSACTION;</code><br>
+      <code>COMMIT;</code><br>
+      <code>ROLLBACK;</code><br>
+      <code>SAVEPOINT savepoint_name;</code>
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>6) What are Views? Syntax and Types</h4>
+    <p>
+      <strong>Answer:</strong> A view is a virtual table that is based on the result of a SQL query. It contains rows and columns just like a real table, but doesn't store data physically.<br>
+
+      <strong>Create View Syntax:</strong><br>
+      <code>CREATE VIEW view_name AS SELECT column1, column2, ... FROM table_name WHERE condition;</code><br>
+
+      <strong>Drop View Syntax:</strong><br>
+      <code>DROP VIEW view_name;</code><br>
+
+      <strong>🔹 Types of Views:</strong><br>
+      • <strong>Simple Views:</strong> Based on single table, no functions<br>
+      • <strong>Complex Views:</strong> Based on multiple tables, contains functions/groups<br>
+      • <strong>Materialized Views:</strong> Physically stored, updated periodically<br>
+
+      <strong>🧠 Benefits:</strong><br>
+      ✔️ Security (hide sensitive columns)<br>
+      ✔️ Simplicity (complex queries as simple views)<br>
+      ✔️ Data independence<br>
+      ✔️ Customized data presentation
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>7) What are Stored Procedures? Syntax and Advantages</h4>
+    <p>
+      <strong>Answer:</strong> A stored procedure is a prepared SQL code that can be saved and reused. It's a set of SQL statements with an assigned name that's stored in the database.<br>
+
+      <strong>Create Stored Procedure Syntax (MySQL):</strong><br>
+      <code>DELIMITER //</code><br>
+      <code>CREATE PROCEDURE procedure_name(IN param1 datatype, OUT param2 datatype)</code><br>
+      <code>BEGIN</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;SELECT * FROM table_name WHERE column = param1;</code><br>
+      <code>END //</code><br>
+      <code>DELIMITER ;</code><br>
+
+      <strong>Execute Stored Procedure:</strong><br>
+      <code>CALL procedure_name(value1, &nbsp;&nbsp;output_var);</code><br>
+
+      <strong>Drop Stored Procedure:</strong><br>
+      <code>DROP PROCEDURE procedure_name;</code><br>
+
+      <strong>🧠 Advantages:</strong><br>
+      ✔️ <strong>Performance:</strong> Pre-compiled and cached<br>
+      ✔️ <strong>Security:</strong> Prevents SQL injection<br>
+      ✔️ <strong>Reusability:</strong> Can be called multiple times<br>
+      ✔️ <strong>Maintainability:</strong> Centralized business logic<br>
+      ✔️ <strong>Network Traffic:</strong> Reduced data transfer
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>8) What are Triggers? Types and Syntax</h4>
+    <p>
+      <strong>Answer:</strong> A trigger is a special stored procedure that automatically executes (fires) in response to specific events in a database table or view.<br>
+
+      <strong>🔹 Types of Triggers:</strong><br>
+      • <strong>BEFORE:</strong> Executes before the triggering event<br>
+      • <strong>AFTER:</strong> Executes after the triggering event<br>
+      • <strong>INSTEAD OF:</strong> Replaces the triggering event (views only)<br>
+
+      <strong>🔹 Triggering Events:</strong><br>
+      • INSERT, UPDATE, DELETE<br>
+
+      <strong>Create Trigger Syntax (MySQL):</strong><br>
+      <code>CREATE TRIGGER trigger_name</code><br>
+      <code>BEFORE/AFTER INSERT/UPDATE/DELETE</code><br>
+      <code>ON table_name FOR EACH ROW</code><br>
+      <code>BEGIN</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;INSERT INTO audit_table VALUES (OLD.id, NEW.id, NOW());</code><br>
+      <code>END;</code><br>
+
+      <strong>Drop Trigger:</strong><br>
+      <code>DROP TRIGGER trigger_name;</code><br>
+
+      <strong>🧠 Common Use Cases:</strong><br>
+      ✔️ Auditing changes<br>
+      ✔️ Logging activities<br>
+      ✔️ Enforcing complex business rules<br>
+      ✔️ Maintaining derived data
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>9) What is the Difference Between DELETE, TRUNCATE, and DROP?</h4>
+    <p>
+      <strong>Answer:</strong> These are three different commands used to remove data or database objects.<br>
+
+      <strong>🔹 DELETE:</strong><br>
+      <code>DELETE FROM table_name WHERE condition;</code><br>
+      • Removes specific rows based on condition<br>
+      • Can be rolled back (part of transaction)<br>
+      • Triggers are fired<br>
+      • Slower performance<br>
+      • Uses WHERE clause<br>
+
+      <strong>🔹 TRUNCATE:</strong><br>
+      <code>TRUNCATE TABLE table_name;</code><br>
+      • Removes all rows from table<br>
+      • Cannot be rolled back (DDL command)<br>
+      • Triggers are not fired<br>
+      • Faster performance<br>
+      • Resets identity/auto-increment values<br>
+
+      <strong>🔹 DROP:</strong><br>
+      <code>DROP TABLE table_name;</code><br>
+      • Removes entire table structure and data<br>
+      • Cannot be rolled back<br>
+      • Removes table from database completely<br>
+      • Frees up storage space completely
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>10) What are Aggregate Functions? Examples with Syntax</h4>
+    <p>
+      <strong>Answer:</strong> Aggregate functions perform calculations on a set of values and return a single value. They are commonly used with GROUP BY clause.<br>
+
+      <strong>🔹 Common Aggregate Functions:</strong><br>
+
+      <strong>COUNT:</strong> Counts the number of rows<br>
+      <code>SELECT COUNT(*) FROM table_name;</code><br>
+      <code>SELECT COUNT(column_name) FROM table_name;</code><br>
+
+      <strong>SUM:</strong> Calculates the sum of numeric values<br>
+      <code>SELECT SUM(salary) FROM employees;</code><br>
+
+      <strong>AVG:</strong> Calculates the average of numeric values<br>
+      <code>SELECT AVG(salary) FROM employees;</code><br>
+
+      <strong>MAX:</strong> Returns the maximum value<br>
+      <code>SELECT MAX(salary) FROM employees;</code><br>
+
+      <strong>MIN:</strong> Returns the minimum value<br>
+      <code>SELECT MIN(salary) FROM employees;</code><br>
+
+      <strong>GROUP_CONCAT (MySQL):</strong> Concatenates values<br>
+      <code>SELECT GROUP_CONCAT(name) FROM employees;</code><br>
+
+      <strong>🧠 Example with GROUP BY:</strong><br>
+      <code>SELECT department, COUNT(*), AVG(salary) FROM employees GROUP BY department HAVING COUNT(*) > 5;</code>
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>11) What is the Difference Between HAVING and WHERE Clause?</h4>
+    <p>
+      <strong>Answer:</strong> Both WHERE and HAVING are used to filter records, but they work at different stages of query execution.<br>
+
+      <strong>🔹 WHERE Clause:</strong><br>
+      • Filters rows before grouping<br>
+      • Cannot use aggregate functions<br>
+      • Used with individual rows<br>
+      • Executed before GROUP BY<br>
+
+      <strong>🔹 HAVING Clause:</strong><br>
+      • Filters groups after grouping<br>
+      • Can use aggregate functions<br>
+      • Used with grouped results<br>
+      • Executed after GROUP BY<br>
+
+      <strong>Examples:</strong><br>
+      <code>SELECT department, COUNT(*) FROM employees WHERE salary > 50000 GROUP BY department;</code><br>
+      <em>WHERE filters individual employee records</em><br>
+
+      <code>SELECT department, COUNT(*) FROM employees GROUP BY department HAVING COUNT(*) > 5;</code><br>
+      <em>HAVING filters grouped department results</em><br>
+
+      <strong>🧠 Key Point:</strong><br>
+      ✔️ Use WHERE for row-level filtering<br>
+      ✔️ Use HAVING for group-level filtering
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>12) What are Sub-queries? Types and Examples</h4>
+    <p>
+      <strong>Answer:</strong> A sub-query (inner query) is a query nested inside another query (outer query). The result of the inner query is used by the outer query.<br>
+
+      <strong>🔹 Types of Sub-queries:</strong><br>
+
+      <strong>Single Row Sub-query:</strong><br>
+      <code>SELECT * FROM employees WHERE salary = (SELECT MAX(salary) FROM employees);</code><br>
+
+      <strong>Multiple Row Sub-query:</strong><br>
+      <code>SELECT * FROM employees WHERE department_id IN (SELECT id FROM departments WHERE location = 'New York');</code><br>
+
+      <strong>Correlated Sub-query:</strong><br>
+      <code>SELECT * FROM employees e1 WHERE salary > (SELECT AVG(salary) FROM employees e2 WHERE e2.department_id = e1.department_id);</code><br>
+
+      <strong>🔹 Sub-query Operators:</strong><br>
+      • <strong>IN:</strong> Check if value exists in sub-query results<br>
+      • <strong>EXISTS:</strong> Check if sub-query returns any rows<br>
+      • <strong>ANY/SOME:</strong> Compare with any value from sub-query<br>
+      • <strong>ALL:</strong> Compare with all values from sub-query<br>
+
+      <strong>🧠 Performance Tip:</strong><br>
+      ✔️ Consider using JOINs instead of sub-queries for better performance in many cases
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>13) What is the Difference Between Primary Key and Unique Key?</h4>
+    <p>
+      <strong>Answer:</strong> Both Primary Key and Unique Key ensure uniqueness, but they have different characteristics and purposes.<br>
+
+      <strong>🔹 Primary Key:</strong><br>
+      • Only one per table<br>
+      • Cannot contain NULL values<br>
+      • Automatically creates clustered index<br>
+      • Used to identify each row uniquely<br>
+      • Referenced by foreign keys<br>
+
+      <strong>🔹 Unique Key:</strong><br>
+      • Multiple unique keys allowed per table<br>
+      • Can contain one NULL value<br>
+      • Creates non-clustered index<br>
+      • Ensures uniqueness but not identification<br>
+
+      <strong>Syntax Examples:</strong><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT pk_name PRIMARY KEY (column_name);</code><br>
+      <code>ALTER TABLE table_name ADD CONSTRAINT uk_name UNIQUE (column_name);</code><br>
+
+      <strong>🧠 Key Difference:</strong><br>
+      ✔️ Primary Key = Unique + Not Null + Only One<br>
+      ✔️ Unique Key = Unique + Can be Null + Multiple allowed
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>14) What are Window Functions? Examples with Syntax</h4>
+    <p>
+      <strong>Answer:</strong> Window functions perform calculations across a set of rows related to the current row, without grouping the result set like aggregate functions.<br>
+
+      <strong>🔹 Common Window Functions:</strong><br>
+
+      <strong>ROW_NUMBER():</strong> Assigns unique sequential numbers<br>
+      <code>SELECT name, salary, ROW_NUMBER() OVER (ORDER BY salary DESC) as row_num FROM employees;</code><br>
+
+      <strong>RANK():</strong> Assigns rank with gaps for ties<br>
+      <code>SELECT name, salary, RANK() OVER (ORDER BY salary DESC) as rank_num FROM employees;</code><br>
+
+      <strong>DENSE_RANK():</strong> Assigns rank without gaps<br>
+      <code>SELECT name, salary, DENSE_RANK() OVER (ORDER BY salary DESC) as dense_rank FROM employees;</code><br>
+
+      <strong>LAG() and LEAD():</strong> Access previous/next row values<br>
+      <code>SELECT name, salary, LAG(salary, 1) OVER (ORDER BY salary) as prev_salary FROM employees;</code><br>
+
+      <strong>PARTITION BY:</strong> Divide result set into partitions<br>
+      <code>SELECT name, department, salary, RANK() OVER (PARTITION BY department ORDER BY salary DESC) as dept_rank FROM employees;</code><br>
+
+      <strong>🧠 Benefits:</strong><br>
+      ✔️ No need for self-joins<br>
+      ✔️ Better performance than correlated sub-queries<br>
+      ✔️ More readable and maintainable code
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>15) What is Database Locking? Types of Locks</h4>
+    <p>
+      <strong>Answer:</strong> Database locking is a mechanism to control concurrent access to database resources, ensuring data consistency and integrity.<br>
+
+      <strong>🔹 Types of Locks by Granularity:</strong><br>
+      • <strong>Row-level Lock:</strong> Locks individual rows<br>
+      • <strong>Page-level Lock:</strong> Locks database pages<br>
+      • <strong>Table-level Lock:</strong> Locks entire tables<br>
+      • <strong>Database-level Lock:</strong> Locks entire database<br>
+
+      <strong>🔹 Types of Locks by Mode:</strong><br>
+
+      <strong>Shared Lock (S):</strong><br>
+      • Multiple transactions can read simultaneously<br>
+      • Prevents write operations<br>
+      • Compatible with other shared locks<br>
+
+      <strong>Exclusive Lock (X):</strong><br>
+      • Only one transaction can access the resource<br>
+      • Prevents both read and write by others<br>
+      • Not compatible with any other locks<br>
+
+      <strong>🔹 Lock Examples (SQL Server):</strong><br>
+      <code>SELECT * FROM table_name WITH (NOLOCK);</code><br>
+      <code>SELECT * FROM table_name WITH (UPDLOCK);</code><br>
+      <code>SELECT * FROM table_name WITH (XLOCK);</code><br>
+
+      <strong>🧠 Deadlock Prevention:</strong><br>
+      ✔️ Always access tables in the same order<br>
+      ✔️ Keep transactions short<br>
+      ✔️ Use appropriate isolation levels
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>16) What are Isolation Levels in Database?</h4>
+    <p>
+      <strong>Answer:</strong> Isolation levels define how transaction integrity is maintained when multiple users access the database concurrently.<br>
+
+      <strong>🔹 Four Standard Isolation Levels:</strong><br>
+
+      <strong>READ UNCOMMITTED (Level 0):</strong><br>
+      • Lowest isolation level<br>
+      • Allows dirty reads, non-repeatable reads, phantom reads<br>
+      • Best performance, least consistency<br>
+
+      <strong>READ COMMITTED (Level 1):</strong><br>
+      • Default in most databases<br>
+      • Prevents dirty reads<br>
+      • Allows non-repeatable reads and phantom reads<br>
+
+      <strong>REPEATABLE READ (Level 2):</strong><br>
+      • Prevents dirty reads and non-repeatable reads<br>
+      • Allows phantom reads<br>
+      • MySQL InnoDB default<br>
+
+      <strong>SERIALIZABLE (Level 3):</strong><br>
+      • Highest isolation level<br>
+      • Prevents all phenomena<br>
+      • Worst performance, best consistency<br>
+
+      <strong>Setting Isolation Level:</strong><br>
+      <code>SET TRANSACTION ISOLATION LEVEL READ COMMITTED;</code><br>
+      <code>SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;</code><br>
+
+      <strong>🧠 Trade-off:</strong><br>
+      ✔️ Higher isolation = Better consistency + Worse performance<br>
+      ✔️ Lower isolation = Better performance + Less consistency
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>17) What is Database Partitioning? Types and Benefits</h4>
+    <p>
+      <strong>Answer:</strong> Database partitioning is the process of dividing a large table into smaller, more manageable pieces while maintaining logical unity.<br>
+
+      <strong>🔹 Types of Partitioning:</strong><br>
+
+      <strong>Horizontal Partitioning (Sharding):</strong><br>
+      • Divides rows across multiple tables/databases<br>
+      • Same schema, different data<br>
+      • Example: Users 1-1000 in partition1, 1001-2000 in partition2<br>
+
+      <strong>Vertical Partitioning:</strong><br>
+      • Divides columns across multiple tables<br>
+      • Different schema, related data<br>
+      • Example: Personal info in one table, professional info in another<br>
+
+      <strong>🔹 Partitioning Methods:</strong><br>
+      • <strong>Range:</strong> Based on value ranges (dates, numbers)<br>
+      • <strong>Hash:</strong> Based on hash function result<br>
+      • <strong>List:</strong> Based on predefined list of values<br>
+      • <strong>Composite:</strong> Combination of above methods<br>
+
+      <strong>Example (MySQL Range Partitioning):</strong><br>
+      <code>CREATE TABLE sales (id INT, sale_date DATE, amount DECIMAL)</code><br>
+      <code>PARTITION BY RANGE (YEAR(sale_date)) (</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;PARTITION p2023 VALUES LESS THAN (2024),</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;PARTITION p2024 VALUES LESS THAN (2025)</code><br>
+      <code>);</code><br>
+
+      <strong>🧠 Benefits:</strong><br>
+      ✔️ Improved query performance<br>
+      ✔️ Better manageability<br>
+      ✔️ Parallel processing<br>
+      ✔️ Reduced maintenance time
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>18) What is Database Replication? Types and Use Cases</h4>
+    <p>
+      <strong>Answer:</strong> Database replication is the process of copying and maintaining database objects in multiple databases across different locations.<br>
+
+      <strong>🔹 Types of Replication:</strong><br>
+
+      <strong>Master-Slave Replication:</strong><br>
+      • One master (write), multiple slaves (read)<br>
+      • Unidirectional data flow<br>
+      • Master handles all writes, slaves handle reads<br>
+
+      <strong>Master-Master Replication:</strong><br>
+      • Multiple masters, all can handle reads/writes<br>
+      • Bidirectional data flow<br>
+      • More complex conflict resolution<br>
+
+      <strong>🔹 Replication Methods:</strong><br>
+      • <strong>Synchronous:</strong> Immediate replication, high consistency<br>
+      • <strong>Asynchronous:</strong> Delayed replication, better performance<br>
+      • <strong>Semi-synchronous:</strong> Hybrid approach<br>
+
+      <strong>MySQL Replication Setup:</strong><br>
+      <code>-- On Master</code><br>
+      <code>CREATE USER 'replica'&nbsp;&nbsp;'%' IDENTIFIED BY 'password';</code><br>
+      <code>GRANT REPLICATION SLAVE ON *.* TO 'replica'&nbsp;&nbsp;'%';</code><br>
+      <code>SHOW MASTER STATUS;</code><br>
+
+      <code>-- On Slave</code><br>
+      <code>CHANGE MASTER TO MASTER_HOST='master_ip', MASTER_USER='replica', MASTER_PASSWORD='password';</code><br>
+      <code>START SLAVE;</code><br>
+
+      <strong>🧠 Use Cases:</strong><br>
+      ✔️ Load distribution (read scaling)<br>
+      ✔️ Disaster recovery<br>
+      ✔️ Geographic distribution<br>
+      ✔️ Backup without downtime
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>19) What is EXPLAIN Plan? How to Optimize Queries?</h4>
+    <p>
+      <strong>Answer:</strong> EXPLAIN plan shows how the database engine executes a SQL query, revealing the execution strategy and helping identify performance bottlenecks.<br>
+
+      <strong>Using EXPLAIN:</strong><br>
+      <code>EXPLAIN SELECT * FROM employees WHERE department_id = 10;</code><br>
+      <code>EXPLAIN ANALYZE SELECT * FROM employees WHERE department_id = 10;</code><br>
+
+      <strong>🔹 Key EXPLAIN Columns:</strong><br>
+      • <strong>id:</strong> Query sequence number<br>
+      • <strong>select_type:</strong> Type of SELECT (SIMPLE, SUBQUERY, etc.)<br>
+      • <strong>table:</strong> Table being accessed<br>
+      • <strong>type:</strong> Join type (const, eq_ref, ref, range, index, ALL)<br>
+      • <strong>key:</strong> Index used<br>
+      • <strong>rows:</strong> Estimated rows examined<br>
+      • <strong>Extra:</strong> Additional information<br>
+
+      <strong>🔹 Query Optimization Techniques:</strong><br>
+
+      <strong>1. Index Optimization:</strong><br>
+      <code>CREATE INDEX idx_dept_salary ON employees(department_id, salary);</code><br>
+
+      <strong>2. Avoid SELECT *:</strong><br>
+      <code>SELECT name, salary FROM employees; -- Instead of SELECT *</code><br>
+
+      <strong>3. Use LIMIT for large results:</strong><br>
+      <code>SELECT * FROM employees ORDER BY salary DESC LIMIT 10;</code><br>
+
+      <strong>4. Optimize WHERE clauses:</strong><br>
+      <code>SELECT * FROM employees WHERE department_id = 10 AND salary > 50000;</code><br>
+
+      <strong>🧠 Optimization Tips:</strong><br>
+      ✔️ Create appropriate indexes<br>
+      ✔️ Avoid functions in WHERE clause<br>
+      ✔️ Use EXISTS instead of IN for subqueries<br>
+      ✔️ Normalize database design<br>
+      ✔️ Regular statistics updates
+    </p>
+  </div>
+
+</div>
 </div>

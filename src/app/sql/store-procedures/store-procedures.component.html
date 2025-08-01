@@ -1,43 +1,40 @@
-<div class="overall-wrapper" appMaximize #sqlStoredProceduresFunctions="maximize" id="sqlStoredProceduresFunctions">
+<div class="overall-wrapper" id="sqlStoredProceduresFunctions">
         <div class="wrapper">
-            <img class="swap" *ngIf="sqlStoredProceduresFunctions.checkfullscreen() ==  'hide'" (click)="sqlStoredProceduresFunctions.toggle()" src="../../../assets/expand.svg" alt="Expand">
-            <img class="swap" *ngIf="sqlStoredProceduresFunctions.checkfullscreen() !=  'hide'" (click)="sqlStoredProceduresFunctions.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <img class="swap" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" src="../../../assets/Minimize icon.svg" alt="Minimize">
             <div class="header">
-                <p> <span class="question">What:</span>
-                SQL stored procedures and functions are <strong>precompiled, reusable database objects that encapsulate complex business logic, data processing operations, and calculations while providing better performance, security, and maintainability.</strong> </p>
-            <p> <span class="question">Why:</span>
-                SQL stored procedures and functions are important because they <strong>improve performance through precompilation, enhance security by preventing SQL injection, enable code reusability, centralize business logic, and provide better transaction control.</strong></p>
-            <p> <span class="question">Where:</span>
-                SQL stored procedures and functions are used <strong>in enterprise applications, data processing pipelines, complex business rule implementations, reporting systems, and anywhere performance-critical database operations are required.</strong></p>
+                <p><span class="question">What:</span> SQL stored procedures and functions are <strong>saved database programs that help you do common tasks quickly and easily, like calculating salaries or finding specific employees.</strong></p>
+                <p><span class="question">Why:</span> SQL stored procedures and functions are important because they <strong>make your database work faster, keep your code organized, prevent errors, and let you reuse the same code multiple times.</strong></p>
+                <p><span class="question">Where:</span> SQL stored procedures and functions are used <strong>in business applications, employee management systems, sales tracking, inventory control, and anywhere you need to do the same database tasks repeatedly.</strong></p>
             </div>
         </div>
-    <div class="examples">
-          <div class="step">
-                <h4>Step 1: Basic Functions and Scalar Functions</h4>
-                <pre><code>-- Scalar function - Returns single value (equivalent to scalar subquery)
-CREATE FUNCTION dbo.GetCompanyAvgSalary()
+        <div class="examples">
+            <div class="step">
+                <h4>Step 1: Simple Functions - Getting Single Values</h4>
+                <pre><code>-- Function to calculate average salary for the whole company
+CREATE FUNCTION dbo.GetCompanyAverageSalary()
 RETURNS DECIMAL(10,2)
 AS
 BEGIN
-    DECLARE &#64;avg_salary DECIMAL(10,2);
-    SELECT &#64;avg_salary = AVG(salary) FROM employees;
-    RETURN &#64;avg_salary;
+    DECLARE &#64;average_salary DECIMAL(10,2);
+    SELECT &#64;average_salary = AVG(salary) FROM employees;
+    RETURN &#64;average_salary;
 END;
 
--- Function with parameters for department-specific calculations
-CREATE FUNCTION dbo.GetDepartmentAvgSalary(&#64;department_id INT)
+-- Function to get average salary for a specific department
+CREATE FUNCTION dbo.GetDepartmentAverageSalary(&#64;department_id INT)
 RETURNS DECIMAL(10,2)
 AS
 BEGIN
-    DECLARE &#64;avg_salary DECIMAL(10,2);
-    SELECT &#64;avg_salary = AVG(salary) 
+    DECLARE &#64;dept_average DECIMAL(10,2);
+    SELECT &#64;dept_average = AVG(salary) 
     FROM employees 
     WHERE department_id = &#64;department_id;
-    RETURN &#64;avg_salary;
+    RETURN &#64;dept_average;
 END;
 
--- Table-valued function - Returns table result set
-CREATE FUNCTION dbo.GetEmployeesAboveAverage()
+-- Function that returns a table of high-earning employees
+CREATE FUNCTION dbo.GetHighEarningEmployees()
 RETURNS TABLE
 AS
 RETURN (
@@ -46,14 +43,13 @@ RETURN (
         first_name,
         last_name,
         salary,
-        dbo.GetCompanyAvgSalary() as company_avg_salary,
-        salary - dbo.GetCompanyAvgSalary() as salary_difference
+        dbo.GetCompanyAverageSalary() as company_average
     FROM employees
-    WHERE salary > dbo.GetCompanyAvgSalary()
+    WHERE salary > dbo.GetCompanyAverageSalary()
 );
 
--- Inline table-valued function with parameters
-CREATE FUNCTION dbo.GetEmployeesByLocation(&#64;location VARCHAR(50))
+-- Function to get employees by city
+CREATE FUNCTION dbo.GetEmployeesByCity(&#64;city VARCHAR(50))
 RETURNS TABLE
 AS
 RETURN (
@@ -61,394 +57,264 @@ RETURN (
         e.employee_id,
         e.first_name,
         e.last_name,
-        e.department_id,
+        e.salary,
         d.department_name
     FROM employees e
     JOIN departments d ON e.department_id = d.department_id
-    WHERE d.location = &#64;location
+    WHERE d.city = &#64;city
 );
 
--- Multi-statement table-valued function for complex processing
-CREATE FUNCTION dbo.GetDepartmentStats()
-RETURNS &#64;result TABLE (
-    department_id INT,
-    department_name VARCHAR(100),
-    avg_salary DECIMAL(10,2),
-    employee_count INT,
-    max_salary DECIMAL(10,2),
-    min_salary DECIMAL(10,2)
-)
-AS
-BEGIN
-    INSERT INTO &#64;result
-    SELECT 
-        d.department_id,
-        d.department_name,
-        AVG(e.salary) as avg_salary,
-        COUNT(*) as employee_count,
-        MAX(e.salary) as max_salary,
-        MIN(e.salary) as min_salary
-    FROM departments d
-    LEFT JOIN employees e ON d.department_id = e.department_id
-    GROUP BY d.department_id, d.department_name;
-    
-    RETURN;
-END;
-
--- Usage examples
-SELECT * FROM dbo.GetEmployeesAboveAverage();
-SELECT * FROM dbo.GetEmployeesByLocation('New York');
-SELECT * FROM dbo.GetDepartmentStats();</code></pre>
-                <p>Basic scalar functions and table-valued functions that replace subqueries with reusable, parameterized database objects for better performance and maintainability.</p>
+-- How to use these functions
+SELECT dbo.GetCompanyAverageSalary() as 'Company Average Salary';
+SELECT dbo.GetDepartmentAverageSalary(1) as 'Department 1 Average';
+SELECT * FROM dbo.GetHighEarningEmployees();
+SELECT * FROM dbo.GetEmployeesByCity('New York');</code></pre>
+                <p>Simple functions help you get information from your database easily. Some return single numbers (like average salary), while others return tables of data (like lists of employees).</p>
             </div>
             
             <div class="step">
-                <h4>Step 2: Stored Procedures for Complex Operations</h4>
-                <pre><code>-- Stored procedure for correlated subquery equivalent
-CREATE PROCEDURE dbo.GetEmployeesAboveDepartmentAverage
+                <h4>Step 2: Stored Procedures - Doing Multiple Things at Once</h4>
+                <pre><code>-- Procedure to find employees earning more than their department average
+CREATE PROCEDURE dbo.FindTopPerformers
 AS
 BEGIN
-    SELECT 
-        e1.employee_id,
-        e1.first_name,
-        e1.last_name,
-        e1.salary,
-        e1.department_id,
-        dbo.GetDepartmentAvgSalary(e1.department_id) as dept_avg_salary
-    FROM employees e1
-    WHERE e1.salary > dbo.GetDepartmentAvgSalary(e1.department_id);
-END;
-
--- Stored procedure with EXISTS equivalent logic
-CREATE PROCEDURE dbo.GetDepartmentsWithHighEarners
-    &#64;salary_threshold DECIMAL(10,2) = 75000
-AS
-BEGIN
-    SELECT 
-        d.department_id,
-        d.department_name,
-        d.location,
-        COUNT(e.employee_id) as high_earner_count
-    FROM departments d
-    LEFT JOIN employees e ON d.department_id = e.department_id AND e.salary > &#64;salary_threshold
-    GROUP BY d.department_id, d.department_name, d.location
-    HAVING COUNT(e.employee_id) > 0;
-END;
-
--- Stored procedure for NOT EXISTS equivalent
-CREATE PROCEDURE dbo.GetEmptyDepartments
-AS
-BEGIN
-    SELECT 
-        d.department_id,
-        d.department_name,
-        d.location,
-        'No employees' as status
-    FROM departments d
-    LEFT JOIN employees e ON d.department_id = e.department_id
-    WHERE e.employee_id IS NULL;
-END;
-
--- Stored procedure with ALL/ANY operator equivalent logic
-CREATE PROCEDURE dbo.GetEmployeesEarningMoreThanDepartment
-    &#64;target_department_id INT
-AS
-BEGIN
-    DECLARE &#64;max_salary_in_dept DECIMAL(10,2);
-    
-    SELECT &#64;max_salary_in_dept = MAX(salary)
-    FROM employees
-    WHERE department_id = &#64;target_department_id;
-    
-    SELECT 
-        employee_id,
-        first_name,
-        last_name,
-        salary,
-        department_id,
-        &#64;max_salary_in_dept as target_dept_max_salary
-    FROM employees
-    WHERE salary > &#64;max_salary_in_dept;
-END;
-
--- Complex stored procedure with multiple operations
-CREATE PROCEDURE dbo.AnalyzeEmployeePerformance
-    &#64;department_id INT = NULL,
-    &#64;salary_multiplier DECIMAL(3,2) = 1.1
-AS
-BEGIN
-    -- Create temporary table for processing
-    CREATE TABLE #temp_analysis (
-        employee_id INT,
-        first_name VARCHAR(50),
-        last_name VARCHAR(50),
-        salary DECIMAL(10,2),
-        department_id INT,
-        dept_size INT,
-        higher_paid_colleagues INT,
-        performance_rating VARCHAR(20)
-    );
-    
-    -- Insert analyzed data
-    INSERT INTO #temp_analysis
     SELECT 
         e.employee_id,
         e.first_name,
         e.last_name,
         e.salary,
         e.department_id,
-        (SELECT COUNT(*) FROM employees e2 WHERE e2.department_id = e.department_id) as dept_size,
-        (SELECT COUNT(*) FROM employees e2 WHERE e2.department_id = e.department_id AND e2.salary > e.salary) as higher_paid_colleagues,
-        CASE 
-            WHEN e.salary > dbo.GetDepartmentAvgSalary(e.department_id) * &#64;salary_multiplier THEN 'High Performer'
-            WHEN e.salary > dbo.GetDepartmentAvgSalary(e.department_id) THEN 'Above Average'
-            ELSE 'Below Average'
-        END as performance_rating
+        dbo.GetDepartmentAverageSalary(e.department_id) as dept_average
     FROM employees e
-    WHERE (&#64;department_id IS NULL OR e.department_id = &#64;department_id);
-    
-    -- Return results
-    SELECT * FROM #temp_analysis
-    ORDER BY department_id, salary DESC;
-    
-    -- Cleanup
-    DROP TABLE #temp_analysis;
+    WHERE e.salary > dbo.GetDepartmentAverageSalary(e.department_id)
+    ORDER BY e.salary DESC;
 END;
 
--- Usage examples
-EXEC dbo.GetEmployeesAboveDepartmentAverage;
-EXEC dbo.GetDepartmentsWithHighEarners &#64;salary_threshold = 80000;
-EXEC dbo.GetEmptyDepartments;
-EXEC dbo.GetEmployeesEarningMoreThanDepartment &#64;target_department_id = 3;
-EXEC dbo.AnalyzeEmployeePerformance &#64;department_id = 1, &#64;salary_multiplier = 1.2;</code></pre>
-                <p>Stored procedures that handle complex correlated operations, existence checks, and multi-step data processing with parameters, temporary tables, and comprehensive business logic.</p>
+-- Procedure to find departments with high earners
+CREATE PROCEDURE dbo.FindDepartmentsWithHighEarners
+    &#64;minimum_salary DECIMAL(10,2) = 75000
+AS
+BEGIN
+    SELECT 
+        d.department_id,
+        d.department_name,
+        d.city,
+        COUNT(e.employee_id) as high_earner_count,
+        AVG(e.salary) as average_high_earner_salary
+    FROM departments d
+    JOIN employees e ON d.department_id = e.department_id
+    WHERE e.salary >= &#64;minimum_salary
+    GROUP BY d.department_id, d.department_name, d.city
+    ORDER BY high_earner_count DESC;
+END;
+
+-- Procedure to find empty departments (no employees)
+CREATE PROCEDURE dbo.FindEmptyDepartments
+AS
+BEGIN
+    SELECT 
+        d.department_id,
+        d.department_name,
+        d.city,
+        'No employees assigned' as status
+    FROM departments d
+    LEFT JOIN employees e ON d.department_id = e.department_id
+    WHERE e.employee_id IS NULL;
+END;
+
+-- Procedure to give salary raises
+CREATE PROCEDURE dbo.GiveSalaryRaises
+    &#64;department_id INT,
+    &#64;raise_percentage DECIMAL(5,2)
+AS
+BEGIN
+    -- Show employees before raise
+    PRINT 'Employees before raise:';
+    SELECT employee_id, first_name, last_name, salary
+    FROM employees 
+    WHERE department_id = &#64;department_id;
+    
+    -- Give the raise
+    UPDATE employees
+    SET salary = salary * (1 + &#64;raise_percentage / 100)
+    WHERE department_id = &#64;department_id;
+    
+    -- Show employees after raise
+    PRINT 'Employees after ' + CAST(&#64;raise_percentage AS VARCHAR) + '% raise:';
+    SELECT 
+        employee_id, 
+        first_name, 
+        last_name, 
+        salary as new_salary,
+        &#64;raise_percentage as raise_given_percent
+    FROM employees 
+    WHERE department_id = &#64;department_id;
+END;
+
+-- How to use these procedures
+EXEC dbo.FindTopPerformers;
+EXEC dbo.FindDepartmentsWithHighEarners &#64;minimum_salary = 80000;
+EXEC dbo.FindEmptyDepartments;
+EXEC dbo.GiveSalaryRaises &#64;department_id = 1, &#64;raise_percentage = 5.0;</code></pre>
+                <p>Stored procedures let you do multiple database operations together. They can search for data, update information, and show results all in one command.</p>
             </div>
             
             <div class="step">
-                <h4>Step 3: Advanced Procedures and Recursive Processing</h4>
-                <pre><code>-- Stored procedure equivalent to CTE with multiple result sets
-CREATE PROCEDURE dbo.GetComprehensiveDepartmentAnalysis
+                <h4>Step 3: Advanced Procedures - Complex Business Operations</h4>
+                <pre><code>-- Procedure to create a detailed company report
+CREATE PROCEDURE dbo.CreateCompanyReport
 AS
 BEGIN
-    -- First result set: High earners analysis
+    -- Step 1: Create temporary table for high earners
     SELECT 
         employee_id, 
         first_name, 
         last_name, 
         salary, 
-        department_id,
-        'High Earner' as category
+        department_id
     INTO #high_earners
     FROM employees
     WHERE salary > 70000;
     
-    -- Second result set: Department summary
-    SELECT 
-        department_id,
-        COUNT(*) as high_earner_count,
-        AVG(salary) as avg_high_earner_salary
-    INTO #department_summary
-    FROM #high_earners
-    GROUP BY department_id;
-    
-    -- Return comprehensive analysis
+    -- Step 2: Create department summary
     SELECT 
         d.department_name,
-        ds.high_earner_count,
-        ds.avg_high_earner_salary,
-        he.first_name,
-        he.last_name,
-        he.salary
+        COUNT(he.employee_id) as high_earner_count,
+        AVG(he.salary) as avg_high_earner_salary,
+        MAX(he.salary) as highest_salary
     FROM departments d
-    JOIN #department_summary ds ON d.department_id = ds.department_id
-    JOIN #high_earners he ON ds.department_id = he.department_id
-    ORDER BY d.department_name, he.salary DESC;
+    LEFT JOIN #high_earners he ON d.department_id = he.department_id
+    GROUP BY d.department_name
+    ORDER BY high_earner_count DESC;
     
-    -- Cleanup
+    -- Clean up temporary table
     DROP TABLE #high_earners;
-    DROP TABLE #department_summary;
 END;
 
--- Recursive stored procedure for hierarchical processing
-CREATE PROCEDURE dbo.GetEmployeeHierarchy
-    &#64;root_manager_id INT = NULL
+-- Procedure to find employee hierarchy (who reports to whom)
+CREATE PROCEDURE dbo.ShowEmployeeHierarchy
+    &#64;start_manager_id INT = NULL
 AS
 BEGIN
-    -- Create hierarchy table
-    CREATE TABLE #employee_hierarchy (
+    -- Create table to store hierarchy
+    CREATE TABLE #hierarchy (
         employee_id INT,
         first_name VARCHAR(50),
         last_name VARCHAR(50),
         manager_id INT,
         level INT,
-        hierarchy_path VARCHAR(1000)
+        full_path VARCHAR(500)
     );
     
-    -- Insert root level employees
-    INSERT INTO #employee_hierarchy
+    -- Insert top-level employees (managers with no boss)
+    INSERT INTO #hierarchy
     SELECT 
         employee_id,
         first_name,
         last_name,
         manager_id,
         1 as level,
-        first_name + ' ' + last_name as hierarchy_path
+        first_name + ' ' + last_name as full_path
     FROM employees
-    WHERE manager_id = &#64;root_manager_id OR (&#64;root_manager_id IS NULL AND manager_id IS NULL);
+    WHERE manager_id IS NULL OR manager_id = &#64;start_manager_id;
     
-    -- Recursive processing
-    DECLARE &#64;current_level INT = 1;
-    DECLARE &#64;rows_added INT = 1;
+    -- Find employees under each manager (simplified version)
+    INSERT INTO #hierarchy
+    SELECT 
+        e.employee_id,
+        e.first_name,
+        e.last_name,
+        e.manager_id,
+        2 as level,
+        h.full_path + ' -> ' + e.first_name + ' ' + e.last_name
+    FROM employees e
+    JOIN #hierarchy h ON e.manager_id = h.employee_id
+    WHERE h.level = 1;
     
-    WHILE &#64;rows_added > 0
-    BEGIN
-        SET &#64;current_level = &#64;current_level + 1;
-        
-        INSERT INTO #employee_hierarchy
-        SELECT 
-            e.employee_id,
-            e.first_name,
-            e.last_name,
-            e.manager_id,
-            &#64;current_level as level,
-            eh.hierarchy_path + ' -> ' + e.first_name + ' ' + e.last_name
-        FROM employees e
-        JOIN #employee_hierarchy eh ON e.manager_id = eh.employee_id
-        WHERE eh.level = &#64;current_level - 1
-        AND e.employee_id NOT IN (SELECT employee_id FROM #employee_hierarchy);
-        
-        SET &#64;rows_added = &#64;&#64;ROWCOUNT;
-    END;
-    
-    -- Return results
+    -- Show the hierarchy
     SELECT 
         employee_id,
         first_name,
         last_name,
         level,
-        hierarchy_path
-    FROM #employee_hierarchy
+        full_path
+    FROM #hierarchy
     ORDER BY level, last_name;
     
-    -- Cleanup
-    DROP TABLE #employee_hierarchy;
+    -- Clean up
+    DROP TABLE #hierarchy;
 END;
 
--- Complex analytical stored procedure with window functions
-CREATE PROCEDURE dbo.GetRankedEmployeeAnalysis
-    &#64;top_n_per_dept INT = 3
+-- Procedure to rank employees by salary
+CREATE PROCEDURE dbo.RankEmployeesBySalary
+    &#64;top_employees_per_department INT = 3
 AS
 BEGIN
-    -- Create ranked employees table
-    CREATE TABLE #ranked_employees (
-        employee_id INT,
-        first_name VARCHAR(50),
-        last_name VARCHAR(50),
-        salary DECIMAL(10,2),
-        department_id INT,
-        dept_rank INT,
-        overall_rank INT
-    );
-    
-    -- Insert ranked data
-    INSERT INTO #ranked_employees
-    SELECT 
-        employee_id,
-        first_name,
-        last_name,
-        salary,
-        department_id,
-        ROW_NUMBER() OVER(PARTITION BY department_id ORDER BY salary DESC) as dept_rank,
-        DENSE_RANK() OVER(ORDER BY salary DESC) as overall_rank
-    FROM employees;
-    
-    -- Create department analysis table
-    CREATE TABLE #department_analysis (
-        department_id INT,
-        total_employees INT,
-        avg_salary DECIMAL(10,2),
-        top_earners_count INT
-    );
-    
-    -- Insert department analysis
-    INSERT INTO #department_analysis
-    SELECT 
-        department_id,
-        COUNT(*) as total_employees,
-        AVG(salary) as avg_salary,
-        (SELECT COUNT(*) FROM #ranked_employees WHERE dept_rank = 1) as top_earners_count
-    FROM #ranked_employees
-    GROUP BY department_id;
-    
-    -- Return comprehensive analysis
+    -- Show top earners in each department
     SELECT 
         d.department_name,
-        re.first_name,
-        re.last_name,
-        re.salary,
-        re.dept_rank,
-        re.overall_rank,
-        da.avg_salary,
-        da.total_employees,
-        CASE 
-            WHEN re.dept_rank = 1 THEN 'Top Earner in Department'
-            WHEN re.overall_rank <= 10 THEN 'Top 10 Company-wide'
-            ELSE 'Regular Employee'
-        END as employee_status
-    FROM departments d
-    JOIN #ranked_employees re ON d.department_id = re.department_id
-    JOIN #department_analysis da ON d.department_id = da.department_id
-    WHERE re.dept_rank <= &#64;top_n_per_dept
-    ORDER BY d.department_name, re.dept_rank;
-    
-    -- Cleanup
-    DROP TABLE #ranked_employees;
-    DROP TABLE #department_analysis;
+        e.first_name,
+        e.last_name,
+        e.salary,
+        RANK() OVER(PARTITION BY e.department_id ORDER BY e.salary DESC) as dept_rank,
+        RANK() OVER(ORDER BY e.salary DESC) as company_rank
+    FROM employees e
+    JOIN departments d ON e.department_id = d.department_id
+    WHERE RANK() OVER(PARTITION BY e.department_id ORDER BY e.salary DESC) <= &#64;top_employees_per_department
+    ORDER BY d.department_name, e.salary DESC;
 END;
 
--- Transaction-enabled stored procedure for data modifications
-CREATE PROCEDURE dbo.ProcessEmployeeSalaryAdjustment
+-- Safe procedure with transaction control
+CREATE PROCEDURE dbo.SafelyUpdateSalaries
     &#64;department_id INT,
-    &#64;adjustment_percentage DECIMAL(5,2)
+    &#64;raise_percentage DECIMAL(5,2)
 AS
 BEGIN
+    -- Start transaction for safety
     BEGIN TRANSACTION;
     
     BEGIN TRY
-        -- Log the operation
-        INSERT INTO salary_adjustment_log (department_id, adjustment_percentage, processed_date)
-        VALUES (&#64;department_id, &#64;adjustment_percentage, GETDATE());
+        -- Log what we're doing
+        PRINT 'Starting salary update for department ' + CAST(&#64;department_id AS VARCHAR);
         
-        -- Update salaries
+        -- Make sure department exists
+        IF NOT EXISTS (SELECT 1 FROM departments WHERE department_id = &#64;department_id)
+        BEGIN
+            THROW 50001, 'Department does not exist!', 1;
+        END
+        
+        -- Update the salaries
         UPDATE employees
-        SET salary = salary * (1 + &#64;adjustment_percentage / 100)
+        SET salary = salary * (1 + &#64;raise_percentage / 100)
         WHERE department_id = &#64;department_id;
         
-        -- Return updated employees
+        -- Show results
         SELECT 
             employee_id,
             first_name,
             last_name,
-            salary as new_salary,
-            &#64;adjustment_percentage as adjustment_applied
+            salary as new_salary
         FROM employees
         WHERE department_id = &#64;department_id;
         
+        -- Save changes
         COMMIT TRANSACTION;
+        PRINT 'Salary update completed successfully!';
+        
     END TRY
     BEGIN CATCH
+        -- Cancel changes if error occurs
         ROLLBACK TRANSACTION;
-        THROW;
+        PRINT 'Error occurred: ' + ERROR_MESSAGE();
     END CATCH;
 END;
 
--- Usage examples
-EXEC dbo.GetComprehensiveDepartmentAnalysis;
-EXEC dbo.GetEmployeeHierarchy &#64;root_manager_id = NULL;
-EXEC dbo.GetRankedEmployeeAnalysis &#64;top_n_per_dept = 5;
-EXEC dbo.ProcessEmployeeSalaryAdjustment &#64;department_id = 1, &#64;adjustment_percentage = 5.0;</code></pre>
-                <p>Advanced stored procedures implementing recursive hierarchical processing, complex analytical operations with temporary tables, window functions, and transaction-controlled data modifications with comprehensive error handling.</p>
+-- How to use these advanced procedures
+EXEC dbo.CreateCompanyReport;
+EXEC dbo.ShowEmployeeHierarchy &#64;start_manager_id = NULL;
+EXEC dbo.RankEmployeesBySalary &#64;top_employees_per_department = 5;
+EXEC dbo.SafelyUpdateSalaries &#64;department_id = 1, &#64;raise_percentage = 5.0;</code></pre>
+                <p>Advanced procedures can create reports, show relationships between employees, rank people by performance, and safely update data with error protection. They use temporary tables and transactions to handle complex business operations.</p>
             </div>
+        </div>
     </div>
-</div>
-

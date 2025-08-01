@@ -4,11 +4,14 @@
             <img class="swap" *ngIf="sqlJoinsRelationships.checkfullscreen() !=  'hide'" (click)="sqlJoinsRelationships.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
             <div class="header">
                 <p> <span class="question">What:</span>
-                SQL joins and relationships are <strong>database operations used to combine data from multiple tables based on related columns, enabling access to interconnected information across normalized database structures.</strong> </p>
-            <p> <span class="question">Why:</span>
-                SQL joins and relationships are important because they <strong>eliminate data redundancy, maintain data integrity, enable complex queries across multiple tables, and support relational database design principles.</strong></p>
-            <p> <span class="question">Where:</span>
-                SQL joins and relationships are used <strong>in relational databases, data warehouses, reporting systems, and anywhere normalized data structures require combining information from multiple related tables.</strong></p>
+                    SQL joins and relationships are used to <strong>connect data from two or more tables</strong> that are related through common columns.
+                </p>
+                <p> <span class="question">Why:</span>
+                    They are important because they help <strong>avoid duplicate data, keep data organized, and allow you to get complete information from different tables.</strong>
+                </p>
+                <p> <span class="question">Where:</span>
+                    Joins and relationships are used <strong>in all types of databases where tables are linked together</strong> — like in websites, reports, e-commerce apps, and business systems.
+                </p>
             </div>
         </div>
     <div class="examples">
@@ -75,43 +78,74 @@ WHERE e.salary > (SELECT AVG(salary) FROM employees);</code></pre>
                 <p>Advanced join techniques including multiple tables, self-joins, aggregations, and complex conditions.</p>
             </div>
             
+          
+
             <div class="step">
-                <h4>Step 3: Database Relationships and Constraints</h4>
-                <pre><code>-- One-to-Many relationship example
--- Each department has many employees
-SELECT d.department_name, COUNT(e.employee_id) as total_employees
+  <h4>Step 3: Database Relationships and Constraints</h4>
+
+  <pre><code>-- 🔗 One-to-Many Relationship
+-- Each department can have many employees
+
+SELECT d.department_name, COUNT(e.employee_id) AS total_employees
 FROM departments d
 LEFT JOIN employees e ON d.department_id = e.department_id
 GROUP BY d.department_id, d.department_name;
 
--- Many-to-Many relationship example
--- Employees can work on multiple projects, projects can have multiple employees
+-- 💡 Example Output:
+-- HR - 5 employees
+-- IT - 3 employees
+-- Marketing - 0 employees</code></pre>
+
+  <pre><code>-- 🔁 Many-to-Many Relationship
+-- Employees can work on many projects, and each project can have many employees
+
 SELECT e.first_name, e.last_name, p.project_name, ep.role, ep.hours_allocated
 FROM employees e
 INNER JOIN employee_projects ep ON e.employee_id = ep.employee_id
 INNER JOIN projects p ON ep.project_id = p.project_id
 ORDER BY e.last_name, p.project_name;
 
--- One-to-One relationship example
--- Each employee has one employee profile
+-- 💡 Example Output:
+-- Alice Johnson - App Redesign - Designer - 20 hrs
+-- Bob Smith - Backend Revamp - Developer - 30 hrs</code></pre>
+
+  <pre><code>-- 1️⃣ One-to-One Relationship
+-- Each employee has only one profile with contact info
+
 SELECT e.first_name, e.last_name, ep.phone_number, ep.address, ep.emergency_contact
 FROM employees e
 LEFT JOIN employee_profiles ep ON e.employee_id = ep.employee_id;
 
--- Complex relationship queries
+-- 💡 Example Output:
+-- Alice Johnson - 9876543210 - 123 Main St - Sarah (Sister)</code></pre>
+
+  <pre><code>-- 📊 Complex Join with Aggregates
+-- Show department name, number of employees, projects, and average salary
+
 SELECT 
     d.department_name,
-    COUNT(DISTINCT e.employee_id) as employee_count,
-    COUNT(DISTINCT p.project_id) as project_count,
-    AVG(e.salary) as avg_department_salary
+    COUNT(DISTINCT e.employee_id) AS employee_count,
+    COUNT(DISTINCT p.project_id) AS project_count,
+    AVG(e.salary) AS avg_department_salary
 FROM departments d
 LEFT JOIN employees e ON d.department_id = e.department_id
 LEFT JOIN employee_projects ep ON e.employee_id = ep.employee_id
 LEFT JOIN projects p ON ep.project_id = p.project_id
 GROUP BY d.department_id, d.department_name
 HAVING COUNT(DISTINCT e.employee_id) > 5
-ORDER BY avg_department_salary DESC;</code></pre>
-                <p>Database relationship patterns and complex queries demonstrating one-to-many, many-to-many, and one-to-one relationships.</p>
-            </div>
+ORDER BY avg_department_salary DESC;
+
+-- 💡 Example Output:
+-- Engineering - 10 employees - 4 projects - ₹75,000 avg salary</code></pre>
+
+  <p><strong>Summary:</strong> These queries help visualize how tables relate to each other in real-world systems:</p>
+  <ul>
+    <li>👨‍💼 One-to-Many → Department has multiple employees</li>
+    <li>🔁 Many-to-Many → Employees involved in many projects</li>
+    <li>🔐 One-to-One → One profile per employee</li>
+    <li>📈 Complex → Useful for reports with grouping & calculations</li>
+  </ul>
+</div>
+
     </div>
 </div>

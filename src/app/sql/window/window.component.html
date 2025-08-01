@@ -3,12 +3,15 @@
             <img class="swap" *ngIf="sqlWindowFunctions.checkfullscreen() ==  'hide'" (click)="sqlWindowFunctions.toggle()" src="../../../assets/expand.svg" alt="Expand">
             <img class="swap" *ngIf="sqlWindowFunctions.checkfullscreen() !=  'hide'" (click)="sqlWindowFunctions.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
             <div class="header">
-                <p> <span class="question">What:</span>
-                SQL window functions are <strong>functions that perform calculations across a set of rows related to the current row, without collapsing the result set into groups, enabling advanced analytics and rankings within query results.</strong> </p>
-            <p> <span class="question">Why:</span>
-                SQL window functions are important because they <strong>enable advanced analytics like running totals, rankings, percentiles, and comparative analysis while preserving individual row details in the result set.</strong></p>
-            <p> <span class="question">Where:</span>
-                SQL window functions are used <strong>in business intelligence, data analytics, reporting dashboards, and anywhere advanced calculations or rankings are needed without grouping data.</strong></p>
+                <p><span class="question">What:</span>
+                    SQL window functions let you do calculations like totals, ranks, or comparisons on a row while still seeing all rows.
+                </p>
+                <p><span class="question">Why:</span>
+                    They are useful for advanced reports where you need to rank, compare, or summarize data without hiding any row.
+                </p>
+                <p><span class="question">Where:</span>
+                    Used in data reports, analytics, dashboards, and anywhere you need running totals, row comparisons, or rankings.
+                </p>
             </div>
         </div>
     <div class="examples">

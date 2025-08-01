@@ -15,7 +15,7 @@ import { FilteringSortingComponent } from './filtering-sorting/filtering-sorting
 
 const routes: Routes = [
     {
-      path: 'sql',
+      path: '',
       component: SqlhomeComponent,
       children:[
         {

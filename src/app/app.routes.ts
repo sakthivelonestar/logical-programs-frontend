@@ -35,4 +35,8 @@ export const routes: Routes = [
       path: "sql",
       loadChildren: () => import('./sql/sql.module').then(m => m.SqlModule)
    },
+    {
+      path: "nest",
+      loadChildren: () => import('./nest/nest.module').then(m => m.NestModule)
+   },
 ];

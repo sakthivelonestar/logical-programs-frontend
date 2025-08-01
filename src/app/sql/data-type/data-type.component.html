@@ -2,14 +2,18 @@
     <div class="wrapper">
         <img class="swap" *ngIf="dataTypesTablesConcepts.checkfullscreen() ==  'hide'" (click)="dataTypesTablesConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
         <img class="swap" *ngIf="dataTypesTablesConcepts.checkfullscreen() !=  'hide'" (click)="dataTypesTablesConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <div class="header">
-            <p> <span class="question">What:</span>
-                SQL data types and tables are <strong>the fundamental building blocks of relational databases that define how data is stored, organized, and structured within database systems.</strong> </p>
-            <p> <span class="question">Why:</span>
-                Understanding data types and table structure is crucial because they <strong>ensure data integrity, optimize storage efficiency, enforce business rules, and enable effective query performance.</strong></p>
-            <p> <span class="question">Where:</span>
-                Data types and tables are used <strong>in database design, application development, data warehousing, and any system that requires structured data storage and retrieval.</strong></p>
-        </div>
+      <div class="header">
+    <p> <span class="question">What:</span>
+        SQL data types and tables are the basic parts of a database. They define what kind of data you can store and how it is organized.
+    </p>
+    <p> <span class="question">Why:</span>
+        Knowing data types and table structure helps keep data correct, saves space, follows rules, and makes searches faster.
+    </p>
+    <p> <span class="question">Where:</span>
+        You use data types and tables when creating databases, building apps, storing reports, or managing any kind of structured data.
+    </p>
+</div>
+
     </div>
 
     <div class="examples">
@@ -168,15 +172,7 @@ SHOW TABLES;
 -- Show detailed table information
 SHOW CREATE TABLE employees;
 
--- Show foreign key relationships
-SELECT 
-    TABLE_NAME,
-    COLUMN_NAME,
-    CONSTRAINT_NAME,
-    REFERENCED_TABLE_NAME,
-    REFERENCED_COLUMN_NAME
-FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-WHERE REFERENCED_TABLE_SCHEMA = 'company_management';</code></pre>
+</code></pre>
                 <p>Commands to inspect table structure, relationships, and verify everything was created correctly.</p>
             </div>
     </div>
