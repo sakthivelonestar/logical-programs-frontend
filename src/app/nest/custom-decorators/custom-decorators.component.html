@@ -1,1 +1,337 @@
-<p>custom-decorators works!</p>
+<div class="overall-wrapper" appMaximize #nestjsCustomDecorators="maximize" id="nestjsCustomDecorators">
+  <div class="wrapper">
+       <img class="swap" *ngIf="nestjsCustomDecorators.checkfullscreen() == 'hide'" (click)="nestjsCustomDecorators.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="nestjsCustomDecorators.checkfullscreen() != 'hide'" (click)="nestjsCustomDecorators.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               NestJS <strong>Custom Decorators</strong> are user-defined TypeScript decorators that encapsulate reusable logic for controllers, services, or other components, simplifying code and enhancing readability.
+           </p>
+           <p> <span class="question">Why:</span>
+               Custom decorators promote <strong>code reuse</strong>, reduce boilerplate, and improve maintainability by abstracting common patterns, such as authentication, logging, or parameter handling.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to streamline controller methods, handle metadata, or enforce specific behaviors across routes.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Custom Decorator</h2>
+       <p>Let's create a custom decorator to extract user information from a request:</p>
+       
+       <h3>Creating a User Decorator</h3>
+       <pre><code><span class="comment">// decorators/user.decorator.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">createParamDecorator</span>, <span class="type">ExecutionContext</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="keyword">export const</span> <span class="type">User</span> = <span class="type">createParamDecorator</span>(
+  (data: <span class="type">string</span>, ctx: <span class="type">ExecutionContext</span>) => &#123;
+    <span class="keyword">const</span> request = ctx.switchToHttp().getRequest();
+    <span class="keyword">const</span> user = request.user;
+    <span class="keyword">return</span> data ? user?.[data] : user;
+  &#125;,
+);
+</code></pre>
+
+       <h3>Key Decorator Elements</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>createParamDecorator</h4>
+           <p>Creates custom parameter decorators for controllers</p>
+         </div>
+         <div class="feature-card">
+           <h4>ExecutionContext</h4>
+           <p>Provides access to request context (HTTP, WebSocket, etc.)</p>
+         </div>
+         <div class="feature-card">
+           <h4>Metadata</h4>
+           <p>Allows attaching custom metadata to methods or classes</p>
+         </div>
+         <div class="feature-card">
+           <h4>Reusable Logic</h4>
+           <p>Encapsulates common functionality for reuse across routes</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Using Custom Decorators in Controllers</h2>
+       <p>This example demonstrates using a custom decorator in a controller for user management.</p>
+
+       <h3>Step 1: Define Interfaces</h3>
+       <p>Interfaces ensure type safety for user data:</p>
+       <pre><code><span class="comment">// interfaces/user.interface.ts</span>
+<span class="keyword">export interface</span> <span class="type">User</span> &#123;
+  id: <span class="type">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  role: <span class="type">string</span>;
+&#125;
+</code></pre>
+
+       <h3>Step 2: Create the Users Service</h3>
+       <p>The service handles business logic for user operations:</p>
+       <pre><code><span class="comment">// users.service.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NotFoundException</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">UsersService</span> &#123;
+  <span class="keyword">private</span> users: <span class="type">User</span>[] = [
+    &#123; id: 1, name: <span class="string">'John Doe'</span>, email: <span class="string">'john&#64;example.com'</span>, role: <span class="string">'user'</span> &#125;,
+    &#123; id: 2, name: <span class="string">'Jane Smith'</span>, email: <span class="string">'jane&#64;example.com'</span>, role: <span class="string">'admin'</span> &#125;
+  ];
+
+  findOne(id: <span class="type">number</span>): <span class="type">User</span> &#123;
+    <span class="keyword">const</span> user = <span class="keyword">this</span>.users.find(user => user.id === id);
+    <span class="keyword">if</span> (!user) &#123;
+      <span class="keyword">throw new</span> <span class="type">NotFoundException</span>(<span class="string">`User with ID $&#123;id &#125; not found`</span>);
+    &#125;
+    <span class="keyword">return</span> user;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 3: Create the Users Controller</h3>
+       <p>The controller uses the custom <code>User</code> decorator:</p>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Param</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> as <span class="type">UserDecorator</span> &#125; <span class="keyword">from</span> <span class="string">'./decorators/user.decorator'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> usersService: <span class="type">UsersService</span>) &#123;&#125;
+
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  getUser(
+    <span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>,
+    <span class="decorator">&#64;UserDecorator</span>() user: <span class="type">User</span>
+  ) &#123;
+    <span class="keyword">return</span> &#123; requestedUser: <span class="keyword">this</span>.usersService.findOne(+id), currentUser: user &#125;;
+  &#125;
+
+  <span class="decorator">&#64;Get</span>(<span class="string">':id/email'</span>)
+  getUserEmail(<span class="decorator">&#64;UserDecorator</span>(<span class="string">'email'</span>) email: <span class="type">string</span>) &#123;
+    <span class="keyword">return</span> &#123; email &#125;;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 4: Define the Users Module</h3>
+       <p>The module ties everything together:</p>
+       <pre><code><span class="comment">// users.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  controllers: [<span class="type">UsersController</span>],
+  providers: [<span class="type">UsersService</span>]
+&#125;)
+<span class="keyword">export class</span> <span class="type">UsersModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Custom decorators simplify access to request data.</li>
+         <li><code>createParamDecorator</code> is used for parameter-level decorators.</li>
+         <li>Decorators can extract specific properties or entire objects.</li>
+         <li>They enhance controller readability by reducing boilerplate.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. Advanced Custom Decorators</h2>
+       <p>Create method and class decorators for advanced use cases like role-based access control:</p>
+
+       <h3>Method Decorator for Roles</h3>
+       <p>Define a decorator to restrict access based on user roles:</p>
+       <pre><code><span class="comment">// decorators/roles.decorator.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">SetMetadata</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="keyword">export const</span> <span class="type">Roles</span> = (...roles: <span class="type">string</span>[]) => <span class="type">SetMetadata</span>(<span class="string">'roles'</span>, roles);
+</code></pre>
+
+       <h3>Interceptor for Role Checking</h3>
+       <p>Use an interceptor to enforce the role-based access:</p>
+       <pre><code><span class="comment">// interceptors/roles.interceptor.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NestInterceptor</span>, <span class="type">ExecutionContext</span>, <span class="type">CallHandler</span>, <span class="type">ForbiddenException</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">Observable</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; <span class="type">Reflector</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/core'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">RolesInterceptor</span> <span class="keyword">implements</span> <span class="type">NestInterceptor</span> &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> reflector: <span class="type">Reflector</span>) &#123;&#125;
+
+  intercept(context: <span class="type">ExecutionContext</span>, next: <span class="type">CallHandler</span>): <span class="type">Observable</span>&lt;<span class="type">any</span>&gt; &#123;
+    <span class="keyword">const</span> requiredRoles = <span class="keyword">this</span>.reflector.get&lt;<span class="type">string</span>[]&gt;(<span class="string">'roles'</span>, context.getHandler());
+    <span class="keyword">if</span> (!requiredRoles) &#123;
+      <span class="keyword">return</span> next.handle();
+    &#125;
+
+    <span class="keyword">const</span> request = context.switchToHttp().getRequest();
+    <span class="keyword">const</span> user = request.user;
+    <span class="keyword">if</span> (!user || !requiredRoles.includes(user.role)) &#123;
+      <span class="keyword">throw new</span> <span class="type">ForbiddenException</span>(<span class="string">'Insufficient role permissions'</span>);
+    &#125;
+
+    <span class="keyword">return</span> next.handle();
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Using Roles Decorator</h3>
+       <p>Apply the roles decorator and interceptor in the controller:</p>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">UseInterceptors</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">Roles</span> &#125; <span class="keyword">from</span> <span class="string">'./decorators/roles.decorator'</span>;
+<span class="keyword">import</span> &#123; <span class="type">RolesInterceptor</span> &#125; <span class="keyword">from</span> <span class="string">'./interceptors/roles.interceptor'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="decorator">&#64;Get</span>(<span class="string">'admin'</span>)
+  <span class="decorator">&#64;Roles</span>(<span class="string">'admin'</span>)
+  <span class="decorator">&#64;UseInterceptors</span>(<span class="type">RolesInterceptor</span>)
+  getAdminData() &#123;
+    <span class="keyword">return</span> &#123; message: <span class="string">'Admin data'</span> &#125;;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Method decorators use <code>SetMetadata</code> to attach metadata.</li>
+         <li>Interceptors or guards read metadata to enforce logic.</li>
+         <li>Role-based decorators simplify access control.</li>
+         <li>Combine with interceptors for robust functionality.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Best Practices for Custom Decorators</h2>
+       <p>Organize custom decorators for maintainability and scalability:</p>
+       
+       <h3>Directory Structure</h3>
+       <pre><code><span class="comment">// Recommended project structure</span>
+project/
+├── src/
+│   ├── users/
+│   │   ├── decorators/
+│   │   │   ├── user.decorator.ts
+│   │   │   └── roles.decorator.ts
+│   │   ├── interceptors/
+│   │   │   └── roles.interceptor.ts
+│   │   ├── interfaces/
+│   │   │   └── user.interface.ts
+│   │   ├── users.controller.ts
+│   │   ├── users.service.ts
+│   │   └── users.module.ts
+│   ├── app.module.ts
+│   └── main.ts
+</code></pre>
+
+       <h3>Best Practices</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Single Responsibility</h4>
+           <p>Each decorator should handle one specific task</p>
+         </div>
+         <div class="feature-card">
+           <h4>Clear Naming</h4>
+           <p>Use descriptive names like <code> &#64;Roles</code> or <code> &#64;User</code></p>
+         </div>
+         <div class="feature-card">
+           <h4>Organized Files</h4>
+           <p>Store decorators in a dedicated <code>decorators</code> folder</p>
+         </div>
+         <div class="feature-card">
+           <h4>Testable</h4>
+           <p>Write unit tests for decorator logic</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on NestJS Custom Decorators</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is a custom decorator in NestJS?</strong>
+           <p class="answer">A user-defined TypeScript decorator that encapsulates reusable logic for controllers or services.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you create a parameter decorator?</strong>
+           <p class="answer">Use <code>createParamDecorator</code> from <code> &#64;nestjs/common</code> with a factory function.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the role of ExecutionContext?</strong>
+           <p class="answer">It provides access to the request context, such as HTTP or WebSocket data.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you create a method decorator?</strong>
+           <p class="answer">Use <code>SetMetadata</code> to attach metadata, processed by interceptors or guards.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the purpose of SetMetadata?</strong>
+           <p class="answer">It attaches custom metadata to methods or classes for runtime processing.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you read metadata from a decorator?</strong>
+           <p class="answer">Use <code>Reflector</code> from <code> &#64;nestjs/core</code> in an interceptor or guard.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a common use case for custom decorators?</strong>
+           <p class="answer">Extracting request data, like user information, or enforcing role-based access.</p>
+           <span class="category">Use Cases</span>
+         </li>
+         <li>
+           <strong class="question-title">How do custom decorators reduce boilerplate?</strong>
+           <p class="answer">They encapsulate repetitive logic, like accessing request data, into reusable decorators.</p>
+           <span class="category">Benefits</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you combine decorators with interceptors?</strong>
+           <p class="answer">Decorators set metadata, and interceptors read it to enforce logic, like authorization.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the Reflector class in NestJS?</strong>
+           <p class="answer">A utility to retrieve metadata set by decorators at runtime.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">Can custom decorators be used with guards?</strong>
+           <p class="answer">Yes, guards can read metadata set by decorators to enforce access control.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you test custom decorators?</strong>
+           <p class="answer">Write unit tests to verify decorator logic using NestJS testing utilities.</p>
+           <span class="category">Testing</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a benefit of using parameter decorators?</strong>
+           <p class="answer">They simplify controller methods by extracting request data concisely.</p>
+           <span class="category">Benefits</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you organize custom decorators?</strong>
+           <p class="answer">Store them in a <code>decorators</code> folder within feature modules.</p>
+           <span class="category">Code Organization</span>
+         </li>
+         <li>
+           <strong class="question-title">Why avoid overusing custom decorators?</strong>
+           <p class="answer">Overuse can obscure logic and make debugging harder; use for clear, reusable patterns.</p>
+           <span class="category">Best Practices</span>
+         </li>
+       </ol>
+     </div>
+   </div>
+</div>

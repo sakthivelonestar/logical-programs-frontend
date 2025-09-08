@@ -1,1 +1,377 @@
-<p>services-di works!</p>
+<div class="overall-wrapper" appMaximize #nestjsServices="maximize" id="nestjsServices">
+  <div class="wrapper">
+       <img class="swap" *ngIf="nestjsServices.checkfullscreen() == 'hide'" (click)="nestjsServices.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="nestjsServices.checkfullscreen() != 'hide'" (click)="nestjsServices.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               NestJS <strong>Services</strong> are TypeScript classes decorated with &#64;Injectable() that encapsulate business logic and data operations. They are injected into controllers or other services using <strong>Dependency Injection (DI)</strong> to promote modularity and reusability.
+           </p>
+           <p> <span class="question">Why:</span>
+               Services provide <strong>separation of concerns</strong> by isolating business logic from request handling. DI enables <strong>loose coupling</strong>, automatic dependency resolution, easy testing, and scalable architecture with reusable components.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL resolvers, microservices,</strong> and backend applications for data manipulation, database integration, external API calls, authentication logic, and building maintainable, testable services.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Service Setup</h2>
+       <p>Let's create a basic NestJS service to handle user-related operations:</p>
+       
+       <h3>Creating a Basic User Service</h3>
+       <pre><code><span class="comment">// users.service.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>  &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">UsersService</span> &#123;
+  <span class="keyword">private</span> users: <span class="type">any</span>[] = [];
+
+  <span class="method">findAll</span>(): <span class="type">any</span>[] &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users;
+   &#125;
+
+  <span class="method">findOne</span>(id: <span class="type">number</span>): <span class="type">any</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.find(user => user.id === id);
+   &#125;
+
+  <span class="method">create</span>(user: <span class="type">any</span>): <span class="type">any</span> &#123;
+    <span class="keyword">this</span>.users.push(user);
+    <span class="keyword">return</span> user;
+   &#125;
+ &#125;
+</code></pre>
+
+       <h3>Key Service Elements</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>&#64;Injectable() Decorator</h4>
+           <p>Marks a class as a provider that can be injected into other classes</p>
+         </div>
+         <div class="feature-card">
+           <h4>Business Logic</h4>
+           <p>Encapsulates data operations and core application logic</p>
+         </div>
+         <div class="feature-card">
+           <h4>Dependency Injection</h4>
+           <p>Services are injected via constructor for use in controllers or other services</p>
+         </div>
+         <div class="feature-card">
+           <h4>Singleton Scope</h4>
+           <p>By default, a single instance is shared across the application</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Complete CRUD Service with Dependency Injection</h2>
+       <p>This example demonstrates a full CRUD service integrated with a controller using dependency injection.</p>
+
+       <h3>Step 1: Define Interfaces & DTOs</h3>
+       <p>Interfaces and DTOs ensure type safety for user data:</p>
+       <pre><code><span class="comment">// interfaces/user.interface.ts</span>
+<span class="keyword">export interface</span> <span class="type">User</span> &#123;
+  id: <span class="type">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+ &#125;
+
+<span class="keyword">export interface</span> <span class="type">CreateUserDto</span> &#123;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+ &#125;
+
+<span class="keyword">export interface</span> <span class="type">UpdateUserDto</span> &#123;
+  name?: <span class="type">string</span>;
+  email?: <span class="type">string</span>;
+  age?: <span class="type">number</span>;
+ &#125;
+</code></pre>
+
+       <h3>Step 2: Create the Users Service</h3>
+       <p>The service handles CRUD operations with in-memory storage:</p>
+       <pre><code><span class="comment">// users.service.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>  &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span>, <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span>  &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">UsersService</span> &#123;
+  <span class="keyword">private</span> users: <span class="type">User</span>[] = [
+    &#123; id: 1, name: <span class="string">'John Doe'</span>, email: <span class="string">'john&#64;example.com'</span>, age: 30  &#125;,
+    &#123; id: 2, name: <span class="string">'Jane Smith'</span>, email: <span class="string">'jane&#64;example.com'</span>, age: 25  &#125;
+  ];
+
+  findAll(limit?: <span class="type">number</span>, offset?: <span class="type">number</span>): <span class="type">User</span>[] &#123;
+    <span class="keyword">const</span> startIndex = offset || 0;
+    <span class="keyword">const</span> endIndex = limit ? startIndex + limit : undefined;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.slice(startIndex, endIndex);
+   &#125;
+
+  findOne(id: <span class="type">number</span>): <span class="type">User</span> | <span class="type">undefined</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.find(user => user.id === id);
+   &#125;
+
+  create(createUserDto: <span class="type">CreateUserDto</span>): <span class="type">User</span> &#123;
+    <span class="keyword">const</span> newUser: <span class="type">User</span> = &#123;
+      id: <span class="keyword">this</span>.users.length + 1,
+      ...createUserDto
+     &#125;;
+    <span class="keyword">this</span>.users.push(newUser);
+    <span class="keyword">return</span> newUser;
+   &#125;
+
+  update(id: <span class="type">number</span>, updateUserDto: <span class="type">UpdateUserDto</span>): <span class="type">User</span> | <span class="type">null</span> &#123;
+    <span class="keyword">const</span> userIndex = <span class="keyword">this</span>.users.findIndex(user => user.id === id);
+    <span class="keyword">if</span> (userIndex === -1) <span class="keyword">return</span> <span class="type">null</span>;
+    <span class="keyword">this</span>.users[userIndex] = &#123; ...<span class="keyword">this</span>.users[userIndex], ...updateUserDto  &#125;;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users[userIndex];
+   &#125;
+
+  remove(id: <span class="type">number</span>): <span class="type">void</span> &#123;
+    <span class="keyword">const</span> userIndex = <span class="keyword">this</span>.users.findIndex(user => user.id === id);
+    <span class="keyword">if</span> (userIndex !== -1) &#123;
+      <span class="keyword">this</span>.users.splice(userIndex, 1);
+     &#125;
+   &#125;
+ &#125;
+</code></pre>
+
+       <h3>Step 3: Inject Service into Controller</h3>
+       <p>The controller uses the service to handle HTTP requests:</p>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; 
+  <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Post</span>, <span class="type">Put</span>, <span class="type">Delete</span>, 
+  <span class="type">Body</span>, <span class="type">Param</span>, <span class="type">Query</span>, <span class="type">HttpStatus</span>, <span class="type">HttpCode</span>
+ &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span>  &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span>, <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span>  &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> usersService: <span class="type">UsersService</span>) &#123; &#125;
+
+  <span class="decorator">&#64;Get</span>()
+  findAll(
+    <span class="decorator">&#64;Query</span>(<span class="string">'limit'</span>) limit?: <span class="type">number</span>,
+    <span class="decorator">&#64;Query</span>(<span class="string">'offset'</span>) offset?: <span class="type">number</span>
+  ): <span class="type">User</span>[] &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.findAll(limit, offset);
+   &#125;
+
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  findOne(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">User</span> | <span class="type">undefined</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.findOne(+id);
+   &#125;
+
+  <span class="decorator">&#64;Post</span>()
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.CREATED)
+  create(<span class="decorator">&#64;Body</span>() createUserDto: <span class="type">CreateUserDto</span>): <span class="type">User</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.create(createUserDto);
+   &#125;
+
+  <span class="decorator">&#64;Put</span>(<span class="string">':id'</span>)
+  update(
+    <span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>,
+    <span class="decorator">&#64;Body</span>() updateUserDto: <span class="type">UpdateUserDto</span>
+  ): <span class="type">User</span> | <span class="type">null</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.update(+id, updateUserDto);
+   &#125;
+
+  <span class="decorator">&#64;Delete</span>(<span class="string">':id'</span>)
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.NO_CONTENT)
+  remove(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">void</span> &#123;
+    <span class="keyword">this</span>.usersService.remove(+id);
+   &#125;
+ &#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Services encapsulate business logic, keeping controllers lean.</li>
+         <li>DI injects services into controllers via constructor.</li>
+         <li>DTOs ensure type-safe data handling.</li>
+         <li>Services can integrate with databases or external APIs.</li>
+         <li>Pagination logic is implemented in the service for reusability.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h3>3. Dependency Injection Patterns</h3>
+       <p>Dependency Injection supports various patterns for flexibility:</p>
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">Scope</span>  &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span>  &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span>  &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  controllers: [<span class="type">UsersController</span>],
+  providers: [
+    <span class="type">UsersService</span>,
+    &#123;
+      provide: <span class="string">'CONFIG'</span>,
+      useValue: &#123; apiKey: <span class="string">'secret'</span>  &#125; <span class="comment">// Value provider</span>
+     &#125;,
+    &#123;
+      provide: <span class="string">'CUSTOM_SERVICE'</span>,
+      useFactory: (usersService: <span class="type">UsersService</span>) => &#123;
+        <span class="keyword">return</span> <span class="keyword">new</span> <span class="type">CustomService</span>(usersService);
+       &#125;,
+      inject: [<span class="type">UsersService</span>] <span class="comment">// Factory provider</span>
+     &#125;
+  ]
+ &#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123; &#125;
+</code></pre>
+
+       <h3>Key DI Patterns</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Constructor Injection</h4>
+           <p>Inject dependencies via constructor parameters</p>
+         </div>
+         <div class="feature-card">
+           <h4>Factory Providers</h4>
+           <p>Create dependencies dynamically with useFactory</p>
+         </div>
+         <div class="feature-card">
+           <h4>Value Providers</h4>
+           <p>Inject static values using useValue</p>
+         </div>
+         <div class="feature-card">
+           <h4>Optional Injection</h4>
+           <p>Use &#64;Optional() for non-required dependencies</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>4. Advanced Service Features</h2>
+       <p>Services support advanced features like custom scopes and lifecycle hooks:</p>
+       <pre><code><span class="comment">// advanced.service.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">Scope</span>, <span class="type">OnModuleInit</span>  &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="decorator">&#64;Injectable</span>(&#123; scope: <span class="type">Scope</span>.TRANSIENT  &#125;)
+<span class="keyword">export class</span> <span class="type">TransientService</span> <span class="keyword">implements</span> <span class="type">OnModuleInit</span> &#123;
+  <span class="keyword">private</span> instanceId: <span class="type">number</span> = Math.random();
+
+  onModuleInit() &#123;
+    console.log(<span class="string">`TransientService initialized with ID: $&#123;this.instanceId &#125;`</span>);
+   &#125;
+
+  getInstanceId(): <span class="type">number</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.instanceId;
+   &#125;
+ &#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li><strong>Scopes</strong>: DEFAULT (singleton), TRANSIENT (new instance per injection), REQUEST (new instance per request).</li>
+         <li><strong>Lifecycle Hooks</strong>: Implement OnModuleInit, OnModuleDestroy, etc., for initialization or cleanup.</li>
+         <li><strong>Circular Dependencies</strong>: Use forwardRef() for resolving circular dependencies.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>5. Module Registration</h2>
+       <p>Services must be registered in a module to be injectable:</p>
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span>  &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span>  &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span>  &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  controllers: [<span class="type">UsersController</span>],
+  providers: [<span class="type">UsersService</span>]
+ &#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123; &#125;
+</code></pre>
+
+       <p class="note">Register services in the providers array to enable dependency injection across the application.</p>
+     </div>
+
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on NestJS Services & Dependency Injection</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is the primary role of a Service in NestJS?</strong>
+           <p class="answer">Services encapsulate business logic and data operations, injectable into controllers or other services for modularity and reusability.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you define a service in NestJS?</strong>
+           <p class="answer">A service is defined by decorating a TypeScript class with the <code>&#64;Injectable()</code> decorator (e.g., <code>&#64;Injectable()</code>).</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the purpose of the &#64;Injectable() decorator?</strong>
+           <p class="answer">The <code>&#64;Injectable()</code> decorator marks a class as a provider that can be managed by NestJS’s DI system.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">What is Dependency Injection in NestJS?</strong>
+           <p class="answer">DI is a design pattern where dependencies are automatically provided to a class, typically via constructor injection, promoting loose coupling.</p>
+           <span class="category">Dependency Injection</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you inject a service into a controller?</strong>
+           <p class="answer">Declare the service as a constructor parameter with an access modifier (e.g., <code>constructor(private usersService: UsersService)</code>).</p>
+           <span class="category">Dependency Injection</span>
+         </li>
+         <li>
+           <strong class="question-title">What are DTOs, and how are they used in services?</strong>
+           <p class="answer">DTOs (Data Transfer Objects) define the structure of data for input/output, ensuring type safety and validation in service methods.</p>
+           <span class="category">DTOs</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you register a service in a NestJS module?</strong>
+           <p class="answer">Add the service to the <code>providers</code> array in the <code>&#64;Module()</code> decorator (e.g., <code>providers: [UsersService]</code>).</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">What are the different provider scopes in NestJS?</strong>
+           <p class="answer">DEFAULT (singleton), TRANSIENT (new instance per injection), and REQUEST (new instance per request).</p>
+           <span class="category">Advanced DI</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a factory provider, and how is it used?</strong>
+           <p class="answer">A factory provider uses <code>useFactory</code> to dynamically create a dependency, allowing custom logic (e.g., <code>useFactory: (service) => new CustomService(service)</code>).</p>
+           <span class="category">Advanced DI</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle circular dependencies in NestJS?</strong>
+           <p class="answer">Use <code>forwardRef(() => OtherService)</code> in the module or constructor to resolve circular dependencies.</p>
+           <span class="category">Advanced DI</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the role of the &#64;Optional() decorator?</strong>
+           <p class="answer"><code>&#64;Optional()</code> marks a dependency as optional, preventing errors if the dependency is not provided.</p>
+           <span class="category">Dependency Injection</span>
+         </li>
+         <li>
+           <strong class="question-title">What are lifecycle hooks in NestJS services?</strong>
+           <p class="answer">Lifecycle hooks like <code>OnModuleInit</code> or <code>OnModuleDestroy</code> allow services to execute code during module initialization or destruction.</p>
+           <span class="category">Advanced DI</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you implement a value provider?</strong>
+           <p class="answer">Use <code>useValue</code> in the module’s providers to inject a static value (e.g., <code>&#123; provide: 'CONFIG', useValue: &#123; apiKey: 'secret'  &#125;  &#125;</code>).</p>
+           <span class="category">Advanced DI</span>
+         </li>
+         <li>
+           <strong class="question-title">Why is separation of concerns important in services?</strong>
+           <p class="answer">Separation of concerns keeps controllers focused on request handling and services on business logic, improving maintainability and testability.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">How can services integrate with databases?</strong>
+           <p class="answer">Services can use ORMs like TypeORM or Sequelize, injected via DI, to perform database operations (e.g., <code>constructor(private repository: Repository&lt;User&gt;)</code>).</p>
+           <span class="category">Data Access</span>
+         </li>
+       </ol>
+     </div>
+   </div>
+</div>

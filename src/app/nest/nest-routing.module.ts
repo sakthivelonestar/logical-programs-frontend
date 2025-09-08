@@ -64,7 +64,7 @@ const routes: Routes = [
           component:MiddlewareNestjsComponent
         },
          {
-          path: 'custom-decorator',
+          path: 'custom-decorators',
           component:CustomDecoratorsComponent 
         },
       ]

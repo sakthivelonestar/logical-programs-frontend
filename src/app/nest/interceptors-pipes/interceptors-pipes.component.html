@@ -1,1 +1,345 @@
-<p>interceptors-pipes works!</p>
+<div class="overall-wrapper" appMaximize #nestjsInterceptorsPipes="maximize" id="nestjsInterceptorsPipes">
+  <div class="wrapper">
+       <img class="swap" *ngIf="nestjsInterceptorsPipes.checkfullscreen() == 'hide'" (click)="nestjsInterceptorsPipes.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="nestjsInterceptorsPipes.checkfullscreen() != 'hide'" (click)="nestjsInterceptorsPipes.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               NestJS <strong>Interceptors</strong> and <strong>Custom Pipes</strong> are mechanisms to transform or process data in the request-response cycle. Interceptors handle cross-cutting concerns like logging or response transformation, while pipes validate or transform input data.
+           </p>
+           <p> <span class="question">Why:</span>
+               Interceptors enable <strong>centralized logic</strong> for tasks like logging, caching, or response formatting. Custom pipes provide <strong>flexible validation</strong> and data transformation, ensuring clean and consistent data processing.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to enhance request handling, enforce data validation, and streamline response management.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Interceptor Setup</h2>
+       <p>Create an interceptor to log request details or transform responses:</p>
+       
+       <h3>Creating a Logging Interceptor</h3>
+       <pre><code><span class="comment">// logging.interceptor.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NestInterceptor</span>, <span class="type">ExecutionContext</span>, <span class="type">CallHandler</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; Observable &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; tap &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">LoggingInterceptor</span> <span class="keyword">implements</span> <span class="type">NestInterceptor</span> &#123;
+  intercept(context: <span class="type">ExecutionContext</span>, next: <span class="type">CallHandler</span>): <span class="type">Observable</span>&lt;<span class="type">any</span>&gt; &#123;
+    <span class="keyword">const</span> request = context.switchToHttp().getRequest();
+    <span class="keyword">const</span> method = request.method;
+    <span class="keyword">const</span> url = request.url;
+    <span class="keyword">const</span> now = <span class="type">Date</span>.now();
+
+    <span class="keyword">return</span> next
+      .handle()
+      .pipe(
+        tap(() => console.log(`[$ &#123;method&#125;] $ &#123;url&#125; - $ &#123;<span class="type">Date</span>.now() - now&#125;ms`))
+      );
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Key Interceptor Features</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Intercept Method</h4>
+           <p>Handles request and response processing</p>
+         </div>
+         <div class="feature-card">
+           <h4>RxJS Integration</h4>
+           <p>Uses observables for flexible handling</p>
+         </div>
+         <div class="feature-card">
+           <h4>Cross-cutting Logic</h4>
+           <p>Applies logging, caching, or transformation</p>
+         </div>
+         <div class="feature-card">
+           <h4>Global or Local</h4>
+           <p>Can be applied globally or per route</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Basic Custom Pipe Setup</h2>
+       <p>Create a custom pipe to validate or transform incoming data:</p>
+
+       <h3>Creating a ParseInt Pipe</h3>
+       <pre><code><span class="comment">// parse-int.pipe.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">PipeTransform</span>, <span class="type">Injectable</span>, <span class="type">ArgumentMetadata</span>, <span class="type">BadRequestException</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">ParseIntPipe</span> <span class="keyword">implements</span> <span class="type">PipeTransform</span> &#123;
+  transform(value: <span class="type">any</span>, metadata: <span class="type">ArgumentMetadata</span>) &#123;
+    <span class="keyword">const</span> val = parseInt(value, 10);
+    <span class="keyword">if</span> (isNaN(val)) &#123;
+      <span class="keyword">throw new</span> <span class="type">BadRequestException</span>(<span class="string">'Validation failed: ID must be a number'</span>);
+    &#125;
+    <span class="keyword">return</span> val;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Applying the Pipe</h3>
+       <p>Use the pipe in a controller:</p>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Param</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">ParseIntPipe</span> &#125; <span class="keyword">from</span> <span class="string">'./pipes/parse-int.pipe'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  findOne(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>, <span class="type">ParseIntPipe</span>) id: <span class="type">number</span>) &#123;
+    <span class="keyword">return</span> &#123; id, name: <span class="string">'John Doe'</span> &#125;;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Key Pipe Features</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Transform Method</h4>
+           <p>Validates or transforms input data</p>
+         </div>
+         <div class="feature-card">
+           <h4>Exception Handling</h4>
+           <p>Throws exceptions for invalid data</p>
+         </div>
+         <div class="feature-card">
+           <h4>Reusable Logic</h4>
+           <p>Applies consistent validation rules</p>
+         </div>
+         <div class="feature-card">
+           <h4>Parameter-level</h4>
+           <p>Targets specific parameters or body</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>3. Advanced Interceptor Usage</h2>
+       <p>Interceptors can transform responses or implement caching:</p>
+
+       <h3>Response Transformation Interceptor</h3>
+       <pre><code><span class="comment">// transform.interceptor.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NestInterceptor</span>, <span class="type">ExecutionContext</span>, <span class="type">CallHandler</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; Observable &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; map &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">TransformInterceptor</span> <span class="keyword">implements</span> <span class="type">NestInterceptor</span> &#123;
+  intercept(context: <span class="type">ExecutionContext</span>, next: <span class="type">CallHandler</span>): <span class="type">Observable</span>&lt;<span class="type">any</span>&gt; &#123;
+    <span class="keyword">return</span> next
+      .handle()
+      .pipe(
+        map(data => (&#123;
+          statusCode: context.switchToHttp().getResponse().statusCode,
+          data,
+          message: <span class="string">'Success'</span>,
+          timestamp: <span class="keyword">new</span> <span class="type">Date</span>().toISOString()
+        &#125;))
+      );
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Applying Interceptor Globally</h3>
+       <p>Apply the interceptor in the main application:</p>
+       <pre><code><span class="comment">// main.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">NestFactory</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/core'</span>;
+<span class="keyword">import</span> &#123; <span class="type">AppModule</span> &#125; <span class="keyword">from</span> <span class="string">'./app.module'</span>;
+<span class="keyword">import</span> &#123; <span class="type">TransformInterceptor</span> &#125; <span class="keyword">from</span> <span class="string">'./interceptors/transform.interceptor'</span>;
+
+<span class="keyword">async function</span> bootstrap() &#123;
+  <span class="keyword">const</span> app = <span class="keyword">await</span> <span class="type">NestFactory</span>.create(<span class="type">AppModule</span>);
+  app.useGlobalInterceptors(<span class="keyword">new</span> <span class="type">TransformInterceptor</span>());
+  <span class="keyword">await</span> app.listen(3000);
+&#125;
+bootstrap();
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Interceptors can wrap responses in a consistent format.</li>
+         <li>Use RxJS operators like <code>map</code> for transformations.</li>
+         <li>Interceptors can be applied globally or per route.</li>
+         <li>Handle cross-cutting concerns like logging or caching.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Advanced Custom Pipe Usage</h2>
+       <p>Create a custom pipe for complex validation or transformation:</p>
+
+       <h3>Custom Validation Pipe</h3>
+       <pre><code><span class="comment">// user-validation.pipe.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">PipeTransform</span>, <span class="type">Injectable</span>, <span class="type">ArgumentMetadata</span>, <span class="type">BadRequestException</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">UserValidationPipe</span> <span class="keyword">implements</span> <span class="type">PipeTransform</span> &#123;
+  transform(value: <span class="type">any</span>, metadata: <span class="type">ArgumentMetadata</span>) &#123;
+    <span class="keyword">if</span> (!value.name || value.name.length < 3) &#123;
+      <span class="keyword">throw new</span> <span class="type">BadRequestException</span>(<span class="string">'Name must be at least 3 characters'</span>);
+    &#125;
+    <span class="keyword">if</span> (!value.email || !value.email.includes(<span class="string">'&#64;'</span>)) &#123;
+      <span class="keyword">throw new</span> <span class="type">BadRequestException</span>(<span class="string">'Invalid email format'</span>);
+    &#125;
+    <span class="keyword">return</span> value;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Using the Pipe in a Controller</h3>
+       <p>Apply the custom pipe to validate request bodies:</p>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Controller</span>, <span class="type">Post</span>, <span class="type">Body</span>, <span class="type">HttpStatus</span>, <span class="type">HttpCode</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UserValidationPipe</span> &#125; <span class="keyword">from</span> <span class="string">'./pipes/user-validation.pipe'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="decorator">&#64;Post</span>()
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.CREATED)
+  create(<span class="decorator">&#64;Body</span>(<span class="type">UserValidationPipe</span>) userData: <span class="type">any</span>) &#123;
+    <span class="keyword">return</span> &#123; message: <span class="string">'User created'</span>, data: userData &#125;;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Pipes validate or transform specific inputs.</li>
+         <li>Custom pipes handle complex validation logic.</li>
+         <li>Pipes can be applied to parameters or body.</li>
+         <li>Throw exceptions for invalid data.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>5. Best Practices for Interceptors and Pipes</h2>
+       <p>Organize interceptors and pipes for scalability and maintainability:</p>
+       
+       <h3>Directory Structure</h3>
+       <pre><code><span class="comment">// Recommended project structure</span>
+project/
+├── src/
+│   ├── users/
+│   │   ├── pipes/
+│   │   │   ├── parse-int.pipe.ts
+│   │   │   └── user-validation.pipe.ts
+│   │   ├── interceptors/
+│   │   │   ├── logging.interceptor.ts
+│   │   │   └── transform.interceptor.ts
+│   │   ├── users.controller.ts
+│   │   ├── users.service.ts
+│   │   └── users.module.ts
+│   ├── app.module.ts
+│   └── main.ts
+</code></pre>
+
+       <h3>Best Practices</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Single Responsibility</h4>
+           <p>Each interceptor or pipe should have one purpose</p>
+         </div>
+         <div class="feature-card">
+           <h4>Global Interceptors</h4>
+           <p>Use global interceptors for common tasks like logging</p>
+         </div>
+         <div class="feature-card">
+           <h4>Reusable Pipes</h4>
+           <p>Create reusable pipes for common validations</p>
+         </div>
+         <div class="feature-card">
+           <h4>Error Handling</h4>
+           <p>Combine pipes with exception filters for robust validation</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on NestJS Interceptors & Custom Pipes</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is an interceptor in NestJS?</strong>
+           <p class="answer">An interceptor is a class that implements <code>NestInterceptor</code> to handle cross-cutting concerns like logging or response transformation.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a custom pipe in NestJS?</strong>
+           <p class="answer">A custom pipe implements <code>PipeTransform</code> to validate or transform incoming data.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the role of the intercept method?</strong>
+           <p class="answer">It processes requests and responses, allowing logic before and after handler execution.</p>
+           <span class="category">Interceptors</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you apply an interceptor?</strong>
+           <p class="answer">Use <code>&#64;UseInterceptors()</code> on a controller/method or globally with <code>useGlobalInterceptors()</code>.</p>
+           <span class="category">Interceptors</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the purpose of the transform method in pipes?</strong>
+           <p class="answer">It validates or transforms input data before it reaches the handler.</p>
+           <span class="category">Pipes</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you create a custom pipe?</strong>
+           <p class="answer">Implement <code>PipeTransform</code> with a <code>transform</code> method and use <code>&#64;Injectable()</code>.</p>
+           <span class="category">Pipes</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the benefit of using RxJS in interceptors?</strong>
+           <p class="answer">RxJS operators like <code>map</code> or <code>tap</code> allow flexible request/response handling.</p>
+           <span class="category">Interceptors</span>
+         </li>
+         <li>
+           <strong class="question-title">How do pipes handle validation errors?</strong>
+           <p class="answer">They throw exceptions like <code>BadRequestException</code> for invalid data.</p>
+           <span class="category">Pipes</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the ExecutionContext in interceptors?</strong>
+           <p class="answer">It provides access to request, response, and execution details.</p>
+           <span class="category">Interceptors</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you apply a pipe to a specific parameter?</strong>
+           <p class="answer">Use <code>&#64;Param('id', ParseIntPipe)</code> or <code>&#64;Body(ParseIntPipe)</code> in the controller.</p>
+           <span class="category">Pipes</span>
+         </li>
+         <li>
+           <strong class="question-title">Why use global interceptors?</strong>
+           <p class="answer">They centralize logic like logging or response formatting across all routes.</p>
+           <span class="category">Interceptors</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the difference between a pipe and a middleware?</strong>
+           <p class="answer">Pipes target specific parameters or bodies, while middleware applies to entire requests.</p>
+           <span class="category">Pipes</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you test an interceptor?</strong>
+           <p class="answer">Mock the <code>ExecutionContext</code> and <code>CallHandler</code> to test interceptor logic.</p>
+           <span class="category">Testing</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you test a custom pipe?</strong>
+           <p class="answer">Instantiate the pipe and test its <code>transform</code> method with sample inputs.</p>
+           <span class="category">Testing</span>
+         </li>
+         <li>
+           <strong class="question-title">How can interceptors be used for caching?</strong>
+           <p class="answer">Store responses in a cache within the interceptor and return cached data for matching requests.</p>
+           <span class="category">Interceptors</span>
+         </li>
+       </ol>
+     </div>
+   </div>
+</div>

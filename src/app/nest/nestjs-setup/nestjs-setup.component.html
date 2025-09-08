@@ -29,23 +29,23 @@ npm run start:dev</code></pre>
            <p>Getting started with NestJS installation and creating your first project.</p>
        </div>
 
-       <div class="step">
+       <!-- <div class="step">
            <h4>Step 1.1: Creating Modules and Resources</h4>
            <pre><code>-- 📦 Generate a Basic Module
 # Create a new module (basic structure)
-nest generate module users
+nest generate module registrations
 # or shorter syntax
-nest g mo users
+nest g mo registrations
 
 -- 🎯 Generate a Complete Resource (CRUD)
 # Create a full resource with CRUD operations
-nest generate resource products
+nest generate resource registration
 # or shorter syntax
-nest g res products
+nest g res registration
 
 -- 💡 Resource Generation Options:
 ? What transport layer do you want to use?
-❯ REST API
+> REST API
   GraphQL (code first)
   GraphQL (schema first)
   Microservice (non-HTTP)
@@ -54,17 +54,17 @@ nest g res products
 ? Would you like to generate CRUD entry points? Yes
 
 -- 📂 Generated Files Structure:
-src/products/
+src/registration/
 ├── dto/
 │   ├── create-product.dto.ts     # Data validation
 │   └── update-product.dto.ts     # Update validation
 ├── entities/
 │   └── product.entity.ts         # Database model
-├── products.controller.ts        # API endpoints
-├── products.module.ts           # Module configuration
-└── products.service.ts         # Business logic</code></pre>
+├── registration.controller.ts        # API endpoints
+├── registration.module.ts           # Module configuration
+└── registration.service.ts         # Business logic</code></pre>
            <p>Learn how to create modules and resources using NestJS CLI commands.</p>
-       </div>
+       </div> -->
        
        <div class="step">
            <h4>Step 2: Project Structure Overview</h4>
@@ -76,12 +76,12 @@ my-nestjs-app/
 │   ├── app.service.ts             # Root service
 │   ├── main.ts                    # Application entry point
 │   └── modules/                   # Feature modules
-│       ├── users/
+│       ├── registrations/
 │       │   ├── dto/               # Data Transfer Objects
 │       │   ├── entities/          # Database entities
-│       │   ├── users.controller.ts
-│       │   ├── users.module.ts
-│       │   └── users.service.ts
+│       │   ├── registrations.controller.ts
+│       │   ├── registrations.module.ts
+│       │   └── registrations.service.ts
 │       └── auth/
 ├── test/                          # E2E tests
 ├── dist/                          # Compiled JavaScript
@@ -117,10 +117,10 @@ bootstrap();</code></pre>
 import {{ '{' }} Module {{ '}' }} from '&#64;nestjs/common';
 import {{ '{' }} AppController {{ '}' }} from './app.controller';
 import {{ '{' }} AppService {{ '}' }} from './app.service';
-import {{ '{' }} UsersModule {{ '}' }} from './modules/users/users.module';
+import {{ '{' }} userModule {{ '}' }} from './modules/registrations/registrations.module';
 
 &#64;Module({{ '{' }}
- imports: [UsersModule],        // Import feature modules
+ imports: [userModule],        // Import feature modules
  controllers: [AppController],   // Root controllers
  providers: [AppService],       // Root services
 {{ '}' }})
@@ -172,9 +172,9 @@ src/
 ├── main.ts
 ├── app.module.ts
 ├── modules/                       # Feature modules
-│   ├── users/
+│   ├── registrations/
 │   ├── auth/
-│   ├── products/
+│   ├── registration/
 │   └── orders/
 ├── common/                        # Shared utilities
 │   ├── decorators/               # Custom decorators
@@ -195,10 +195,10 @@ src/
 
            <pre><code>-- 🛠️ CLI Commands for Structure Generation
 # Generate a new module
-nest generate module users
+nest generate module registrations
 
 # Generate controller with CRUD operations
-nest generate resource products
+nest generate resource registration
 
 # Generate service
 nest generate service auth
@@ -210,17 +210,17 @@ nest generate guard common/guards/jwt
 nest generate interceptor common/interceptors/logging
 
 -- 💡 Generated Output Structure:
-products/
+registration/
 ├── dto/
 │   ├── create-product.dto.ts
 │   └── update-product.dto.ts
 ├── entities/
 │   └── product.entity.ts
-├── products.controller.spec.ts
-├── products.controller.ts
-├── products.module.ts
-├── products.service.spec.ts
-└── products.service.ts</code></pre>
+├── registration.controller.spec.ts
+├── registration.controller.ts
+├── registration.module.ts
+├── registration.service.spec.ts
+└── registration.service.ts</code></pre>
 
            <pre><code>-- 📋 Package.json Scripts Explanation
 {{ '{' }}
@@ -245,5 +245,111 @@ products/
                <li>⚡ <strong>Development Experience</strong> → Hot reload, debugging, testing built-in</li>
            </ul>
        </div>
+
+       <div class="step interview-questions">
+  <h4>
+    <span>📝</span>
+    NestJS Setup and Structure Interview Questions
+  </h4>
+
+  <div class="question-section">
+    <p>Project Setup Questions</p>
+    <ul>
+      <li>
+        <p>Q: What are the prerequisites and steps to create a new NestJS project?</p>
+        <div class="answer">
+          <strong>Prerequisites:</strong>
+          <ul>
+            <li>Node.js (version 12 or higher)</li>
+            <li>npm or yarn package manager</li>
+          </ul>
+          <strong>Steps:</strong>
+          <ul>
+            <li>Install NestJS CLI: <code>npm i -g &#64;nestjs/cli</code></li>
+            <li>Create project: <code>nest new my-nestjs-app</code></li>
+            <li>Choose package manager: npm or yarn</li>
+            <li>Navigate to project: <code>cd my-nestjs-app</code></li>
+            <li>Start development: <code>npm run start:dev</code></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <p>Q: Explain the key configuration files in a NestJS project.</p>
+        <div class="answer">
+          <ul>
+            <li><strong>nest-cli.json:</strong> CLI behavior, project structure, compilation options</li>
+            <li><strong>tsconfig.json:</strong> TypeScript compiler options and paths</li>
+            <li><strong>package.json:</strong> Dependencies and npm scripts</li>
+            <li><strong>.env:</strong> Environment variables configuration</li>
+            <li><strong>main.ts:</strong> Application bootstrap configuration</li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="question-section">
+    <p>Architecture & Structure Questions</p>
+    <ul>
+      <li>
+        <p>Q: What are the core architectural concepts in NestJS?</p>
+        <div class="answer">
+          <ul>
+            <li><strong>Modules:</strong> Organize application structure</li>
+            <li><strong>Controllers:</strong> Handle HTTP requests and define routes</li>
+            <li><strong>Providers:</strong> Services, repositories, factories, helpers</li>
+            <li><strong>Middleware:</strong> Process requests before reaching route handler</li>
+            <li><strong>Guards:</strong> Handle authentication and authorization</li>
+            <li><strong>Interceptors:</strong> Transform request/response data</li>
+            <li><strong>Pipes:</strong> Validate and transform input data</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <p>Q: How would you structure a large-scale NestJS application?</p>
+        <div class="answer">
+          <ul>
+            <li><strong>src/modules/:</strong> Feature modules (users, auth, products)</li>
+            <li><strong>src/common/:</strong> Shared code (guards, filters, decorators)</li>
+            <li><strong>src/config/:</strong> Configuration modules and env setup</li>
+            <li><strong>src/database/:</strong> Database entities and migrations</li>
+            <li><strong>src/utils/:</strong> Helper functions and utilities</li>
+            <li><strong>test/:</strong> Unit and e2e tests</li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="question-section">
+    <p>Development & Testing Questions</p>
+    <ul>
+      <li>
+        <p>Q: What are the essential NestJS CLI commands for development?</p>
+        <div class="answer">
+          <ul>
+            <li><code>nest g resource [name]</code> - Generate full CRUD resource</li>
+            <li><code>nest g module [name]</code> - Create new module</li>
+            <li><code>nest g controller [name]</code> - Generate controller</li>
+            <li><code>nest g service [name]</code> - Create service</li>
+            <li><code>nest g middleware [name]</code> - Generate middleware</li>
+            <li><code>nest g guard [name]</code> - Create guard</li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <p>Q: How do you handle testing in a NestJS application?</p>
+        <div class="answer">
+          <ul>
+            <li><strong>Unit Tests:</strong> <code>npm run test</code> - Test individual components</li>
+            <li><strong>E2E Tests:</strong> <code>npm run test:e2e</code> - Test full request flow</li>
+            <li><strong>Test Watch:</strong> <code>npm run test:watch</code> - Development testing</li>
+            <li><strong>Coverage:</strong> <code>npm run test:cov</code> - Test coverage report</li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
    </div>
 </div>

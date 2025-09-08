@@ -1,1 +1,500 @@
-<p>database-integration works!</p>
+<div class="overall-wrapper" appMaximize #typeormIntegration="maximize" id="typeormIntegration">
+  <div class="wrapper">
+       <img class="swap" *ngIf="typeormIntegration.checkfullscreen() == 'hide'" (click)="typeormIntegration.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="typeormIntegration.checkfullscreen() != 'hide'" (click)="typeormIntegration.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               <strong>TypeORM</strong> is a powerful ORM (Object-Relational Mapping) library for TypeScript and JavaScript, seamlessly integrated with NestJS to manage database operations. It provides a structured way to interact with relational databases using entities, repositories, and queries.
+           </p>
+           <p> <span class="question">Why:</span>
+               TypeORM simplifies database interactions by offering <strong>entity-based modeling</strong>, <strong>repository patterns</strong>, and support for multiple databases (e.g., PostgreSQL, MySQL, SQLite). It enhances code maintainability, type safety, and scalability in NestJS applications.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to manage data persistence, perform CRUD operations, and handle complex relationships in relational databases.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic TypeORM Setup in NestJS</h2>
+       <p>Integrate TypeORM into a NestJS application to manage database connections and entities:</p>
+       
+       <h3>Installing TypeORM and Database Driver</h3>
+       <p>Install TypeORM and a database driver (e.g., PostgreSQL):</p>
+       <pre><code>npm install &#64;nestjs/typeorm typeorm pg
+</code></pre>
+
+       <h3>Configuring TypeORM in App Module</h3>
+       <p>Configure TypeORM in the root module using <code>TypeOrmModule.forRoot()</code>:</p>
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/typeorm'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersModule</span> &#125; <span class="keyword">from</span> <span class="string">'./users/users.module'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  imports: [
+    <span class="type">TypeOrmModule</span>.forRoot(&#123;
+      type: <span class="string">'postgres'</span>,
+      host: <span class="string">'localhost'</span>,
+      port: 5432,
+      username: <span class="string">'your_username'</span>,
+      password: <span class="string">'your_password'</span>,
+      database: <span class="string">'your_database'</span>,
+      entities: [<span class="string">'dist/**/*.entity&#123;.ts,.js&#125;'</span>],
+      synchronize: <span class="keyword">true</span>, <span class="comment">// Use cautiously in production</span>
+    &#125;),
+    <span class="type">UsersModule</span>,
+  ],
+&#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Key TypeORM Elements</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Entities</h4>
+           <p>Classes that map to database tables, defining the schema</p>
+         </div>
+         <div class="feature-card">
+           <h4>Repositories</h4>
+           <p>Handle database operations for specific entities</p>
+         </div>
+         <div class="feature-card">
+           <h4>Connections</h4>
+           <p>Configure database access and settings</p>
+         </div>
+         <div class="feature-card">
+           <h4>Synchronization</h4>
+           <p>Automatically syncs schema with database (development only)</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Complete TypeORM Integration</h2>
+       <p>This example demonstrates a complete TypeORM integration for user management, including entity, repository, service, and controller.</p>
+
+       <h3>Step 1: Define the User Entity</h3>
+       <p>Create an entity to represent the User table in the database:</p>
+       <pre><code><span class="comment">// users/entities/user.entity.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Entity</span>, <span class="type">Column</span>, <span class="type">PrimaryGeneratedColumn</span> &#125; <span class="keyword">from</span> <span class="string">'typeorm'</span>;
+
+<span class="decorator">&#64;Entity</span>()
+<span class="keyword">export class</span> <span class="type">User</span> &#123;
+  <span class="decorator">&#64;PrimaryGeneratedColumn</span>()
+  id: <span class="type">number</span>;
+
+  <span class="decorator">&#64;Column</span>()
+  name: <span class="type">string</span>;
+
+  <span class="decorator">&#64;Column</span>(&#123; unique: <span class="keyword">true</span> &#125;)
+  email: <span class="type">string</span>;
+
+  <span class="decorator">&#64;Column</span>()
+  age: <span class="type">number</span>;
+&#125;
+</code></pre>
+
+       <h3>Step 2: Create DTOs for Validation</h3>
+       <p>Define Data Transfer Objects (DTOs) for input validation:</p>
+       <pre><code><span class="comment">// users/dto/create-user.dto.ts</span>
+<span class="keyword">export class</span> <span class="type">CreateUserDto</span> &#123;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+&#125;
+
+<span class="comment">// users/dto/update-user.dto.ts</span>
+<span class="keyword">export class</span> <span class="type">UpdateUserDto</span> &#123;
+  name?: <span class="type">string</span>;
+  email?: <span class="type">string</span>;
+  age?: <span class="type">number</span>;
+&#125;
+</code></pre>
+
+       <h3>Step 3: Create the Users Service with TypeORM</h3>
+       <p>The service uses a TypeORM repository for database operations:</p>
+       <pre><code><span class="comment">// users/users.service.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NotFoundException</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">InjectRepository</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/typeorm'</span>;
+<span class="keyword">import</span> &#123; <span class="type">Repository</span> &#125; <span class="keyword">from</span> <span class="string">'typeorm'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> &#125; <span class="keyword">from</span> <span class="string">'./entities/user.entity'</span>;
+<span class="keyword">import</span> &#123; <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span> &#125; <span class="keyword">from</span> <span class="string">'./dto'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">UsersService</span> &#123;
+  <span class="keyword">constructor</span>(
+    <span class="decorator">&#64;InjectRepository</span>(<span class="type">User</span>)
+    <span class="keyword">private</span> userRepository: <span class="type">Repository</span><<span class="type">User</span>>,
+  ) &#123;&#125;
+
+  async findAll(limit?: <span class="type">number</span>, offset?: <span class="type">number</span>): <span class="keyword">Promise</span><<span class="type">User</span>[]> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.userRepository.find(&#123;
+      skip: offset || 0,
+      take: limit,
+    &#125;);
+  &#125;
+
+  async findOne(id: <span class="type">number</span>): <span class="keyword">Promise</span><<span class="type">User</span>> &#123;
+    <span class="keyword">const</span> user = <span class="keyword">await</span> <span class="keyword">this</span>.userRepository.findOneBy(&#123; id &#125;);
+    <span class="keyword">if</span> (!user) &#123;
+      <span class="keyword">throw new</span> <span class="type">NotFoundException</span>(<span class="string">`User with ID $&#123;id&#125; not found`</span>);
+    &#125;
+    <span class="keyword">return</span> user;
+  &#125;
+
+  async create(createUserDto: <span class="type">CreateUserDto</span>): <span class="keyword">Promise</span><<span class="type">User</span>> &#123;
+    <span class="keyword">const</span> user = <span class="keyword">this</span>.userRepository.create(createUserDto);
+    <span class="keyword">return</span> <span class="keyword">this</span>.userRepository.save(user);
+  &#125;
+
+  async update(id: <span class="type">number</span>, updateUserDto: <span class="type">UpdateUserDto</span>): <span class="keyword">Promise</span><<span class="type">User</span>> &#123;
+    <span class="keyword">const</span> user = <span class="keyword">await</span> <span class="keyword">this</span>.findOne(id);
+    <span class="keyword">return</span> <span class="keyword">this</span>.userRepository.save(&#123; ...user, ...updateUserDto &#125;);
+  &#125;
+
+  async remove(id: <span class="type">number</span>): <span class="keyword">Promise</span><<span class="type">void</span>> &#123;
+    <span class="keyword">const</span> user = <span class="keyword">await</span> <span class="keyword">this</span>.findOne(id);
+    <span class="keyword">await</span> <span class="keyword">this</span>.userRepository.remove(user);
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 4: Create the Users Controller</h3>
+       <p>The controller handles HTTP requests, delegating to the service:</p>
+       <pre><code><span class="comment">// users/users.controller.ts</span>
+<span class="keyword">import</span> &#123; 
+  <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Post</span>, <span class="type">Put</span>, <span class="type">Delete</span>, 
+  <span class="type">Body</span>, <span class="type">Param</span>, <span class="type">Query</span>, <span class="type">HttpStatus</span>, <span class="type">HttpCode</span>
+&#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> &#125; <span class="keyword">from</span> <span class="string">'./entities/user.entity'</span>;
+<span class="keyword">import</span> &#123; <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span> &#125; <span class="keyword">from</span> <span class="string">'./dto'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> usersService: <span class="type">UsersService</span>) &#123;&#125;
+
+  <span class="decorator">&#64;Get</span>()
+  async findAll(
+    <span class="decorator">&#64;Query</span>(<span class="string">'limit'</span>) limit?: <span class="type">number</span>,
+    <span class="decorator">&#64;Query</span>(<span class="string">'offset'</span>) offset?: <span class="type">number</span>,
+  ): <span class="keyword">Promise</span><<span class="type">User</span>[]> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.findAll(limit, offset);
+  &#125;
+
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  async findOne(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="keyword">Promise</span><<span class="type">User</span>> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.findOne(+id);
+  &#125;
+
+  <span class="decorator">&#64;Post</span>()
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.CREATED)
+  async create(<span class="decorator">&#64;Body</span>() createUserDto: <span class="type">CreateUserDto</span>): <span class="keyword">Promise</span><<span class="type">User</span>> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.create(createUserDto);
+  &#125;
+
+  <span class="decorator">&#64;Put</span>(<span class="string">':id'</span>)
+  async update(
+    <span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>,
+    <span class="decorator">&#64;Body</span>() updateUserDto: <span class="type">UpdateUserDto</span>,
+  ): <span class="keyword">Promise</span><<span class="type">User</span>> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.update(+id, updateUserDto);
+  &#125;
+
+  <span class="decorator">&#64;Delete</span>(<span class="string">':id'</span>)
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.NO_CONTENT)
+  async remove(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="keyword">Promise</span><<span class="type">void</span>> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.remove(+id);
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 5: Define the Users Module</h3>
+       <p>Register the entity and service in the module:</p>
+       <pre><code><span class="comment">// users/users.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/typeorm'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> &#125; <span class="keyword">from</span> <span class="string">'./entities/user.entity'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  imports: [<span class="type">TypeOrmModule</span>.forFeature([<span class="type">User</span>])],
+  controllers: [<span class="type">UsersController</span>],
+  providers: [<span class="type">UsersService</span>],
+&#125;)
+<span class="keyword">export class</span> <span class="type">UsersModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li><code>TypeOrmModule.forRoot()</code> configures the database connection.</li>
+         <li><code>TypeOrmModule.forFeature()</code> registers entities for specific modules.</li>
+         <li>Repositories provide type-safe database operations.</li>
+         <li>DTOs ensure input validation and type safety.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. Advanced TypeORM Features</h2>
+       <p>TypeORM supports advanced features like relations, migrations, and query building:</p>
+
+       <h3>Defining Relations</h3>
+       <p>Add a one-to-many relationship between User and Post entities:</p>
+       <pre><code><span class="comment">// users/entities/user.entity.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Entity</span>, <span class="type">Column</span>, <span class="type">PrimaryGeneratedColumn</span>, <span class="type">OneToMany</span> &#125; <span class="keyword">from</span> <span class="string">'typeorm'</span>;
+<span class="keyword">import</span> &#123; <span class="type">Post</span> &#125; <span class="keyword">from</span> <span class="string">'../posts/entities/post.entity'</span>;
+
+<span class="decorator">&#64;Entity</span>()
+<span class="keyword">export class</span> <span class="type">User</span> &#123;
+  <span class="decorator">&#64;PrimaryGeneratedColumn</span>()
+  id: <span class="type">number</span>;
+
+  <span class="decorator">&#64;Column</span>()
+  name: <span class="type">string</span>;
+
+  <span class="decorator">&#64;Column</span>(&#123; unique: <span class="keyword">true</span> &#125;)
+  email: <span class="type">string</span>;
+
+  <span class="decorator">&#64;Column</span>()
+  age: <span class="type">number</span>;
+
+  <span class="decorator">&#64;OneToMany</span>(() => <span class="type">Post</span>, (post) => post.user)
+  posts: <span class="type">Post</span>[];
+&#125;
+
+<span class="comment">// posts/entities/post.entity.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Entity</span>, <span class="type">Column</span>, <span class="type">PrimaryGeneratedColumn</span>, <span class="type">ManyToOne</span> &#125; <span class="keyword">from</span> <span class="string">'typeorm'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span> &#125; <span class="keyword">from</span> <span class="string">'../users/entities/user.entity'</span>;
+
+<span class="decorator">&#64;Entity</span>()
+<span class="keyword">export class</span> <span class="type">Post</span> &#123;
+  <span class="decorator">&#64;PrimaryGeneratedColumn</span>()
+  id: <span class="type">number</span>;
+
+  <span class="decorator">&#64;Column</span>()
+  title: <span class="type">string</span>;
+
+  <span class="decorator">&#64;Column</span>()
+  content: <span class="type">string</span>;
+
+  <span class="decorator">&#64;ManyToOne</span>(() => <span class="type">User</span>, (user) => user.posts)
+  user: <span class="type">User</span>;
+&#125;
+</code></pre>
+
+       <h3>Using Migrations</h3>
+       <p>Generate and run migrations to manage schema changes:</p>
+       <pre><code><span class="comment">// package.json</span>
+&#123;
+  "scripts": &#123;
+    "typeorm": "typeorm-ts-node-commonjs",
+    "migration:generate": "npm run typeorm migration:generate ./src/migrations/Init -- -d ./src/data-source.ts",
+    "migration:run": "npm run typeorm migration:run -- -d ./src/data-source.ts"
+  &#125;
+&#125;
+
+<span class="comment">// data-source.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">DataSource</span> &#125; <span class="keyword">from</span> <span class="string">'typeorm'</span>;
+
+<span class="keyword">export const</span> <span class="type">AppDataSource</span> = <span class="keyword">new</span> <span class="type">DataSource</span>(&#123;
+  type: <span class="string">'postgres'</span>,
+  host: <span class="string">'localhost'</span>,
+  port: 5432,
+  username: <span class="string">'your_username'</span>,
+  password: <span class="string">'your_password'</span>,
+  database: <span class="string">'your_database'</span>,
+  entities: [<span class="string">'src/**/*.entity&#123;.ts,.js&#125;'</span>],
+  migrations: [<span class="string">'src/migrations/*&#123;.ts,.js&#125;'</span>],
+  synchronize: <span class="keyword">false</span>,
+&#125;);
+</code></pre>
+       <p>Run migrations:</p>
+       <pre><code>npm run migration:generate
+npm run migration:run
+</code></pre>
+
+       <h3>Query Builder Example</h3>
+       <p>Use QueryBuilder for complex queries:</p>
+       <pre><code><span class="comment">// users/users.service.ts</span>
+async findUsersWithPosts(): <span class="keyword">Promise</span><<span class="type">User</span>[]> &#123;
+  <span class="keyword">return</span> <span class="keyword">this</span>.userRepository
+    .createQueryBuilder(<span class="string">'user'</span>)
+    .leftJoinAndSelect(<span class="string">'user.posts'</span>, <span class="string">'posts'</span>)
+    .where(<span class="string">'user.age > :age'</span>, &#123; age: 18 &#125;)
+    .getMany();
+&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Relations like <code>&#64;OneToMany</code> and <code>&#64;ManyToOne</code> model database relationships.</li>
+         <li>Migrations ensure controlled schema updates in production.</li>
+         <li>QueryBuilder provides a flexible way to write complex queries.</li>
+         <li>Disable <code>synchronize: true</code> in production to avoid accidental schema changes.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Code Organization Best Practices</h2>
+       <p>Organize your NestJS and TypeORM application for clarity and scalability:</p>
+       
+       <h3>Directory Structure</h3>
+       <pre><code><span class="comment">// Recommended project structure</span>
+project/
+├── src/
+│   ├── users/
+│   │   ├── entities/
+│   │   │   └── user.entity.ts
+│   │   ├── dto/
+│   │   │   ├── create-user.dto.ts
+│   │   │   └── update-user.dto.ts
+│   │   ├── users.controller.ts
+│   │   ├── users.service.ts
+│   │   └── users.module.ts
+│   ├── posts/
+│   │   ├── entities/
+│   │   │   └── post.entity.ts
+│   │   ├── posts.controller.ts
+│   │   ├── posts.service.ts
+│   │   └── posts.module.ts
+│   ├── migrations/
+│   │   └── *.ts
+│   ├── data-source.ts
+│   ├── app.module.ts
+│   └── main.ts
+</code></pre>
+
+       <h3>Best Practices</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Entity Separation</h4>
+           <p>Keep entities in a dedicated folder per module</p>
+         </div>
+         <div class="feature-card">
+           <h4>DTO Validation</h4>
+           <p>Use DTOs with validation pipes for safe data input</p>
+         </div>
+         <div class="feature-card">
+           <h4>Migration Management</h4>
+           <p>Use migrations for schema changes in production</p>
+         </div>
+         <div class="feature-card">
+           <h4>Repository Pattern</h4>
+           <p>Leverage repositories for clean database access</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>5. Global TypeORM Configuration</h2>
+       <p>Configure TypeORM globally for shared database access:</p>
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">Global</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">TypeOrmModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/typeorm'</span>;
+
+<span class="decorator">&#64;Global</span>()
+<span class="decorator">&#64;Module</span>(&#123;
+  imports: [
+    <span class="type">TypeOrmModule</span>.forRoot(&#123;
+      type: <span class="string">'postgres'</span>,
+      host: <span class="string">'localhost'</span>,
+      port: 5432,
+      username: <span class="string">'your_username'</span>,
+      password: <span class="string">'your_password'</span>,
+      database: <span class="string">'your_database'</span>,
+      entities: [<span class="string">'dist/**/*.entity&#123;.ts,.js&#125;'</span>],
+      synchronize: <span class="keyword">false</span>,
+    &#125;),
+  ],
+  exports: [<span class="type">TypeOrmModule</span>],
+&#125;)
+<span class="keyword">export class</span> <span class="type">DatabaseModule</span> &#123;&#125;
+</code></pre>
+       <p class="note">Use <code>&#64;Global()</code> for TypeORM sparingly to avoid tight coupling across modules.</p>
+     </div>
+
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on NestJS TypeORM Integration</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is TypeORM, and how does it integrate with NestJS?</strong>
+           <p class="answer">TypeORM is an ORM library that integrates with NestJS via <code>&#64;nestjs/typeorm</code> to manage database operations using entities and repositories.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you configure TypeORM in a NestJS application?</strong>
+           <p class="answer">Use <code>TypeOrmModule.forRoot()</code> in the root module to set up database connections and entities.</p>
+           <span class="category">Configuration</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the purpose of the &#64;Entity() decorator?</strong>
+           <p class="answer">The <code>&#64;Entity()</code> decorator marks a class as a database table, mapping its properties to columns.</p>
+           <span class="category">Entities</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you register an entity in a module?</strong>
+           <p class="answer">Use <code>TypeOrmModule.forFeature([Entity])</code> in the module to register entities and inject their repositories.</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a TypeORM repository, and how is it used?</strong>
+           <p class="answer">A repository provides methods to perform database operations on an entity, injected via <code>&#64;InjectRepository()</code>.</p>
+           <span class="category">Repositories</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle relationships in TypeORM?</strong>
+           <p class="answer">Use decorators like <code>&#64;OneToMany</code>, <code>&#64;ManyToOne</code>, or <code>&#64;ManyToMany</code> to define relationships between entities.</p>
+           <span class="category">Relationships</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the synchronize option in TypeORM?</strong>
+           <p class="answer">The <code>synchronize</code> option auto-creates database schema based on entities, but should be disabled in production.</p>
+           <span class="category">Configuration</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you create and run migrations in TypeORM?</strong>
+           <p class="answer">Use <code>typeorm migration:generate</code> to create migrations and <code>typeorm migration:run</code> to apply them.</p>
+           <span class="category">Migrations</span>
+         </li>
+         <li>
+           <strong class="question-title">What is QueryBuilder, and when is it useful?</strong>
+           <p class="answer">QueryBuilder allows writing complex SQL queries in a programmatic, type-safe way, useful for joins and conditions.</p>
+           <span class="category">Advanced</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle transactions in TypeORM?</strong>
+           <p class="answer">Use <code>QueryRunner</code> or the repository’s <code>manager.transaction()</code> method to execute operations within a transaction.</p>
+           <span class="category">Advanced</span>
+         </li>
+         <li>
+           <strong class="question-title">Why use DTOs with TypeORM in NestJS?</strong>
+           <p class="answer">DTOs ensure input validation and type safety when creating or updating entities.</p>
+           <span class="category">Best Practices</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle database errors in NestJS with TypeORM?</strong>
+           <p class="answer">Use exception handling (e.g., <code>NotFoundException</code>) in services to manage errors like missing records.</p>
+           <span class="category">Error Handling</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the benefit of using repositories over raw queries?</strong>
+           <p class="answer">Repositories provide a clean, type-safe API for database operations, reducing boilerplate and errors.</p>
+           <span class="category">Repositories</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you optimize TypeORM performance?</strong>
+           <p class="answer">Use eager/lazy loading wisely, index frequently queried fields, and leverage QueryBuilder for efficient queries.</p>
+           <span class="category">Performance</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the recommended directory structure for TypeORM in NestJS?</strong>
+           <p class="answer">Organize by feature, with entities, DTOs, controllers, and services in module-specific folders.</p>
+           <span class="category">Code Organization</span>
+         </li>
+       </ol>
+     </div>
+   </div>
+</div>

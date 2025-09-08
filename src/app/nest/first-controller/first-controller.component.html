@@ -1,1 +1,465 @@
-<p>first-controller works!</p>
+<div class="overall-wrapper" appMaximize #nestjsControllers="maximize" id="nestjsControllers">
+  <div class="wrapper">
+       <img class="swap" *ngIf="nestjsControllers.checkfullscreen() == 'hide'" (click)="nestjsControllers.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="nestjsControllers.checkfullscreen() != 'hide'" (click)="nestjsControllers.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               NestJS <strong>Controllers</strong> are TypeScript classes decorated with &#64;Controller() that handle HTTP requests and define <strong>routes</strong> using method decorators like &#64;Get(), &#64;Post(), &#64;Put(), &#64;Delete(). They act as the entry point for incoming requests and coordinate with services to process business logic.
+           </p>
+           <p> <span class="question">Why:</span>
+               Controllers provide <strong>clean separation of concerns</strong> by isolating request handling from business logic. They enable <strong>dependency injection</strong>, automatic request/response parsing, route parameter extraction, and maintainable API endpoint organization with built-in validation and error handling.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications for handling HTTP requests, integrating middleware, implementing authentication guards, and building scalable, testable backend services with clear architectural boundaries.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Controller Setup</h2>
+       <p>Let's create your first NestJS controller to handle user-related operations:</p>
+       
+       <h3>Creating a Basic User Controller</h3>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Post</span>, <span class="type">Body</span>, <span class="type">Param</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  
+  <span class="comment">// GET /users - Get all users</span>
+  <span class="decorator">&#64;Get</span>()
+  <span class="method">findAll</span>(): <span class="type">string</span> &#123;
+    <span class="keyword">return</span> <span class="string">'This action returns all users'</span>;
+  &#125;
+
+  <span class="comment">// GET /users/:id - Get user by ID</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  <span class="method">findOne</span>(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">string</span> &#123;
+    <span class="keyword">return</span> <span class="string">`This action returns user #$&#123;id&#125;`</span>;
+  &#125;
+
+  <span class="comment">// POST /users - Create new user</span>
+  <span class="decorator">&#64;Post</span>()
+  <span class="method">create</span>(<span class="decorator">&#64;Body</span>() createUserDto: <span class="type">any</span>): <span class="type">string</span> &#123;
+    <span class="keyword">return</span> <span class="string">'This action adds a new user'</span>;
+  &#125;
+&#125;</code></pre>
+
+       <h3>Key Controller Elements</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>&#64;Controller() Decorator</h4>
+           <p>Defines the base route prefix for all endpoints in this controller</p>
+         </div>
+         <div class="feature-card">
+           <h4>HTTP Method Decorators</h4>
+           <p>&#64;Get(), &#64;Post(), &#64;Put(), &#64;Delete() map methods to HTTP verbs</p>
+         </div>
+         <div class="feature-card">
+           <h4>Parameter Decorators</h4>
+           <p>&#64;Param(), &#64;Body(), &#64;Query() extract data from requests</p>
+         </div>
+         <div class="feature-card">
+           <h4>Route Parameters</h4>
+           <p>Use :id syntax for dynamic route segments</p>
+         </div>
+       </div>
+     </div>
+
+<div class="step">
+  <h2>2. Complete CRUD Controller in NestJS</h2>
+  <p>
+    This example shows how to build a <strong>full CRUD (Create, Read, Update, Delete)</strong> 
+    controller in <strong>NestJS</strong> using <strong>TypeScript interfaces</strong> and DTOs. 
+    It follows REST API best practices and supports pagination with query parameters.
+  </p>
+
+  <h3>Step 1: Define Interfaces & DTOs</h3>
+  <p>These interfaces describe the structure of a <code>User</code> entity and data requirements for creation/updating.</p>
+
+  <pre><code>
+<span class="comment">// interfaces/user.interface.ts</span>
+<span class="keyword">export interface</span> <span class="type">User</span> &#123;
+  id: <span class="type">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+&#125;
+
+<span class="keyword">export interface</span> <span class="type">CreateUserDto</span> &#123;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+&#125;
+
+<span class="keyword">export interface</span> <span class="type">UpdateUserDto</span> &#123;
+  name?: <span class="type">string</span>;
+  email?: <span class="type">string</span>;
+  age?: <span class="type">number</span>;
+&#125;
+</code></pre>
+
+  <h3>Step 2: Create the Users Controller</h3>
+  <p>The controller implements:</p>
+  <ul>
+    <li><strong>GET</strong> – Retrieve all users or one user by ID.</li>
+    <li><strong>POST</strong> – Create a new user.</li>
+    <li><strong>PUT</strong> – Update an existing user.</li>
+    <li><strong>DELETE</strong> – Remove a user.</li>
+  </ul>
+
+  <pre><code>
+<span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; 
+  <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Post</span>, <span class="type">Put</span>, <span class="type">Delete</span>, 
+  <span class="type">Body</span>, <span class="type">Param</span>, <span class="type">Query</span>, <span class="type">HttpStatus</span>, <span class="type">HttpCode</span>
+&#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span>, <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span> &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="keyword">private</span> users: <span class="type">User</span>[] = [
+    &#123; id: 1, name: <span class="string">'John Doe'</span>, email: <span class="string">'john&#64;example.com'</span>, age: 30 &#125;,
+    &#123; id: 2, name: <span class="string">'Jane Smith'</span>, email: <span class="string">'jane&#64;example.com'</span>, age: 25 &#125;
+  ];
+
+  <span class="comment">// GET /api/users?limit=10&offset=0</span>
+  <span class="decorator">&#64;Get</span>()
+  <span class="method">findAll</span>(
+    <span class="decorator">&#64;Query</span>(<span class="string">'limit'</span>) limit?: <span class="type">number</span>,
+    <span class="decorator">&#64;Query</span>(<span class="string">'offset'</span>) offset?: <span class="type">number</span>
+  ): <span class="type">User</span>[] &#123;
+    <span class="keyword">const</span> startIndex = offset || 0;
+    <span class="keyword">const</span> endIndex = limit ? startIndex + limit : undefined;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.slice(startIndex, endIndex);
+  &#125;
+
+  <span class="comment">// GET /api/users/:id</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  <span class="method">findOne</span>(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">User</span> | <span class="type">undefined</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.find(user =&gt; user.id === +id);
+  &#125;
+
+  <span class="comment">// POST /api/users</span>
+  <span class="decorator">&#64;Post</span>()
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.CREATED)
+  <span class="method">create</span>(<span class="decorator">&#64;Body</span>() createUserDto: <span class="type">CreateUserDto</span>): <span class="type">User</span> &#123;
+    <span class="keyword">const</span> newUser: <span class="type">User</span> = &#123;
+      id: <span class="keyword">this</span>.users.length + 1,
+      ...createUserDto
+    &#125;;
+    <span class="keyword">this</span>.users.push(newUser);
+    <span class="keyword">return</span> newUser;
+  &#125;
+
+  <span class="comment">// PUT /api/users/:id</span>
+  <span class="decorator">&#64;Put</span>(<span class="string">':id'</span>)
+  <span class="method">update</span>(
+    <span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>,
+    <span class="decorator">&#64;Body</span>() updateUserDto: <span class="type">UpdateUserDto</span>
+  ): <span class="type">User</span> | <span class="type">null</span> &#123;
+    <span class="keyword">const</span> userIndex = <span class="keyword">this</span>.users.findIndex(user =&gt; user.id === +id);
+    <span class="keyword">if</span> (userIndex === -1) <span class="keyword">return</span> <span class="type">null</span>;
+    <span class="keyword">this</span>.users[userIndex] = &#123; ...<span class="keyword">this</span>.users[userIndex], ...updateUserDto &#125;;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users[userIndex];
+  &#125;
+
+  <span class="comment">// DELETE /api/users/:id</span>
+  <span class="decorator">&#64;Delete</span>(<span class="string">':id'</span>)
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.NO_CONTENT)
+  <span class="method">remove</span>(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">void</span> &#123;
+    <span class="keyword">const</span> userIndex = <span class="keyword">this</span>.users.findIndex(user =&gt; user.id === +id);
+    <span class="keyword">if</span> (userIndex !== -1) &#123;
+      <span class="keyword">this</span>.users.splice(userIndex, 1);
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+
+  <h3>Key Points</h3>
+  <ul>
+    <li><code>&#64;Query()</code> – Get pagination params (<code>limit</code>, <code>offset</code>).</li>
+    <li><code>&#64;Param()</code> – Access URL params like <code>:id</code>.</li>
+    <li><code>&#64;Body()</code> – Extract request JSON body.</li>
+    <li><code>&#64;HttpCode()</code> – Set custom HTTP status codes.</li>
+    <li>DTOs provide type safety and structure for incoming data.</li>
+  </ul>
+</div>
+
+
+     <div class="step">
+       <h2>3. Generated Routes Overview</h2>
+       <p>The controller above automatically generates the following API endpoints:</p>
+       
+       <table class="route-table">
+         <thead>
+           <tr>
+             <th>HTTP Method</th>
+             <th>Route</th>
+             <th>Handler Method</th>
+             <th>Description</th>
+           </tr>
+         </thead>
+         <tbody>
+           <tr>
+             <td><span class="method-badge get">GET</span></td>
+             <td>/api/users</td>
+             <td>findAll()</td>
+             <td>Get all users with optional pagination</td>
+           </tr>
+           <tr>
+             <td><span class="method-badge get">GET</span></td>
+             <td>/api/users/:id</td>
+             <td>findOne()</td>
+             <td>Get a specific user by ID</td>
+           </tr>
+           <tr>
+             <td><span class="method-badge post">POST</span></td>
+             <td>/api/users</td>
+             <td>create()</td>
+             <td>Create a new user</td>
+           </tr>
+           <tr>
+             <td><span class="method-badge put">PUT</span></td>
+             <td>/api/users/:id</td>
+             <td>update()</td>
+             <td>Update an existing user</td>
+           </tr>
+           <tr>
+             <td><span class="method-badge delete">DELETE</span></td>
+             <td>/api/users/:id</td>
+             <td>remove()</td>
+             <td>Delete a user by ID</td>
+           </tr>
+         </tbody>
+       </table>
+     </div>
+
+     <div class="step">
+       <h2>4. Advanced Routing Features</h2>
+       <p>NestJS controllers support advanced routing patterns and request handling:</p>
+       
+       <h3>Nested Routes and Sub-resources</h3>
+       <pre><code><span class="comment">// Advanced routing examples</span>
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  
+  <span class="comment">// GET /api/users/:id/posts</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">':id/posts'</span>)
+  <span class="method">getUserPosts</span>(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) userId: <span class="type">string</span>) &#123;
+    <span class="keyword">return</span> <span class="string">`Posts for user $&#123;userId&#125;`</span>;
+  &#125;
+
+  <span class="comment">// GET /api/users/search?q=john&status=active</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">'search'</span>)
+  <span class="method">searchUsers</span>(
+    <span class="decorator">&#64;Query</span>(<span class="string">'q'</span>) query: <span class="type">string</span>,
+    <span class="decorator">&#64;Query</span>(<span class="string">'status'</span>) status?: <span class="type">string</span>
+  ) &#123;
+    <span class="keyword">return</span> <span class="string">`Searching for: $&#123;query&#125; with status: $&#123;status&#125;`</span>;
+  &#125;
+
+  <span class="comment">// POST /api/users/:id/avatar</span>
+  <span class="decorator">&#64;Post</span>(<span class="string">':id/avatar'</span>)
+  <span class="method">uploadAvatar</span>(
+    <span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) userId: <span class="type">string</span>,
+    <span class="decorator">&#64;Body</span>() avatarData: <span class="type">any</span>
+  ) &#123;
+    <span class="keyword">return</span> <span class="string">`Avatar uploaded for user $&#123;userId&#125;`</span>;
+  &#125;
+
+  <span class="comment">// GET /api/users/stats/summary</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">'stats/summary'</span>)
+  <span class="method">getUserStats</span>() &#123;
+    <span class="keyword">return</span> &#123;
+      total: 150,
+      active: 120,
+      inactive: 30
+    &#125;;
+  &#125;
+&#125;</code></pre>
+
+       <h3>Route Parameters and Wildcards</h3>
+       <pre><code><span class="comment">// Complex parameter patterns</span>
+<span class="decorator">&#64;Controller</span>(<span class="string">'files'</span>)
+<span class="keyword">export class</span> <span class="type">FilesController</span> &#123;
+  
+  <span class="comment">// Wildcard route - matches any path after /files/</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">'*'</span>)
+  <span class="method">getFile</span>(<span class="decorator">&#64;Param</span>(<span class="string">'0'</span>) filePath: <span class="type">string</span>) &#123;
+    <span class="keyword">return</span> <span class="string">`File path: $&#123;filePath&#125;`</span>;
+  &#125;
+
+  <span class="comment">// Multiple parameters</span>
+  <span class="decorator">&#64;Get</span>(<span class="string">':category/:year/:month'</span>)
+  <span class="method">getFilesByDate</span>(
+    <span class="decorator">&#64;Param</span>(<span class="string">'category'</span>) category: <span class="type">string</span>,
+    <span class="decorator">&#64;Param</span>(<span class="string">'year'</span>) year: <span class="type">string</span>,
+    <span class="decorator">&#64;Param</span>(<span class="string">'month'</span>) month: <span class="type">string</span>
+  ) &#123;
+    <span class="keyword">return</span> <span class="string">`Files in $&#123;category&#125; for $&#123;month&#125;/$&#123;year&#125;`</span>;
+  &#125;
+&#125;</code></pre>
+     </div>
+
+     <div class="step">
+       <h2>5. Request Data Handling</h2>
+       <p>Different ways to extract and handle data from HTTP requests:</p>
+       
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>&#64;Body()</h4>
+           <p>Extract the entire request body or specific properties</p>
+         </div>
+         <div class="feature-card">
+           <h4>&#64;Param()</h4>
+           <p>Get URL parameters from the route path</p>
+         </div>
+         <div class="feature-card">
+           <h4>&#64;Query()</h4>
+           <p>Access query string parameters</p>
+         </div>
+         <div class="feature-card">
+           <h4>&#64;Headers()</h4>
+           <p>Read HTTP headers from the request</p>
+         </div>
+       </div>
+
+       <pre><code><span class="comment">// Complete request data extraction example</span>
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/orders'</span>)
+<span class="keyword">export class</span> <span class="type">OrdersController</span> &#123;
+  
+  <span class="decorator">&#64;Post</span>(<span class="string">':userId'</span>)
+  <span class="method">createOrder</span>(
+    <span class="comment">// URL parameter</span>
+    <span class="decorator">&#64;Param</span>(<span class="string">'userId'</span>) userId: <span class="type">string</span>,
+    
+    <span class="comment">// Request body</span>
+    <span class="decorator">&#64;Body</span>() orderData: &#123;
+      items: <span class="type">string</span>[];
+      total: <span class="type">number</span>;
+      shipping: <span class="type">string</span>;
+    &#125;,
+    
+    <span class="comment">// Query parameters</span>
+    <span class="decorator">&#64;Query</span>(<span class="string">'discount'</span>) discountCode?: <span class="type">string</span>,
+    <span class="decorator">&#64;Query</span>(<span class="string">'express'</span>) expressDelivery?: <span class="type">boolean</span>,
+    
+    <span class="comment">// Headers</span>
+    <span class="decorator">&#64;Headers</span>(<span class="string">'authorization'</span>) authToken?: <span class="type">string</span>,
+    <span class="decorator">&#64;Headers</span>(<span class="string">'user-agent'</span>) userAgent?: <span class="type">string</span>
+  ) &#123;
+    <span class="keyword">return</span> &#123;
+      message: <span class="string">'Order created successfully'</span>,
+      userId,
+      orderData,
+      discountCode,
+      expressDelivery: expressDelivery === <span class="keyword">true</span>,
+      authToken: authToken ? <span class="string">'Present'</span> : <span class="string">'Missing'</span>,
+      userAgent
+    &#125;;
+  &#125;
+&#125;</code></pre>
+     </div>
+
+      <div class="step">
+       <h2>6 Module Registration</h2>
+       <p>Don't forget to register your controller in a NestJS module:</p>
+       
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#123;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+
+<span class="decorator">&#123;Module</span>(&#123;
+  controllers: [<span class="type">UsersController</span>],
+  <span class="comment">// providers: [UsersService], // Add services here</span>
+&#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123;&#125;</code></pre>
+
+       <p class="note">Your NestJS application will automatically discover and register all routes defined in your controllers when the module is imported.</p>
+     </div>
+
+
+     <div class="interview-questions step">
+        <h2>15 Important Interview Questions on NestJS Controllers with Answers</h2>
+            <ol class="question-list">
+                <li>
+                <strong class="question-title">What is the primary role of a Controller in NestJS?</strong>
+                <p class="answer">Controllers handle incoming HTTP requests, define routes using decorators, and coordinate with services to process business logic, acting as the entry point for API endpoints.</p>
+                <span class="category">Basics</span>
+                </li>
+                <li>
+                <strong class="question-title">How do you define a controller in NestJS?</strong>
+                <p class="answer">A controller is defined by decorating a TypeScript class with the <code>&#64;Controller()</code> decorator, specifying a base route prefix (e.g., <code>&#64;Controller('users')</code>).</p>
+                <span class="category">Basics</span>
+                </li>
+                <li>
+                <strong class="question-title">What is the purpose of the &#64;Controller() decorator?</strong>
+                <p class="answer">The <code>&#64;Controller()</code> decorator marks a class as a controller and defines the base route prefix for all its endpoints (e.g., <code>&#64;Controller('api/users')</code>).</p>
+                <span class="category">Decorators</span>
+                </li>
+                <li>
+                <strong class="question-title">Explain the role of the &#64;Get() decorator in a controller.</strong>
+                <p class="answer">The <code>&#64;Get()</code> decorator maps a method to handle HTTP GET requests for a specific route (e.g., <code>&#64;Get(':id')</code> for <code>/users/:id</code>).</p>
+                <span class="category">Decorators</span>
+                </li>
+                <li>
+                <strong class="question-title">How do you implement a full CRUD controller in NestJS?</strong>
+                <p class="answer">Use <code>&#64;Get()</code>, <code>&#64;Post()</code>, <code>&#64;Put(':id')</code>, and <code>&#64;Delete(':id')</code> to handle retrieval, creation, update, and deletion of resources, respectively, with DTOs for type safety.</p>
+                <span class="category">CRUD Operations</span>
+                </li>
+                <li>
+                <strong class="question-title">What is the purpose of the &#64;Param() decorator?</strong>
+                <p class="answer"><code>&#64;Param()</code> extracts route parameters (e.g., <code>:id</code>) from the URL path for use in the method (e.g., <code>&#64;Param('id')</code>).</p>
+                <span class="category">Parameter Handling</span>
+                </li>
+                <li>
+                <strong class="question-title">How does the &#64;Body() decorator work?</strong>
+                <p class="answer"><code>&#64;Body()</code> extracts the JSON payload from the request body, used in POST/PUT requests to create or update resources.</p>
+                <span class="category">Parameter Handling</span>
+                </li>
+                <li>
+                <strong class="question-title">What are DTOs, and why are they used in NestJS controllers?</strong>
+                <p class="answer">DTOs (Data Transfer Objects) define the structure of request/response data, ensuring type safety and validation (e.g., <code>CreateUserDto</code>).</p>
+                <span class="category">DTOs</span>
+                </li>
+                <li>
+                <strong class="question-title">How do you register a controller in a NestJS module?</strong>
+                <p class="answer">Add the controller to the <code>controllers</code> array in the <code>&#64;Module()</code> decorator (e.g., <code>controllers: [UsersController]</code>).</p>
+                <span class="category">Modules</span>
+                </li>
+                <li>
+                <strong class="question-title">What is a wildcard route, and how is it implemented?</strong>
+                <p class="answer">A wildcard route (e.g., <code>&#64;Get('*')</code>) matches any path after the base prefix, capturing the full path with <code>&#64;Param('0')</code>.</p>
+                <span class="category">Advanced Routing</span>
+                </li>
+                <li>
+                <strong class="question-title">How does the &#64;Query() decorator function in NestJS?</strong>
+                <p class="answer"><code>&#64;Query()</code> extracts query string parameters (e.g., <code>limit=10</code>) from the URL for filtering or pagination (e.g., <code>&#64;Query('limit')</code>).</p>
+                <span class="category">Parameter Handling</span>
+                </li>
+                <li>
+                <strong class="question-title">What is the role of the &#64;HttpCode() decorator?</strong>
+                <p class="answer">The <code>&#64;HttpCode()</code> decorator sets a custom HTTP status code for a method’s response (e.g., <code>&#64;HttpCode(HttpStatus.CREATED)</code> for 201).</p>
+                <span class="category">Decorators</span>
+                </li>
+                <li>
+                <strong class="question-title">How do you implement pagination in a NestJS controller?</strong>
+                <p class="answer">Use <code>&#64;Query('limit')</code> and <code>&#64;Query('offset')</code> to slice an array of data, returning a subset based on the provided parameters.</p>
+                <span class="category">CRUD Operations</span>
+                </li>
+                <li>
+                <strong class="question-title">What are nested routes, and how are they implemented?</strong>
+                <p class="answer">Nested routes access sub-resources (e.g., <code>&#64;Get(':id/posts')</code> for <code>/api/users/:id/posts</code>), defined by extending the route path.</p>
+                <span class="category">Advanced Routing</span>
+                </li>
+                <li>
+                <strong class="question-title">Why is module registration important for controllers?</strong>
+                <p class="answer">Module registration allows NestJS to discover and initialize controllers, enabling automatic route registration and dependency injection.</p>
+                <span class="category">Modules</span>
+                </li>
+            </ol>
+     </div>
+
+</div>

@@ -1,1 +1,440 @@
-<p>dto-validation works!</p>
+<div class="overall-wrapper" appMaximize #nestjsDtoValidation="maximize" id="nestjsDtoValidation">
+  <div class="wrapper">
+       <img class="swap" *ngIf="nestjsDtoValidation.checkfullscreen() == 'hide'" (click)="nestjsDtoValidation.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="nestjsDtoValidation.checkfullscreen() != 'hide'" (click)="nestjsDtoValidation.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               NestJS <strong>DTOs (Data Transfer Objects)</strong> are TypeScript classes or interfaces used to define the shape of data transferred between client and server. They work with <strong>input validation</strong> to ensure data integrity and type safety in API requests.
+           </p>
+           <p> <span class="question">Why:</span>
+               DTOs and input validation ensure <strong>consistent data structures</strong>, prevent invalid data, and enhance security by validating and sanitizing incoming requests. They improve code maintainability and provide clear API contracts.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL applications,</strong> and microservices to validate and process incoming data in controllers, ensuring robust and secure backend systems.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic DTO Setup</h2>
+       <p>Let's create a basic DTO for user-related functionality with validation in NestJS:</p>
+       
+       <h3>Creating a User DTO</h3>
+       <pre><code>// create-user.dto.ts
+import &#123; IsString, IsEmail, IsInt, Min, Max &#125; from 'class-validator';
+
+export class CreateUserDto &#123;
+  &#64;IsString()
+  name: string;
+
+  &#64;IsEmail()
+  email: string;
+
+  &#64;IsInt()
+  &#64;Min(18)
+  &#64;Max(100)
+  age: number;
+&#125;
+</code></pre>
+
+       <h3>Key DTO Elements</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>class-validator</h4>
+           <p>Provides decorators like <code>&#64;IsString</code>, <code>&#64;IsEmail</code>, and <code>&#64;IsInt</code> for input validation</p>
+         </div>
+         <div class="feature-card">
+           <h4>DTO Classes</h4>
+           <p>Define the structure of incoming data for type safety</p>
+         </div>
+         <div class="feature-card">
+           <h4>Pipe Integration</h4>
+           <p>Uses <code>ValidationPipe</code> to enforce DTO validation in controllers</p>
+         </div>
+         <div class="feature-card">
+           <h4>Type Safety</h4>
+           <p>Ensures data conforms to expected types and constraints</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Complete DTO and Validation Setup</h2>
+       <p>This example demonstrates a complete setup with DTOs, validation, and controller integration for user management.</p>
+
+       <h3>Step 1: Define DTOs</h3>
+       <p>Create DTOs for creating and updating users with validation:</p>
+       <pre><code>// create-user.dto.ts
+import &#123; IsString, IsEmail, IsInt, Min, Max &#125; from 'class-validator';
+
+export class CreateUserDto &#123;
+  &#64;IsString()
+  name: string;
+
+  &#64;IsEmail()
+  email: string;
+
+  &#64;IsInt()
+  &#64;Min(18)
+  &#64;Max(100)
+  age: number;
+&#125;
+
+// update-user.dto.ts
+import &#123; IsString, IsEmail, IsInt, Min, Max, IsOptional &#125; from 'class-validator';
+
+export class UpdateUserDto &#123;
+  &#64;IsString()
+  &#64;IsOptional()
+  name?: string;
+
+  &#64;IsEmail()
+  &#64;IsOptional()
+  email?: string;
+
+  &#64;IsInt()
+  &#64;Min(18)
+  &#64;Max(100)
+  &#64;IsOptional()
+  age?: number;
+&#125;
+</code></pre>
+
+       <h3>Step 2: Enable Validation in Main</h3>
+       <p>Configure the <code>ValidationPipe</code> globally in the main application:</p>
+       <pre><code>// main.ts
+import &#123; NestFactory &#125; from '&#64;nestjs/core';
+import &#123; AppModule &#125; from './app.module';
+import &#123; ValidationPipe &#125; from '&#64;nestjs/common';
+
+async function bootstrap() &#123;
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  await app.listen(3000);
+&#125;
+bootstrap();
+</code></pre>
+
+       <h3>Step 3: Create the Users Service</h3>
+       <p>The service handles business logic using DTOs:</p>
+       <pre><code>// users.service.ts
+import &#123; Injectable &#125; from '&#64;nestjs/common';
+import &#123; CreateUserDto, UpdateUserDto &#125; from './dto/user.dto';
+
+export interface User &#123;
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+&#125;
+
+&#64;Injectable()
+export class UsersService &#123;
+  private users: User[] = [
+    &#123; id: 1, name: 'John Doe', email: 'john&#64;example.com', age: 30 &#125;,
+    &#123; id: 2, name: 'Jane Smith', email: 'jane&#64;example.com', age: 25 &#125;
+  ];
+
+  findAll(limit?: number, offset?: number): User[] &#123;
+    const startIndex = offset || 0;
+    const endIndex = limit ? startIndex + limit : undefined;
+    return this.users.slice(startIndex, endIndex);
+  &#125;
+
+  findOne(id: number): User | undefined &#123;
+    return this.users.find(user => user.id === id);
+  &#125;
+
+  create(createUserDto: CreateUserDto): User &#123;
+    const newUser: User = &#123;
+      id: this.users.length + 1,
+      ...createUserDto
+    &#125;;
+    this.users.push(newUser);
+    return newUser;
+  &#125;
+
+  update(id: number, updateUserDto: UpdateUserDto): User | null &#123;
+    const userIndex = this.users.findIndex(user => user.id === id);
+    if (userIndex === -1) return null;
+    this.users[userIndex] = &#123; ...this.users[userIndex], ...updateUserDto &#125;;
+    return this.users[userIndex];
+  &#125;
+
+  remove(id: number): void &#123;
+    const userIndex = this.users.findIndex(user => user.id === id);
+    if (userIndex !== -1) &#123;
+      this.users.splice(userIndex, 1);
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 4: Create the Users Controller</h3>
+       <p>The controller uses DTOs and validation to handle HTTP requests:</p>
+       <pre><code>// users.controller.ts
+import &#123; 
+  Controller, Get, Post, Put, Delete, 
+  Body, Param, Query, HttpStatus, HttpCode 
+&#125; from '&#64;nestjs/common';
+import &#123; UsersService &#125; from './users.service';
+import &#123; CreateUserDto, UpdateUserDto &#125; from './dto/user.dto';
+
+&#64;Controller('api/users')
+export class UsersController &#123;
+  constructor(private usersService: UsersService) &#123;&#125;
+
+  &#64;Get()
+  findAll(
+    &#64;Query('limit') limit?: number,
+    &#64;Query('offset') offset?: number
+  ) &#123;
+    return this.usersService.findAll(limit, offset);
+  &#125;
+
+  &#64;Get(':id')
+  findOne(&#64;Param('id') id: string) &#123;
+    return this.usersService.findOne(+id);
+  &#125;
+
+  &#64;Post()
+  &#64;HttpCode(HttpStatus.CREATED)
+  create(&#64;Body() createUserDto: CreateUserDto) &#123;
+    return this.usersService.create(createUserDto);
+  &#125;
+
+  &#64;Put(':id')
+  update(
+    &#64;Param('id') id: string,
+    &#64;Body() updateUserDto: UpdateUserDto
+  ) &#123;
+    return this.usersService.update(+id, updateUserDto);
+  &#125;
+
+  &#64;Delete(':id')
+  &#64;HttpCode(HttpStatus.NO_CONTENT)
+  remove(&#64;Param('id') id: string) &#123;
+    this.usersService.remove(+id);
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 5: Define the Users Module</h3>
+       <p>The module ties everything together:</p>
+       <pre><code>// users.module.ts
+import &#123; Module &#125; from '&#64;nestjs/common';
+import &#123; UsersController &#125; from './users.controller';
+import &#123; UsersService &#125; from './users.service';
+
+&#64;Module(&#123;
+  controllers: [UsersController],
+  providers: [UsersService],
+&#125;)
+export class UsersModule &#123;&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>DTOs define the structure of incoming data.</li>
+         <li><code>class-validator</code> ensures data meets validation rules.</li>
+         <li><code>ValidationPipe</code> enforces validation globally or per route.</li>
+         <li>DTOs improve type safety and API contract clarity.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. Advanced Validation Features</h2>
+       <p>NestJS supports advanced validation techniques for complex use cases:</p>
+
+       <h3>Custom Validation</h3>
+       <p>Create custom validation decorators for specific requirements:</p>
+       <pre><code>// custom-validators.ts
+import &#123; registerDecorator, ValidationOptions, ValidationArguments &#125; from 'class-validator';
+
+export function IsValidName(validationOptions?: ValidationOptions) &#123;
+  return function (object: Object, propertyName: string) &#123;
+    registerDecorator(&#123;
+      name: 'IsValidName',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: &#123;
+        validate(value: any, args: ValidationArguments) &#123;
+          return typeof value === 'string' && value.length >= 3 && value.length <= 50;
+        &#125;
+      &#125;
+    &#125;);
+  &#125;;
+&#125;
+
+// create-user.dto.ts
+import &#123; IsEmail, IsInt, Min, Max &#125; from 'class-validator';
+import &#123; IsValidName &#125; from './custom-validators';
+
+export class CreateUserDto &#123;
+  &#64;IsValidName(&#123; message: 'Name must be between 3 and 50 characters' &#125;)
+  name: string;
+
+  &#64;IsEmail()
+  email: string;
+
+  &#64;IsInt()
+  &#64;Min(18)
+  &#64;Max(100)
+  age: number;
+&#125;
+</code></pre>
+
+       <h3>Transforming Input</h3>
+       <p>Use <code>ValidationPipe</code> to transform input data:</p>
+       <pre><code>// main.ts
+import &#123; NestFactory &#125; from '&#64;nestjs/core';
+import &#123; AppModule &#125; from './app.module';
+import &#123; ValidationPipe &#125; from '&#64;nestjs/common';
+
+async function bootstrap() &#123;
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(
+    new ValidationPipe(&#123;
+      transform: true, // Automatically transform payloads to DTO types
+      whitelist: true, // Strip properties not defined in DTO
+      forbidNonWhitelisted: true // Throw error for non-whitelisted properties
+    &#125;)
+  );
+  await app.listen(3000);
+&#125;
+bootstrap();
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Custom validators allow for specific business rules.</li>
+         <li><code>transform</code> converts input to DTO types automatically.</li>
+         <li><code>whitelist</code> and <code>forbidNonWhitelisted</code> enhance security.</li>
+         <li>Validation can be applied globally or per route.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Best Practices for DTOs and Validation</h2>
+       <p>Follow these practices for effective DTO and validation usage:</p>
+       
+       <h3>Directory Structure</h3>
+       <pre><code>// Recommended project structure
+project/
+├── src/
+│   ├── users/
+│   │   ├── dto/
+│   │   │   ├── create-user.dto.ts
+│   │   │   └── update-user.dto.ts
+│   │   ├── users.controller.ts
+│   │   ├── users.service.ts
+│   │   └── users.module.ts
+│   ├── app.module.ts
+│   └── main.ts
+</code></pre>
+
+       <h3>Best Practices</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Separate DTOs</h4>
+           <p>Create distinct DTOs for create, update, and other operations</p>
+         </div>
+         <div class="feature-card">
+           <h4>Strict Validation</h4>
+           <p>Use <code>whitelist</code> and <code>forbidNonWhitelisted</code> for security</p>
+         </div>
+         <div class="feature-card">
+           <h4>Reusable Validators</h4>
+           <p>Create custom validators for reusable logic</p>
+         </div>
+         <div class="feature-card">
+           <h4>Type Transformation</h4>
+           <p>Enable <code>transform</code> for automatic type conversion</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on NestJS DTOs & Input Validation</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is a DTO in NestJS?</strong>
+           <p class="answer">A DTO (Data Transfer Object) is a class or interface defining the shape of data transferred between client and server.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">Why use DTOs in NestJS?</strong>
+           <p class="answer">DTOs ensure type safety, define API contracts, and work with validation to ensure data integrity.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the role of the class-validator library?</strong>
+           <p class="answer">It provides decorators for validating DTO properties, like <code>&#64;IsString</code>, <code>&#64;IsEmail</code>, and <code>&#64;IsInt</code>.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you enable validation in NestJS?</strong>
+           <p class="answer">Use the <code>ValidationPipe</code> globally in <code>main.ts</code> or per route in controllers.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the ValidationPipe?</strong>
+           <p class="answer">A built-in pipe that validates incoming data against DTOs using <code>class-validator</code>.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you create a custom validator in NestJS?</strong>
+           <p class="answer">Use <code>registerDecorator</code> from <code>class-validator</code> to define custom validation logic.</p>
+           <span class="category">Advanced Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">What does the transform option do in ValidationPipe?</strong>
+           <p class="answer">It automatically converts incoming data to the DTO’s type (e.g., string to number).</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the whitelist option in ValidationPipe?</strong>
+           <p class="answer">It strips properties not defined in the DTO, enhancing security.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">What does forbidNonWhitelisted do?</strong>
+           <p class="answer">It throws an error if non-whitelisted properties are present in the payload.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle optional fields in a DTO?</strong>
+           <p class="answer">Use the <code>&#64;IsOptional</code> decorator from <code>class-validator</code> for optional properties.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">Why separate DTOs for create and update operations?</strong>
+           <p class="answer">Separate DTOs allow different validation rules for creating vs. updating data.</p>
+           <span class="category">Code Organization</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you organize DTOs in a NestJS project?</strong>
+           <p class="answer">Place DTOs in a <code>dto</code> folder within feature modules (e.g., <code>users/dto/create-user.dto.ts</code>).</p>
+           <span class="category">Code Organization</span>
+         </li>
+         <li>
+           <strong class="question-title">How does ValidationPipe improve security?</strong>
+           <p class="answer">It validates and sanitizes input, preventing invalid or malicious data from reaching the application.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">What happens if validation fails?</strong>
+           <p class="answer">The <code>ValidationPipe</code> throws a <code>BadRequestException</code> with validation errors.</p>
+           <span class="category">Validation</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you test DTO validation?</strong>
+           <p class="answer">Use unit tests with <code>class-validator</code>’s <code>validate</code> function or integration tests with HTTP requests.</p>
+           <span class="category">Testing</span>
+         </li>
+       </ol>
+     </div>
+   </div>
+</div>

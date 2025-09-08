@@ -1,1 +1,543 @@
-<p>auth-guards works!</p>
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p><span class="question">What:</span> Secure your API with <strong>JWT authentication</strong> (who you are) and <strong>Guards</strong> (can you access this route?). Guards implement <code>CanActivate</code> and run <em>before</em> a route handler.</p>
+      <p><span class="question">Why:</span> To verify users, protect endpoints, and enforce role-based access with clean, testable, reusable logic.</p>
+      <p><span class="question">Where:</span> Apply to REST/GraphQL routes, microservices gateways, or any controller/method you want to secure.</p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <!-- STEP 0: INSTALL -->
+    <div class="step">
+      <h2>Step 0 — Install Packages</h2>
+      <pre><code># JWT + Passport + Config (recommended)
+npm i &#64;nestjs/jwt &#64;nestjs/passport passport passport-jwt
+npm i &#64;nestjs/config
+# (Optional) hashing for real apps
+npm i bcrypt
+npm i -D &#64;types/bcrypt</code></pre>
+<div class="step-description">
+  <p class="title">Package Installation</p>
+  <p class="details">Install required packages for JWT authentication, Passport integration, and configuration management. Optional bcrypt for password hashing in production environments.</p>
+  <ul class="key-points">
+    <li>JWT for token generation and verification</li>
+    <li>Passport for authentication strategies</li>
+    <li>Config for environment variables</li>
+    <li>Bcrypt for secure password hashing</li>
+  </ul>
+</div>
+    </div>
+
+    <!-- STEP 1: ENV + APP MODULE -->
+    <div class="step">
+      <h2>Step 1 — Configure <code>.env</code> and <code>AppModule</code></h2>
+      <pre><code># .env
+JWT_SECRET=super_secret_change_me
+JWT_EXPIRES=1h</code></pre>
+
+      <pre><code><span class="comment">// src/app.module.ts</span>
+<span class="keyword">import</span> &#123; Module &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; ConfigModule &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/config'</span>;
+<span class="keyword">import</span> &#123; AuthModule &#125; <span class="keyword">from</span> <span class="string">'./auth/auth.module'</span>;
+<span class="keyword">import</span> &#123; UsersModule &#125; <span class="keyword">from</span> <span class="string">'./users/users.module'</span>;
+
+&#64;Module(&#123;
+  imports: [
+    ConfigModule.forRoot(&#123; isGlobal: <span class="keyword">true</span> &#125;),
+    UsersModule,
+    AuthModule,
+  ],
+&#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123;&#125;</code></pre>
+     <div class="step-description">
+        <p class="title">Environment & Module Configuration</p>
+        <p class="details">Set up environment variables for JWT configuration and configure the root AppModule with necessary imports.</p>
+        <ul class="key-points">
+          <li>Secure JWT secret configuration</li>
+          <li>Token expiration settings</li>
+          <li>Global configuration access</li>
+          <li>Module integration setup</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 2: DTOs -->
+    <div class="step">
+      <h2>Step 2 — DTOs (request shapes)</h2>
+      <pre><code><span class="comment">// src/auth/dto/login.dto.ts</span>
+<span class="keyword">export class</span> <span class="type">LoginDto</span> &#123;
+  email: <span class="type">string</span>;
+  password: <span class="type">string</span>;
+&#125;
+
+<span class="comment">// src/users/user.entity.ts (demo only, normally use DB entity)</span>
+<span class="keyword">export class</span> <span class="type">User</span> &#123;
+  id: <span class="type">number</span>;
+  email: <span class="type">string</span>;
+  passwordHash: <span class="type">string</span>;
+  role: <span class="type">"admin"</span> | <span class="type">"user"</span>;
+&#125;</code></pre>
+
+    <div class="step-description">
+      <p class="title">Data Transfer Objects</p>
+      <p class="details">Define the shape of data for login requests and user entities, ensuring type safety and validation.</p>
+      <ul class="key-points">
+        <li>Login request validation</li>
+        <li>User entity structure</li>
+        <li>Type safety enforcement</li>
+        <li>Request/response shapes</li>
+      </ul>
+    </div>
+    </div>
+
+    <!-- STEP 3: USERS SERVICE -->
+    <div class="step">
+      <h2>Step 3 — UsersService (lookup users)</h2>
+      <pre><code><span class="comment">// src/users/users.service.ts (in-memory for demo)</span>
+<span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; User &#125; <span class="keyword">from</span> <span class="string">'./user.entity'</span>;
+<span class="comment">// In real apps, use a DB + hashed passwords</span>
+
+&#64;Injectable()
+<span class="keyword">export class</span> <span class="type">UsersService</span> &#123;
+  <span class="keyword">private</span> users: <span class="type">User</span>[] = [
+    &#123; id: 1, email: <span class="string">'admin&#64;app.com'</span>, passwordHash: <span class="string">'password'</span>, role: <span class="string">'admin'</span> &#125;, <span class="comment">// demo only</span>
+    &#123; id: 2, email: <span class="string">'user&#64;app.com'</span>,  passwordHash: <span class="string">'password'</span>, role: <span class="string">'user'</span>  &#125;,
+  ];
+
+  async findByEmail(email: <span class="type">string</span>) &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.find(u =&gt; u.email === email) ?? <span class="keyword">null</span>;
+  &#125;
+&#125;</code></pre>
+
+      <pre><code><span class="comment">// src/users/users.module.ts</span>
+<span class="keyword">import</span> &#123; Module &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; UsersService &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+
+&#64;Module(&#123;
+  providers: [UsersService],
+  exports: [UsersService],
+&#125;)
+<span class="keyword">export class</span> <span class="type">UsersModule</span> &#123;&#125;</code></pre>
+      <div class="step-description">
+        <p class="title">User Service Implementation</p>
+        <p class="details">Create a service to manage user operations, including user lookup by email for authentication.</p>
+        <ul class="key-points">
+          <li>User data management</li>
+          <li>Email-based lookups</li>
+          <li>Service registration</li>
+          <li>Module exports</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 4: AUTH MODULE (JwtModule async) -->
+    <div class="step">
+      <h2>Step 4 — AuthModule (JwtModule with env)</h2>
+      <pre><code><span class="comment">// src/auth/auth.module.ts</span>
+<span class="keyword">import</span> &#123; Module &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; JwtModule &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/jwt'</span>;
+<span class="keyword">import</span> &#123; PassportModule &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/passport'</span>;
+<span class="keyword">import</span> &#123; ConfigModule, ConfigService &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/config'</span>;
+<span class="keyword">import</span> &#123; AuthService &#125; <span class="keyword">from</span> <span class="string">'./auth.service'</span>;
+<span class="keyword">import</span> &#123; UsersModule &#125; <span class="keyword">from</span> <span class="string">'../users/users.module'</span>;
+<span class="keyword">import</span> &#123; AuthController &#125; <span class="keyword">from</span> <span class="string">'./auth.controller'</span>;
+<span class="keyword">import</span> &#123; JwtStrategy &#125; <span class="keyword">from</span> <span class="string">'./strategies/jwt.strategy'</span>;
+
+&#64;Module(&#123;
+  imports: [
+    UsersModule,
+    PassportModule,
+    JwtModule.registerAsync(&#123;
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (cfg: ConfigService) =&gt; (&#123;
+        secret: cfg.get(<span class="string">'JWT_SECRET'</span>),
+        signOptions: &#123; expiresIn: cfg.get(<span class="string">'JWT_EXPIRES'</span>) || <span class="string">'1h'</span> &#125;,
+      &#125;),
+    &#125;),
+  ],
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
+  exports: [AuthService],
+&#125;)
+<span class="keyword">export class</span> <span class="type">AuthModule</span> &#123;&#125;</code></pre>
+
+     <div class="step-description">
+        <p class="title">Authentication Module Setup</p>
+        <p class="details">Configure the AuthModule with JWT integration, using environment variables for secure configuration.</p>
+        <ul class="key-points">
+          <li>JWT module configuration</li>
+          <li>Passport integration</li>
+          <li>Service providers</li>
+          <li>Module exports</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 5: AUTH SERVICE -->
+    <div class="step">
+      <h2>Step 5 — AuthService (validate &amp; sign tokens)</h2>
+      <pre><code><span class="comment">// src/auth/auth.service.ts</span>
+<span class="keyword">import</span> &#123; Injectable, UnauthorizedException &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; JwtService &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/jwt'</span>;
+<span class="keyword">import</span> &#123; UsersService &#125; <span class="keyword">from</span> <span class="string">'../users/users.service'</span>;
+
+&#64;Injectable()
+<span class="keyword">export class</span> <span class="type">AuthService</span> &#123;
+  <span class="keyword">constructor</span>(
+    <span class="keyword">private</span> users: UsersService,
+    <span class="keyword">private</span> jwt: JwtService,
+  ) &#123;&#125;
+
+  async validateUser(email: <span class="type">string</span>, password: <span class="type">string</span>) &#123;
+    <span class="keyword">const</span> user = await <span class="keyword">this</span>.users.findByEmail(email);
+    <span class="keyword">if</span> (!user || user.passwordHash !== password) &#123; <span class="comment">// use bcrypt.compare in real apps</span>
+      <span class="keyword">throw new</span> UnauthorizedException(<span class="string">'Invalid credentials'</span>);
+    &#125;
+    <span class="keyword">return</span> user;
+  &#125;
+
+  async login(email: <span class="type">string</span>, password: <span class="type">string</span>) &#123;
+    <span class="keyword">const</span> user = await <span class="keyword">this</span>.validateUser(email, password);
+    <span class="keyword">const</span> payload = &#123; sub: user.id, email: user.email, role: user.role &#125;;
+    <span class="keyword">return</span> &#123; access_token: <span class="keyword">this</span>.jwt.sign(payload) &#125;;
+  &#125;
+&#125;</code></pre>
+
+        <div class="step-description">
+          <p class="title">Authentication Service</p>
+          <p class="details">Implement user validation and JWT token generation logic in the AuthService.</p>
+          <ul class="key-points">
+            <li>User credential validation</li>
+            <li>Token generation</li>
+            <li>Error handling</li>
+            <li>Login flow management</li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- STEP 6: STRATEGY + GUARD -->
+    <div class="step">
+      <h2>Step 6 — JWT Strategy &amp; Guard</h2>
+      <pre><code><span class="comment">// src/auth/strategies/jwt.strategy.ts</span>
+<span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; PassportStrategy &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/passport'</span>;
+<span class="keyword">import</span> &#123; ExtractJwt, Strategy &#125; <span class="keyword">from</span> <span class="string">'passport-jwt'</span>;
+<span class="keyword">import</span> &#123; ConfigService &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/config'</span>;
+
+&#64;Injectable()
+<span class="keyword">export class</span> <span class="type">JwtStrategy</span> <span class="keyword">extends</span> PassportStrategy(Strategy) &#123;
+  <span class="keyword">constructor</span>(cfg: ConfigService) &#123;
+    <span class="keyword">super</span>(&#123;
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: <span class="keyword">false</span>,
+      secretOrKey: cfg.get(<span class="string">'JWT_SECRET'</span>),
+    &#125;);
+  &#125;
+
+  async validate(payload: <span class="type">any</span>) &#123;
+    <span class="comment">// The return value becomes request.user</span>
+    <span class="keyword">return</span> &#123; userId: payload.sub, email: payload.email, role: payload.role &#125;;
+  &#125;
+&#125;</code></pre>
+
+      <pre><code><span class="comment">// src/auth/guards/jwt-auth.guard.ts</span>
+<span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; AuthGuard &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/passport'</span>;
+
+&#64;Injectable()
+<span class="keyword">export class</span> <span class="type">JwtAuthGuard</span> <span class="keyword">extends</span> AuthGuard(<span class="string">'jwt'</span>) &#123;&#125;</code></pre>
+         <div class="step-description">
+            <p class="title">JWT Strategy & Guard Implementation</p>
+            <p class="details">Create the JWT strategy for token validation and authentication guard for route protection.</p>
+            <ul class="key-points">
+              <li>Token extraction</li>
+              <li>Payload validation</li>
+              <li>Guard implementation</li>
+              <li>Route protection</li>
+            </ul>
+          </div>
+    </div>
+
+    <!-- STEP 7: AUTH CONTROLLER -->
+    <div class="step">
+      <h2>Step 7 — AuthController (login &amp; profile)</h2>
+      <pre><code><span class="comment">// src/auth/auth.controller.ts</span>
+<span class="keyword">import</span> &#123; Controller, Post, Body, HttpCode, HttpStatus, Get, UseGuards, Req &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; AuthService &#125; <span class="keyword">from</span> <span class="string">'./auth.service'</span>;
+<span class="keyword">import</span> &#123; LoginDto &#125; <span class="keyword">from</span> <span class="string">'./dto/login.dto'</span>;
+<span class="keyword">import</span> &#123; JwtAuthGuard &#125; <span class="keyword">from</span> <span class="string">'./guards/jwt-auth.guard'</span>;
+
+&#64;Controller(<span class="string">'auth'</span>)
+<span class="keyword">export class</span> <span class="type">AuthController</span> &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> auth: AuthService) &#123;&#125;
+
+  &#64;Post(<span class="string">'login'</span>)
+  &#64;HttpCode(HttpStatus.OK)
+  async login(&#64;Body() dto: LoginDto) &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.auth.login(dto.email, dto.password);
+  &#125;
+
+  &#64;Get(<span class="string">'profile'</span>)
+  &#64;UseGuards(JwtAuthGuard)
+  profile(&#64;Req() req: any) &#123;
+    <span class="keyword">return</span> &#123; user: req.user &#125;;
+  &#125;
+&#125;</code></pre>
+
+          <div class="step-description">
+            <p class="title">Authentication Controller</p>
+            <p class="details">Set up routes for login and protected profile access using guards and JWT authentication.</p>
+            <ul class="key-points">
+              <li>Login endpoint</li>
+              <li>Protected routes</li>
+              <li>Guard integration</li>
+              <li>Response handling</li>
+            </ul>
+          </div>
+    </div>
+
+    <!-- STEP 8: PROTECT YOUR FEATURE ROUTES -->
+    <div class="step">
+      <h2>Step 8 — Protect Feature Routes with Guards</h2>
+      <pre><code><span class="comment">// src/products/products.controller.ts</span>
+<span class="keyword">import</span> &#123; Controller, Get, UseGuards &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; JwtAuthGuard &#125; <span class="keyword">from</span> <span class="string">'../auth/guards/jwt-auth.guard'</span>;
+
+&#64;Controller(<span class="string">'api/products'</span>)
+&#64;UseGuards(JwtAuthGuard)
+<span class="keyword">export class</span> <span class="type">ProductsController</span> &#123;
+  &#64;Get()
+  findAll() &#123;
+    <span class="keyword">return</span> [&#123; id: 1, name: <span class="string">'Keyboard'</span> &#125;];
+  &#125;
+&#125;</code></pre>
+
+        <div class="step-description">
+          <p class="title">Route Protection Implementation</p>
+          <p class="details">Apply authentication guards to feature routes requiring user authentication.</p>
+          <ul class="key-points">
+            <li>Guard application</li>
+            <li>Route security</li>
+            <li>Controller protection</li>
+            <li>Authentication flow</li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- STEP 9: ROLE-BASED AUTHORIZATION -->
+    <div class="step">
+      <h2>Step 9 — Role-Based Authorization (optional)</h2>
+      <pre><code><span class="comment">// src/auth/roles.decorator.ts</span>
+<span class="keyword">import</span> &#123; SetMetadata &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">export const</span> <span class="type">ROLES_KEY</span> = <span class="string">'roles'</span>;
+<span class="keyword">export const</span> <span class="type">Roles</span> = (...roles: <span class="type">string</span>[]) =&gt; SetMetadata(ROLES_KEY, roles);</code></pre>
+
+      <pre><code><span class="comment">// src/auth/roles.guard.ts</span>
+<span class="keyword">import</span> &#123; Injectable, CanActivate, ExecutionContext, ForbiddenException &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; Reflector &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/core'</span>;
+<span class="keyword">import</span> &#123; ROLES_KEY &#125; <span class="keyword">from</span> <span class="string">'./roles.decorator'</span>;
+
+&#64;Injectable()
+<span class="keyword">export class</span> <span class="type">RolesGuard</span> <span class="keyword">implements</span> CanActivate &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> reflector: Reflector) &#123;&#125;
+
+  canActivate(ctx: ExecutionContext): <span class="type">boolean</span> &#123;
+    <span class="keyword">const</span> required = <span class="keyword">this</span>.reflector.getAllAndOverride&lt;string[]&gt;(ROLES_KEY, [
+      ctx.getHandler(),
+      ctx.getClass(),
+    ]);
+    <span class="keyword">if</span> (!required || required.length === 0) <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="keyword">const</span> req = ctx.switchToHttp().getRequest();
+    <span class="keyword">const</span> user = req.user;
+    <span class="keyword">if</span> (!user || !required.includes(user.role)) &#123;
+      <span class="keyword">throw new</span> ForbiddenException(<span class="string">'Insufficient role'</span>);
+    &#125;
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+  &#125;
+&#125;</code></pre>
+
+      <pre><code><span class="comment">// use in a controller</span>
+&#64;UseGuards(JwtAuthGuard, RolesGuard)
+&#64;Roles(<span class="string">'admin'</span>)
+&#64;Get(<span class="string">'admin-only'</span>)
+adminArea() &#123; <span class="keyword">return</span> &#123; message: <span class="string">'ok'</span> &#125;; &#125;</code></pre>
+       <div class="step-description">
+          <p class="title">Role-Based Authorization</p>
+          <p class="details">Implement role-based access control using custom decorators and guards.</p>
+          <ul class="key-points">
+            <li>Role decorator</li>
+            <li>Authorization guard</li>
+            <li>Role validation</li>
+            <li>Access control</li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- STEP 10: TEST -->
+    <div class="step">
+      <h2>Step 10 — Test the Flow</h2>
+      <ol>
+        <li><strong>Login</strong> to get a token:</li>
+      </ol>
+      <pre><code>POST /auth/login
+&#123; "email": "admin&#64;app.com", "password": "password" &#125;</code></pre>
+      <ol start="2">
+        <li><strong>Call protected</strong> route with Bearer token:</li>
+      </ol>
+      <pre><code>GET /auth/profile
+Authorization: Bearer &lt;TOKEN_FROM_LOGIN&gt;</code></pre>
+        <div class="step-description">
+          <p class="title">Authentication Flow Testing</p>
+          <p class="details">Test the complete authentication flow from login to protected route access.</p>
+          <ul class="key-points">
+            <li>Login testing</li>
+            <li>Token validation</li>
+            <li>Protected routes</li>
+            <li>Authorization checks</li>
+          </ul>
+        </div>
+    </div>
+
+    <!-- STEP 11: BEST PRACTICES -->
+    <div class="step">
+      <h2>Best Practices</h2>
+      <ul>
+        <li><strong>Do not hardcode</strong> secrets; use <code>&#64;nestjs/config</code> and environment variables.</li>
+        <li><strong>Hash passwords</strong> with <code>bcrypt</code>; never store plain text.</li>
+        <li>Prefer <strong>Passport strategies</strong> (<code>JwtStrategy</code>) over manual token parsing.</li>
+        <li>Use <strong>guards composition</strong>: <code>JwtAuthGuard</code> + <code>RolesGuard</code> for layered security.</li>
+        <li>Write <strong>unit tests</strong> for guards and strategies.</li>
+      </ul>
+
+      <div class="step-description">
+        <p class="title">Security Best Practices</p>
+        <p class="details">Follow security best practices for production-ready authentication implementation.</p>
+        <ul class="key-points">
+          <li>Environment configuration</li>
+          <li>Password security</li>
+          <li>Strategy usage</li>
+          <li>Guard composition</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- STEP 12: FOLDER STRUCTURE -->
+    <div class="step">
+      <h2>Recommended Structure</h2>
+      <pre><code>src/
+├─ auth/
+│  ├─ auth.controller.ts
+│  ├─ auth.module.ts
+│  ├─ auth.service.ts
+│  ├─ guards/jwt-auth.guard.ts
+│  ├─ strategies/jwt.strategy.ts
+│  ├─ roles.guard.ts
+│  ├─ roles.decorator.ts
+│  └─ dto/login.dto.ts
+├─ users/
+│  ├─ users.module.ts
+│  ├─ users.service.ts
+│  └─ user.entity.ts
+├─ app.module.ts
+└─ main.ts</code></pre>
+       <div class="step-description">
+          <p class="title">Project Structure Organization</p>
+          <p class="details">Organize authentication-related files in a maintainable and scalable structure.</p>
+          <ul class="key-points">
+            <li>Module organization</li>
+            <li>File separation</li>
+            <li>Code organization</li>
+            <li>Maintainability</li>
+          </ul>
+        </div>
+    </div>
+
+    
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on  JWT authentication Guards</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is a Guard in NestJS and what is its primary purpose?</strong>
+          <p class="answer">A Guard is a class implementing the <code>CanActivate</code> interface, used to determine whether a request should be handled by the route handler. Guards are commonly used for authentication and authorization.</p>
+          <span class="category">Basics</span>
+        </li>
+        <li>
+          <strong class="question-title">How does JWT authentication work in a NestJS application?</strong>
+          <p class="answer">JWT authentication issues a signed token to the client upon successful login. The client includes this token in the Authorization header for subsequent requests, and the server verifies the token to authenticate the user.</p>
+          <span class="category">JWT</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you implement JWT authentication in NestJS?</strong>
+          <p class="answer">By using <code>&#64;nestjs/jwt</code> and <code>&#64;nestjs/passport</code>, creating a JWT strategy, and protecting routes with a custom <code>JwtAuthGuard</code> that extends <code>AuthGuard('jwt')</code>.</p>
+          <span class="category">Implementation</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the role of the <code>JwtStrategy</code> class?</strong>
+          <p class="answer">The <code>JwtStrategy</code> extracts and validates the JWT from the request, and attaches the decoded payload to <code>request.user</code> if valid.</p>
+          <span class="category">JWT</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you protect a route using a JWT guard?</strong>
+          <p class="answer">Apply <code>&#64;UseGuards(JwtAuthGuard)</code> to controllers or route handlers to require a valid JWT for access.</p>
+          <span class="category">Usage</span>
+        </li>
+        <li>
+          <strong class="question-title">How can you implement role-based access control with guards?</strong>
+          <p class="answer">By creating a custom roles decorator and a <code>RolesGuard</code> that checks the user’s role in the JWT payload against required roles for the route.</p>
+          <span class="category">Authorization</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between authentication and authorization in the context of guards?</strong>
+          <p class="answer">Authentication verifies the user’s identity (e.g., via JWT), while authorization checks if the authenticated user has permission to access a resource (e.g., via roles).</p>
+          <span class="category">Concepts</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you extract the JWT from an incoming request?</strong>
+          <p class="answer">Typically, the JWT is extracted from the <code>Authorization</code> header as a Bearer token using <code>ExtractJwt.fromAuthHeaderAsBearerToken()</code> in the JWT strategy.</p>
+          <span class="category">JWT</span>
+        </li>
+        <li>
+          <strong class="question-title">What happens if a JWT is invalid or expired?</strong>
+          <p class="answer">The guard denies access and NestJS returns a 401 Unauthorized response.</p>
+          <span class="category">Error Handling</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you test guards in a NestJS application?</strong>
+          <p class="answer">By writing unit tests for guard classes and integration tests for protected routes, using mock requests and tokens.</p>
+          <span class="category">Testing</span>
+        </li>
+        <li>
+          <strong class="question-title">How can you apply guards globally in a NestJS application?</strong>
+          <p class="answer">By using <code>app.useGlobalGuards()</code> in <code>main.ts</code> to apply a guard to all routes.</p>
+          <span class="category">Usage</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the purpose of the <code>canActivate</code> method in a guard?</strong>
+          <p class="answer">It contains the logic to allow or deny a request. It returns <code>true</code> (allow), <code>false</code> (deny), or a Promise/Observable resolving to either.</p>
+          <span class="category">Implementation</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you access the decoded JWT payload in a controller?</strong>
+          <p class="answer">After passing the <code>JwtAuthGuard</code>, the payload is available as <code>request.user</code> in the controller method.</p>
+          <span class="category">Usage</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you handle multiple guards on a single route?</strong>
+          <p class="answer">List them in <code>&#64;UseGuards()</code>, e.g., <code>&#64;UseGuards(JwtAuthGuard, RolesGuard)</code>. All must return <code>true</code> for access.</p>
+          <span class="category">Advanced</span>
+        </li>
+        <li>
+          <strong class="question-title">What are some best practices for securing JWT authentication in NestJS?</strong>
+          <p class="answer">Use strong secrets, short token lifetimes, HTTPS, hash passwords, validate input, and never expose sensitive data in JWT payloads.</p>
+          <span class="category">Best Practices</span>
+        </li>
+      </ol>
+     </div>
+  </div>
+</div>

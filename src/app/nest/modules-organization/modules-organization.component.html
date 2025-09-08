@@ -1,1 +1,407 @@
-<p>modules-organization works!</p>
+<div class="overall-wrapper" appMaximize #nestjsModules="maximize" id="nestjsModules">
+  <div class="wrapper">
+       <img class="swap" *ngIf="nestjsModules.checkfullscreen() == 'hide'" (click)="nestjsModules.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="nestjsModules.checkfullscreen() != 'hide'" (click)="nestjsModules.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+       <div class="header">
+           <p> <span class="question">What:</span>
+               NestJS <strong>Modules</strong> are TypeScript classes decorated with &#64;Module() that organize application code into cohesive units. They group related controllers, services, and other providers, defining dependencies and encapsulating functionality.
+           </p>
+           <p> <span class="question">Why:</span>
+               Modules promote <strong>separation of concerns</strong>, modularity, and scalability by organizing code into reusable, maintainable units. They enable <strong>dependency injection</strong>, facilitate testing, and simplify code navigation in large applications.
+           </p>
+           <p> <span class="question">Where:</span>
+               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to structure code, manage dependencies, and create modular architectures for scalable and testable backend systems.
+           </p>
+       </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Module Setup</h2>
+       <p>Let's create a basic NestJS module to organize user-related functionality:</p>
+       
+       <h3>Creating a Users Module</h3>
+       <pre><code><span class="comment">// users.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  controllers: [<span class="type">UsersController</span>],
+  providers: [<span class="type">UsersService</span>],
+&#125;)
+<span class="keyword">export class</span> <span class="type">UsersModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Key Module Elements</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>&#64;Module() Decorator</h4>
+           <p>Defines a module with metadata for controllers, providers, imports, and exports</p>
+         </div>
+         <div class="feature-card">
+           <h4>Controllers</h4>
+           <p>Handle HTTP requests and route definitions</p>
+         </div>
+         <div class="feature-card">
+           <h4>Providers</h4>
+           <p>Services and other injectable classes for business logic</p>
+         </div>
+         <div class="feature-card">
+           <h4>Imports/Exports</h4>
+           <p>Manage dependencies and share providers across modules</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Complete Module Structure</h2>
+       <p>This example demonstrates a complete module structure with controllers, services, and imports for a user management feature.</p>
+
+       <h3>Step 1: Define Interfaces & DTOs</h3>
+       <p>Interfaces and DTOs ensure type safety for user data:</p>
+       <pre><code><span class="comment">// interfaces/user.interface.ts</span>
+<span class="keyword">export interface</span> <span class="type">User</span> &#123;
+  id: <span class="type">number</span>;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+&#125;
+
+<span class="keyword">export interface</span> <span class="type">CreateUserDto</span> &#123;
+  name: <span class="type">string</span>;
+  email: <span class="type">string</span>;
+  age: <span class="type">number</span>;
+&#125;
+
+<span class="keyword">export interface</span> <span class="type">UpdateUserDto</span> &#123;
+  name?: <span class="type">string</span>;
+  email?: <span class="type">string</span>;
+  age?: <span class="type">number</span>;
+&#125;
+</code></pre>
+
+       <h3>Step 2: Create the Users Service</h3>
+       <p>The service handles business logic for CRUD operations:</p>
+       <pre><code><span class="comment">// users.service.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span>, <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span> &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">UsersService</span> &#123;
+  <span class="keyword">private</span> users: <span class="type">User</span>[] = [
+    &#123; id: 1, name: <span class="string">'John Doe'</span>, email: <span class="string">'john&#64;example.com'</span>, age: 30 &#125;,
+    &#123; id: 2, name: <span class="string">'Jane Smith'</span>, email: <span class="string">'jane&#64;example.com'</span>, age: 25 &#125;
+  ];
+
+  findAll(limit?: <span class="type">number</span>, offset?: <span class="type">number</span>): <span class="type">User</span>[] &#123;
+    <span class="keyword">const</span> startIndex = offset || 0;
+    <span class="keyword">const</span> endIndex = limit ? startIndex + limit : undefined;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.slice(startIndex, endIndex);
+  &#125;
+
+  findOne(id: <span class="type">number</span>): <span class="type">User</span> | <span class="type">undefined</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users.find(user => user.id === id);
+  &#125;
+
+  create(createUserDto: <span class="type">CreateUserDto</span>): <span class="type">User</span> &#123;
+    <span class="keyword">const</span> newUser: <span class="type">User</span> = &#123;
+      id: <span class="keyword">this</span>.users.length + 1,
+      ...createUserDto
+    &#125;;
+    <span class="keyword">this</span>.users.push(newUser);
+    <span class="keyword">return</span> newUser;
+  &#125;
+
+  update(id: <span class="type">number</span>, updateUserDto: <span class="type">UpdateUserDto</span>): <span class="type">User</span> | <span class="type">null</span> &#123;
+    <span class="keyword">const</span> userIndex = <span class="keyword">this</span>.users.findIndex(user => user.id === id);
+    <span class="keyword">if</span> (userIndex === -1) <span class="keyword">return</span> <span class="type">null</span>;
+    <span class="keyword">this</span>.users[userIndex] = &#123; ...<span class="keyword">this</span>.users[userIndex], ...updateUserDto &#125;;
+    <span class="keyword">return</span> <span class="keyword">this</span>.users[userIndex];
+  &#125;
+
+  remove(id: <span class="type">number</span>): <span class="type">void</span> &#123;
+    <span class="keyword">const</span> userIndex = <span class="keyword">this</span>.users.findIndex(user => user.id === id);
+    <span class="keyword">if</span> (userIndex !== -1) &#123;
+      <span class="keyword">this</span>.users.splice(userIndex, 1);
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 3: Create the Users Controller</h3>
+       <p>The controller uses the service to handle HTTP requests:</p>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; 
+  <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Post</span>, <span class="type">Put</span>, <span class="type">Delete</span>, 
+  <span class="type">Body</span>, <span class="type">Param</span>, <span class="type">Query</span>, <span class="type">HttpStatus</span>, <span class="type">HttpCode</span>
+&#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+<span class="keyword">import</span> &#123; <span class="type">User</span>, <span class="type">CreateUserDto</span>, <span class="type">UpdateUserDto</span> &#125; <span class="keyword">from</span> <span class="string">'./interfaces/user.interface'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> usersService: <span class="type">UsersService</span>) &#123;&#125;
+
+  <span class="decorator">&#64;Get</span>()
+  findAll(
+    <span class="decorator">&#64;Query</span>(<span class="string">'limit'</span>) limit?: <span class="type">number</span>,
+    <span class="decorator">&#64;Query</span>(<span class="string">'offset'</span>) offset?: <span class="type">number</span>
+  ): <span class="type">User</span>[] &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.findAll(limit, offset);
+  &#125;
+
+  <span class="decorator">&#64;Get</span>(<span class="string">':id'</span>)
+  findOne(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">User</span> | <span class="type">undefined</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.findOne(+id);
+  &#125;
+
+  <span class="decorator">&#64;Post</span>()
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.CREATED)
+  create(<span class="decorator">&#64;Body</span>() createUserDto: <span class="type">CreateUserDto</span>): <span class="type">User</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.create(createUserDto);
+  &#125;
+
+  <span class="decorator">&#64;Put</span>(<span class="string">':id'</span>)
+  update(
+    <span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>,
+    <span class="decorator">&#64;Body</span>() updateUserDto: <span class="type">UpdateUserDto</span>
+  ): <span class="type">User</span> | <span class="type">null</span> &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.usersService.update(+id, updateUserDto);
+  &#125;
+
+  <span class="decorator">&#64;Delete</span>(<span class="string">':id'</span>)
+  <span class="decorator">&#64;HttpCode</span>(<span class="type">HttpStatus</span>.NO_CONTENT)
+  remove(<span class="decorator">&#64;Param</span>(<span class="string">'id'</span>) id: <span class="type">string</span>): <span class="type">void</span> &#123;
+    <span class="keyword">this</span>.usersService.remove(+id);
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Step 4: Define the Users Module</h3>
+       <p>The module ties everything together:</p>
+       <pre><code><span class="comment">// users.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  controllers: [<span class="type">UsersController</span>],
+  providers: [<span class="type">UsersService</span>],
+  exports: [<span class="type">UsersService</span>]
+&#125;)
+<span class="keyword">export class</span> <span class="type">UsersModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Modules group related components for better organization.</li>
+         <li><code>exports</code> allows sharing providers with other modules.</li>
+         <li>Controllers and services are registered in the module.</li>
+         <li>Modules support dependency injection for services.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. Advanced Module Features</h2>
+       <p>Modules support advanced features like imports, exports, and dynamic modules:</p>
+
+       <h3>Importing and Exporting Modules</h3>
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">UsersModule</span> &#125; <span class="keyword">from</span> <span class="string">'./users/users.module'</span>;
+<span class="keyword">import</span> &#123; <span class="type">AuthModule</span> &#125; <span class="keyword">from</span> <span class="string">'./auth/auth.module'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  imports: [<span class="type">UsersModule</span>, <span class="type">AuthModule</span>]
+&#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Dynamic Modules</h3>
+       <p>Dynamic modules allow configuration at runtime:</p>
+       <pre><code><span class="comment">// config.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">DynamicModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;&#125;)
+<span class="keyword">export class</span> <span class="type">ConfigModule</span> &#123;
+  <span class="keyword">static</span> forRoot(config: &#123; apiKey: <span class="type">string</span> &#125;): <span class="type">DynamicModule</span> &#123;
+    <span class="keyword">return</span> &#123;
+      module: <span class="type">ConfigModule</span>,
+      providers: [
+        &#123;
+          provide: <span class="string">'CONFIG'</span>,
+          useValue: config
+        &#125;
+      ],
+      exports: [<span class="string">'CONFIG'</span>]
+    &#125;;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Using Dynamic Modules</h3>
+       <pre><code><span class="comment">// app.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">ConfigModule</span> &#125; <span class="keyword">from</span> <span class="string">'./config.module'</span>;
+
+<span class="decorator">&#64;Module</span>(&#123;
+  imports: [
+    <span class="type">ConfigModule</span>.forRoot(&#123; apiKey: <span class="string">'secret-key'</span> &#125;)
+  ]
+&#125;)
+<span class="keyword">export class</span> <span class="type">AppModule</span> &#123;&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li><code>imports</code>: Include other modules to use their providers.</li>
+         <li><code>exports</code>: Share providers with other modules.</li>
+         <li>Dynamic modules enable runtime configuration.</li>
+         <li>Modules support hierarchical dependency injection.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Code Organization Best Practices</h2>
+       <p>Organize your NestJS application for scalability and maintainability:</p>
+       
+       <h3>Directory Structure</h3>
+       <pre><code><span class="comment">// Recommended project structure</span>
+project/
+├── src/
+│   ├── users/
+│   │   ├── interfaces/
+│   │   │   └── user.interface.ts
+│   │   ├── users.controller.ts
+│   │   ├── users.service.ts
+│   │   └── users.module.ts
+│   ├── auth/
+│   │   ├── auth.controller.ts
+│   │   ├── auth.service.ts
+│   │   └── auth.module.ts
+│   ├── app.module.ts
+│   └── main.ts
+</code></pre>
+
+       <h3>Best Practices</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Feature-based Modules</h4>
+           <p>Group related controllers, services, and interfaces by feature</p>
+         </div>
+         <div class="feature-card">
+           <h4>Single Responsibility</h4>
+           <p>Each module should handle one feature or domain</p>
+         </div>
+         <div class="feature-card">
+           <h4>Reusable Providers</h4>
+           <p>Export services for use in other modules</p>
+         </div>
+         <div class="feature-card">
+           <h4>Lazy Loading</h4>
+           <p>Use dynamic modules for lazy-loaded features</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>5. Global Modules</h2>
+       <p>Global modules make providers available application-wide without importing:</p>
+       <pre><code><span class="comment">// logger.module.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">Global</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">LoggerService</span> &#125; <span class="keyword">from</span> <span class="string">'./logger.service'</span>;
+
+<span class="decorator">&#64;Global</span>()
+<span class="decorator">&#64;Module</span>(&#123;
+  providers: [<span class="type">LoggerService</span>],
+  exports: [<span class="type">LoggerService</span>]
+&#125;)
+<span class="keyword">export class</span> <span class="type">LoggerModule</span> &#123;&#125;
+</code></pre>
+
+       <p class="note">Use <code>&#64;Global()</code> sparingly to avoid tight coupling.</p>
+     </div>
+
+     <div class="interview-questions step">
+       <h2>15 Important Interview Questions on NestJS Modules & Code Organization</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is the purpose of a Module in NestJS?</strong>
+           <p class="answer">Modules organize code into cohesive units, grouping related controllers, services, and providers, and managing dependencies.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you define a module in NestJS?</strong>
+           <p class="answer">Use the <code>&#64;Module()</code> decorator on a TypeScript class, specifying <code>controllers</code>, <code>providers</code>, <code>imports</code>, and <code>exports</code>.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the role of the &#64;Module() decorator?</strong>
+           <p class="answer">The <code>&#64;Module()</code> decorator defines a module’s metadata, including controllers, providers, imports, and exports.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">What are the key properties of the &#64;Module() decorator?</strong>
+           <p class="answer"><code>controllers</code>, <code>providers</code>, <code>imports</code>, and <code>exports</code> define the module’s components and dependencies.</p>
+           <span class="category">Decorators</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you register a controller in a module?</strong>
+           <p class="answer">Add the controller to the <code>controllers</code> array in the <code>&#64;Module()</code> decorator (e.g., <code>controllers: [UsersController]</code>).</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you register a service in a module?</strong>
+           <p class="answer">Add the service to the <code>providers</code> array in the <code>&#64;Module()</code> decorator (e.g., <code>providers: [UsersService]</code>).</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the purpose of the imports property in a module?</strong>
+           <p class="answer">The <code>imports</code> property includes other modules, making their exported providers available for dependency injection.</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the exports property used for?</strong>
+           <p class="answer">The <code>exports</code> property makes providers available to other modules that import the current module.</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a dynamic module in NestJS?</strong>
+           <p class="answer">A dynamic module is created at runtime using a static method (e.g., <code>forRoot()</code>) to provide configurable providers.</p>
+           <span class="category">Advanced Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you create a global module?</strong>
+           <p class="answer">Use the <code>&#64;Global()</code> decorator to make a module’s providers available application-wide without importing.</p>
+           <span class="category">Advanced Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">Why is code organization important in NestJS?</strong>
+           <p class="answer">Organized code improves maintainability, scalability, and testability by grouping related functionality into modules.</p>
+           <span class="category">Code Organization</span>
+         </li>
+         <li>
+           <strong class="question-title">What is a recommended directory structure for a NestJS project?</strong>
+           <p class="answer">Group files by feature (e.g., <code>users/users.module.ts</code>, <code>users/users.controller.ts</code>, <code>users/users.service.ts</code>).</p>
+           <span class="category">Code Organization</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle dependencies between modules?</strong>
+           <p class="answer">Use <code>imports</code> to include dependent modules and <code>exports</code> to share providers, ensuring proper dependency injection.</p>
+           <span class="category">Modules</span>
+         </li>
+         <li>
+           <strong class="question-title">What is the benefit of feature-based modules?</strong>
+           <p class="answer">Feature-based modules group related functionality, improving code clarity, maintainability, and reusability.</p>
+           <span class="category">Code Organization</span>
+         </li>
+         <li>
+           <strong class="question-title">How can you implement lazy loading with modules?</strong>
+           <p class="answer">Use dynamic modules with <code>registerAsync()</code> or lazy-loaded providers to load modules on demand.</p>
+           <span class="category">Advanced Modules</span>
+         </li>
+       </ol>
+     </div>
+   </div>
+</div>

@@ -1,1 +1,375 @@
-<p>error-handling-nestjs works!</p>
+<div class="overall-wrapper" appMaximize #nestjsErrorHandling="maximize" id="nestjsErrorHandling">
+    <div class="wrapper">
+      <img class="swap" *ngIf="nestjsErrorHandling.checkfullscreen() == 'hide'" (click)="nestjsErrorHandling.toggle()" src="../../../assets/expand.svg" alt="Expand">
+      <img class="swap" *ngIf="nestjsErrorHandling.checkfullscreen() != 'hide'" (click)="nestjsErrorHandling.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          NestJS <strong>Error Handling & Exception Filters</strong> manage errors in applications, such as retrieving inflow/outflow data. Built-in exceptions (e.g., <code>NotFoundException</code>) and custom exception filters handle errors to ensure consistent, user-friendly responses.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          Error handling makes applications <strong>robust</strong> by managing failures (e.g., invalid filters or no data found) gracefully. It provides clear error messages and consistent API responses, improving user experience and debugging. Exception filters allow <strong>customized error responses</strong> tailored to specific scenarios, like invalid date ranges in filters.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          Used in <strong>REST APIs, dashboards, and financial applications</strong> to handle errors like invalid input, missing data, or server issues in a centralized way, especially for endpoints like <code>getOverallInflowOutflowData</code>.
+        </p>
+      </div>
+    </div>
+
+    <div class="examples">
+      <div class="step">
+        <h2>1. Basic Error Handling</h2>
+        <p>NestJS provides built-in exceptions to handle common errors, such as when no inflow/outflow data is found for given filters. This avoids manual try-catch blocks and ensures proper HTTP status codes.</p>
+
+        <h3>Using Built-in Exceptions</h3>
+        <p>Throw a <code>NotFoundException</code> in the service when no data matches the filters, replacing manual response handling.</p>
+        <pre><code>
+<span class="comment">// dashboard.service.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">Injectable</span>, <span class="type">NotFoundException</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/common'</span>;
+
+<span class="decorator"> &#64;Injectable</span>()
+<span class="keyword">export class</span> <span class="type">DashboardService</span> &#123; 
+  <span class="keyword">private</span> data = [
+    &#123;  id: 1, type: <span class="string">'inflow'</span>, amount: 1000 &#125; ,
+    &#123;  id: 2, type: <span class="string">'outflow'</span>, amount: 500 &#125; 
+  ];
+
+  async getOverallInflowOutflowData(filters: <span class="type">any</span>) &#123; 
+    <span class="keyword">const</span> result = <span class="keyword">this</span>.data.filter(item => <span class="keyword">true</span>); <span class="comment">// Simplified filter logic</span>
+    <span class="keyword">if</span> (result.length === 0) &#123; 
+      <span class="keyword">throw new</span> <span class="type">NotFoundException</span>(<span class="string">'No inflow/outflow data found for the given filters'</span>);
+    &#125; 
+    <span class="keyword">return</span> result;
+  &#125; 
+&#125; 
+        </code></pre>
+        <p><strong>Explanation</strong>: Instead of returning an empty array with a 200 status, the service throws a <code>NotFoundException</code>, which NestJS converts to a 404 response. This is more semantically correct for “no data found.”</p>
+
+        <h3>Key Exception Types</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>HttpException</h4>
+            <p>Base class for all HTTP errors, used for custom exceptions</p>
+          </div>
+          <div class="feature-card">
+            <h4>NotFoundException</h4>
+            <p>Throws a 404 error when data is missing (e.g., no inflow/outflow data)</p>
+          </div>
+          <div class="feature-card">
+            <h4>BadRequestException</h4>
+            <p>Throws a 400 error for invalid filters (e.g., missing date)</p>
+          </div>
+          <div class="feature-card">
+            <h4>InternalServerErrorException</h4>
+            <p>Throws a 500 error for unexpected server issues</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h2>2. Custom Exception Filters</h2>
+        <p>Create custom exceptions and filters to handle specific errors, like invalid filters in <code>getOverallInflowOutflowData</code>, and customize the response format to match your existing structure (e.g., <code>&#123;  status, message, data &#125; </code>).</p>
+
+        <h3>Step 1: Create a Custom Exception</h3>
+        <p>Define a custom exception for invalid filters, such as missing or incorrect date ranges.</p>
+        <pre><code>
+<span class="comment">// exceptions/invalid-filter.exception.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">HttpException</span>, <span class="type">HttpStatus</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/common'</span>;
+
+<span class="keyword">export class</span> <span class="type">InvalidFilterException</span> <span class="keyword">extends</span> <span class="type">HttpException</span> &#123; 
+  <span class="keyword">constructor</span>(message: <span class="type">string</span>) &#123; 
+    <span class="keyword">super</span>(message, <span class="type">HttpStatus</span>.BAD_REQUEST);
+  &#125; 
+&#125; 
+        </code></pre>
+        <p><strong>Explanation</strong>: This creates a 400 error for invalid filters, e.g., <code>throw new InvalidFilterException('Start date is required')</code>.</p>
+
+        <h3>Step 2: Create a Custom Exception Filter</h3>
+        <p>Implement a filter to catch all HTTP exceptions and format responses consistently, matching your <code>&#123;  status, message &#125; </code> structure.</p>
+        <pre><code>
+<span class="comment">// filters/http-exception.filter.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">ExceptionFilter</span>, <span class="type">Catch</span>, <span class="type">ArgumentsHost</span>, <span class="type">HttpException</span>, <span class="type">HttpStatus</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">Response</span> &#125;  <span class="keyword">from</span> <span class="string">'express'</span>;
+
+<span class="decorator"> &#64;Catch</span>(<span class="type">HttpException</span>)
+<span class="keyword">export class</span> <span class="type">HttpExceptionFilter</span> <span class="keyword">implements</span> <span class="type">ExceptionFilter</span> &#123; 
+  catch(exception: <span class="type">HttpException</span>, host: <span class="type">ArgumentsHost</span>) &#123; 
+    <span class="keyword">const</span> ctx = host.switchToHttp();
+    <span class="keyword">const</span> response = ctx.getResponse&lt;<span class="type">Response</span>&gt;();
+    <span class="keyword">const</span> status = exception.getStatus();
+    <span class="keyword">const</span> exceptionResponse = exception.getResponse();
+
+    response
+      .status(status)
+      .json(&#123; 
+        status: <span class="keyword">false</span>,
+        statusCode: status,
+        message: <span class="keyword">typeof</span> exceptionResponse === <span class="string">'string'</span> ? exceptionResponse : exceptionResponse[<span class="string">'message'</span>],
+        error: exceptionResponse[<span class="string">'error'</span>] || <span class="type">HttpStatus</span>[status],
+        timestamp: <span class="keyword">new</span> <span class="type">Date</span>().toISOString()
+      &#125; );
+  &#125; 
+&#125; 
+        </code></pre>
+        <p><strong>Explanation</strong>: The filter catches all HTTP exceptions (e.g., <code>NotFoundException</code>, <code>InvalidFilterException</code>) and formats responses with <code>status</code>, <code>statusCode</code>, <code>message</code>, <code>error</code>, and <code>timestamp</code>, aligning with your existing response format.</p>
+
+        <h3>Step 3: Apply the Exception Filter</h3>
+        <p>Refactor your controller to use the filter and throw exceptions instead of manual responses.</p>
+        <pre><code>
+<span class="comment">// dashboard.controller.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">Body</span>, <span class="type">UseFilters</span>, <span class="type">Logger</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">DashboardService</span> &#125;  <span class="keyword">from</span> <span class="string">'./dashboard.service'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">HttpExceptionFilter</span> &#125;  <span class="keyword">from</span> <span class="string">'./filters/http-exception.filter'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">FilterDto</span> &#125;  <span class="keyword">from</span> <span class="string">'./dto/filter.dto'</span>;
+
+<span class="decorator"> &#64;Controller</span>(<span class="string">'api/dashboard'</span>)
+<span class="decorator"> &#64;UseFilters</span>(<span class="type">HttpExceptionFilter</span>)
+<span class="keyword">export class</span> <span class="type">DashboardController</span> &#123; 
+  <span class="keyword">private readonly</span> logger = <span class="keyword">new</span> <span class="type">Logger</span>(<span class="type">DashboardController</span>.name);
+
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> dashboardService: <span class="type">DashboardService</span>) &#123; &#125; 
+
+  <span class="decorator"> &#64;Get</span>(<span class="string">'inflow-outflow'</span>)
+  async getOverallInflowOutflowData(<span class="decorator"> &#64;Body</span>() filters: <span class="type">FilterDto</span>) &#123; 
+    <span class="keyword">this</span>.logger.log(<span class="string">`Inside overall inflow and outflow`</span>);
+    <span class="keyword">const</span> data = <span class="keyword">await this</span>.dashboardService.getOverallInflowOutflowData(filters);
+    <span class="keyword">this</span>.logger.log(<span class="string">`Data Retrieved Successfully: $&#123; data.length&#125;  records`</span>);
+    <span class="keyword">return</span> &#123; 
+      status: <span class="keyword">true</span>,
+      data,
+      message: <span class="string">'Data Retrieved Successfully'</span>
+    &#125; ;
+  &#125; 
+&#125; 
+        </code></pre>
+        <p><strong>Explanation</strong>: The controller no longer uses <code> &#64;Res()</code> or try-catch. It relies on the service to throw exceptions, which are caught by the filter. The response format matches your original success response.</p>
+
+        <h3>Step 4: Global Exception Filter</h3>
+        <p>Apply the filter globally to handle errors across all endpoints, reducing repetitive code.</p>
+        <pre><code>
+<span class="comment">// main.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">NestFactory</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/core'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">AppModule</span> &#125;  <span class="keyword">from</span> <span class="string">'./app.module'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">HttpExceptionFilter</span> &#125;  <span class="keyword">from</span> <span class="string">'./dashboard/filters/http-exception.filter'</span>;
+
+<span class="keyword">async function</span> bootstrap() &#123; 
+  <span class="keyword">const</span> app = <span class="keyword">await</span> <span class="type">NestFactory</span>.create(<span class="type">AppModule</span>);
+  app.useGlobalFilters(<span class="keyword">new</span> <span class="type">HttpExceptionFilter</span>());
+  <span class="keyword">await</span> app.listen(3000);
+&#125; 
+bootstrap();
+        </code></pre>
+        <p><strong>Explanation</strong>: The global filter ensures all HTTP exceptions are formatted consistently, eliminating the need for try-catch in every controller method.</p>
+
+        <h3>Key Points</h3>
+        <ul>
+          <li>Built-in exceptions like <code>NotFoundException</code> handle common cases (e.g., no data).</li>
+          <li>Custom exceptions like <code>InvalidFilterException</code> address specific scenarios.</li>
+          <li>Filters ensure consistent error responses across the app.</li>
+          <li>Global filters reduce repetitive error handling code.</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h2>3. Advanced Error Handling</h2>
+        <p>Add validation for <code>FilterDto</code> and handle specific exceptions with targeted filters to enhance error handling for <code>getOverallInflowOutflowData</code>.</p>
+
+        <h3>Specific Exception Filter</h3>
+        <p>Create a filter for <code>InvalidFilterException</code> to provide additional details, like suggestions.</p>
+        <pre><code>
+<span class="comment">// filters/invalid-filter.filter.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">ExceptionFilter</span>, <span class="type">Catch</span>, <span class="type">ArgumentsHost</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">Response</span> &#125;  <span class="keyword">from</span> <span class="string">'express'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">InvalidFilterException</span> &#125;  <span class="keyword">from</span> <span class="string">'../exceptions/invalid-filter.exception'</span>;
+
+<span class="decorator"> &#64;Catch</span>(<span class="type">InvalidFilterException</span>)
+<span class="keyword">export class</span> <span class="type">InvalidFilterFilter</span> <span class="keyword">implements</span> <span class="type">ExceptionFilter</span> &#123; 
+  catch(exception: <span class="type">InvalidFilterException</span>, host: <span class="type">ArgumentsHost</span>) &#123; 
+    <span class="keyword">const</span> ctx = host.switchToHttp();
+    <span class="keyword">const</span> response = ctx.getResponse&lt;<span class="type">Response</span>&gt;();
+    <span class="keyword">const</span> status = exception.getStatus();
+
+    response
+      .status(status)
+      .json(&#123; 
+        status: <span class="keyword">false</span>,
+        statusCode: status,
+        message: exception.message,
+        error: <span class="string">'Invalid Filters'</span>,
+        timestamp: <span class="keyword">new</span> <span class="type">Date</span>().toISOString(),
+        suggestion: <span class="string">'Ensure startDate and endDate are valid ISO 8601 dates'</span>
+      &#125; );
+  &#125; 
+&#125; 
+        </code></pre>
+        <p><strong>Explanation</strong>: This filter catches only <code>InvalidFilterException</code> and adds a <code>suggestion</code> field to help users fix the error.</p>
+
+        <h3>Combining with Validation</h3>
+        <p>Use <code>ValidationPipe</code> to validate <code>FilterDto</code> and a filter to handle validation errors.</p>
+        <pre><code>
+<span class="comment">// filters/validation-exception.filter.ts</span>
+<span class="keyword">import</span> &#123;  <span class="type">ExceptionFilter</span>, <span class="type">Catch</span>, <span class="type">ArgumentsHost</span>, <span class="type">BadRequestException</span> &#125;  <span class="keyword">from</span> <span class="string">' &#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123;  <span class="type">Response</span> &#125;  <span class="keyword">from</span> <span class="string">'express'</span>;
+
+<span class="decorator"> &#64;Catch</span>(<span class="type">BadRequestException</span>)
+<span class="keyword">export class</span> <span class="type">ValidationExceptionFilter</span> <span class="keyword">implements</span> <span class="type">ExceptionFilter</span> &#123; 
+  catch(exception: <span class="type">BadRequestException</span>, host: <span class="type">ArgumentsHost</span>) &#123; 
+    <span class="keyword">const</span> ctx = host.switchToHttp();
+    <span class="keyword">const</span> response = ctx.getResponse&lt;<span class="type">Response</span>&gt;();
+    <span class="keyword">const</span> status = exception.getStatus();
+    <span class="keyword">const</span> exceptionResponse = exception.getResponse();
+
+    response
+      .status(status)
+      .json(&#123; 
+        status: <span class="keyword">false</span>,
+        statusCode: status,
+        message: <span class="string">'Validation failed'</span>,
+        errors: exceptionResponse[<span class="string">'message'</span>],
+        timestamp: <span class="keyword">new</span> <span class="type">Date</span>().toISOString()
+      &#125; );
+  &#125; 
+&#125; 
+        </code></pre>
+        <p><strong>Explanation</strong>: This filter catches validation errors from <code>ValidationPipe</code>, listing specific issues (e.g., “startDate must be a valid date”).</p>
+
+        <h3>Key Points</h3>
+        <ul>
+          <li>Specific filters (e.g., <code>InvalidFilterFilter</code>) target custom exceptions.</li>
+          <li>Validation filters handle <code>BadRequestException</code> for invalid <code>FilterDto</code>.</li>
+          <li>Filters can add fields like <code>suggestion</code> to guide users.</li>
+          <li>Multiple filters can be combined for comprehensive error handling.</li>
+        </ul>
+      </div>
+
+      <div class="step">
+        <h2>4. Best Practices for Error Handling</h2>
+        <p>Organize error handling for your dashboard application to ensure maintainability and consistency.</p>
+
+        <h3>Directory Structure</h3>
+        <p>Organize files to keep exceptions and filters modular, matching your inflow/outflow use case.</p>
+        <pre><code>
+<span class="comment">// Recommended project structure</span>
+project/
+├── src/
+│   ├── dashboard/
+│   │   ├── dto/
+│   │   │   └── filter.dto.ts
+│   │   ├── exceptions/
+│   │   │   └── invalid-filter.exception.ts
+│   │   ├── filters/
+│   │   │   ├── http-exception.filter.ts
+│   │   │   └── validation-exception.filter.ts
+│   │   ├── dashboard.controller.ts
+│   │   ├── dashboard.service.ts
+│   │   └── dashboard.module.ts
+│   ├── app.module.ts
+│   └── main.ts
+        </code></pre>
+        <p><strong>Explanation</strong>: Group related files (e.g., exceptions, filters) under the <code>dashboard</code> module for clarity.</p>
+
+        <h3>Best Practices</h3>
+        <div class="feature-grid">
+          <div class="feature-card">
+            <h4>Centralized Filters</h4>
+            <p>Use global filters to ensure consistent error responses across all endpoints</p>
+          </div>
+          <div class="feature-card">
+            <h4>Custom Exceptions</h4>
+            <p>Create exceptions like <code>InvalidFilterException</code> for specific errors</p>
+          </div>
+          <div class="feature-card">
+            <h4>Structured Responses</h4>
+            <p>Include <code>status</code>, <code>message</code>, and <code>timestamp</code> in responses</p>
+          </div>
+          <div class="feature-card">
+            <h4>Minimal Exposure</h4>
+            <p>Avoid exposing sensitive details like stack traces in responses</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="interview-questions step">
+        <h2>15 Important Interview Questions on NestJS Error Handling & Exception Filters</h2>
+        <ol class="question-list">
+          <li>
+            <strong class="question-title">What is error handling in NestJS?</strong>
+            <p class="answer">Error handling manages runtime errors (e.g., no data found) using exceptions and filters to ensure consistent API responses.</p>
+            <span class="category">Basics</span>
+          </li>
+          <li>
+            <strong class="question-title">What is an exception filter in NestJS?</strong>
+            <p class="answer">A filter catches exceptions and customizes responses, e.g., formatting errors for <code>getOverallInflowOutflowData</code>.</p>
+            <span class="category">Basics</span>
+          </li>
+          <li>
+            <strong class="question-title">What is the role of HttpException?</strong>
+            <p class="answer">It’s the base class for HTTP errors, allowing custom status codes and messages (e.g., <code>InvalidFilterException</code>).</p>
+            <span class="category">Exceptions</span>
+          </li>
+          <li>
+            <strong class="question-title">Name some built-in NestJS exceptions.</strong>
+            <p class="answer"><code>NotFoundException</code>, <code>BadRequestException</code>, <code>UnauthorizedException</code>, <code>InternalServerErrorException</code>.</p>
+            <span class="category">Exceptions</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you create a custom exception?</strong>
+            <p class="answer">Extend <code>HttpException</code>, e.g., <code>InvalidFilterException</code> for invalid filters.</p>
+            <span class="category">Exceptions</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you apply an exception filter?</strong>
+            <p class="answer">Use <code> &#64;UseFilters()</code> on a controller or <code>useGlobalFilters()</code> in <code>main.ts</code>.</p>
+            <span class="category">Filters</span>
+          </li>
+          <li>
+            <strong class="question-title">What is the purpose of the  &#64;Catch decorator?</strong>
+            <p class="answer">It specifies which exceptions a filter handles, e.g., <code> &#64;Catch(InvalidFilterException)</code>.</p>
+            <span class="category">Filters</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you handle validation errors?</strong>
+            <p class="answer">Use <code>ValidationPipe</code> and catch <code>BadRequestException</code> with a filter.</p>
+            <span class="category">Filters</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you implement a global exception filter?</strong>
+            <p class="answer">Use <code>app.useGlobalFilters(new HttpExceptionFilter())</code> in <code>main.ts</code>.</p>
+            <span class="category">Filters</span>
+          </li>
+          <li>
+            <strong class="question-title">What is ArgumentsHost in exception filters?</strong>
+            <p class="answer">It provides access to request and response objects for formatting responses.</p>
+            <span class="category">Filters</span>
+          </li>
+          <li>
+            <strong class="question-title">Why use custom exception filters?</strong>
+            <p class="answer">They provide tailored responses, e.g., suggesting fixes for invalid filters.</p>
+            <span class="category">Filters</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you avoid exposing sensitive information?</strong>
+            <p class="answer">Use filters to sanitize responses, excluding stack traces in production.</p>
+            <span class="category">Best Practices</span>
+          </li>
+          <li>
+            <strong class="question-title">What is the benefit of structured error responses?</strong>
+            <p class="answer">They ensure predictable formats for clients, e.g., consistent <code>status</code> and <code>message</code>.</p>
+            <span class="category">Best Practices</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you test exception filters?</strong>
+            <p class="answer">Write unit tests to simulate exceptions and verify response formats.</p>
+            <span class="category">Testing</span>
+          </li>
+          <li>
+            <strong class="question-title">How do you handle multiple exception types?</strong>
+            <p class="answer">Use multiple <code> &#64;Catch</code> decorators or conditional logic in a filter.</p>
+            <span class="category">Filters</span>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
