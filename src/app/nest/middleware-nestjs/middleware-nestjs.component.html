@@ -2,119 +2,129 @@
   <div class="wrapper">
        <img class="swap" *ngIf="nestjsMiddleware.checkfullscreen() == 'hide'" (click)="nestjsMiddleware.toggle()" src="../../../assets/expand.svg" alt="Expand">
        <img class="swap" *ngIf="nestjsMiddleware.checkfullscreen() != 'hide'" (click)="nestjsMiddleware.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-       <div class="header">
-           <p> <span class="question">What:</span>
-               NestJS <strong>Middleware</strong> are functions or classes that execute during the request-response cycle, before or after controllers. They handle tasks like logging, authentication, or modifying requests/responses.
-           </p>
-           <p> <span class="question">Why:</span>
-               Middleware enables <strong>cross-cutting concerns</strong>, such as request logging, authentication, or input validation, promoting reusability and separation of concerns in a modular way.
-           </p>
-           <p> <span class="question">Where:</span>
-               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to process incoming requests, enforce security, or transform data before reaching controllers.
-           </p>
-       </div>
+      <div class="header">
+          <p>
+            <span class="question">What:</span>
+            In NestJS, <strong>Middleware</strong> is a function or class that runs
+            <strong>before your controller methods (&#64;Get, &#64;Post, etc.)</strong>.
+            It can check, log, or modify the request before it reaches the controller.
+          </p>
+          <p>
+            <span class="question">Why:</span>
+            Middleware is useful for <strong>common tasks</strong> like logging requests,
+            checking authentication, or validating inputs. This prevents repeating
+            the same code in every controller.
+          </p>
+          <p>
+            <span class="question">Where:</span>
+            You can use Middleware in <strong>REST APIs, GraphQL, or microservices</strong>
+            whenever you need to process requests before they go to controllers.
+          </p>
+        </div>
    </div>
    
    <div class="examples">
+      <div style="width: 100%;display: flex;justify-content: center;align-items: center; background-color: rgb(90, 87, 87);padding: 10px;">
+            <img src="../../../assets/Middlewares_1.png"  width="70%" height="70%"  alt="">
+    </div>
      <div class="step">
        <h2>1. Basic Middleware Setup</h2>
-       <p>Let's create a basic middleware to log incoming requests:</p>
+       <p>Create a simple middleware to log requests:</p>
        
-       <h3>Creating a Logger Middleware</h3>
-       <pre><code><span class="comment">// logger.middleware.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NestMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
-<span class="keyword">import</span> &#123; <span class="type">Request</span>, <span class="type">Response</span>, <span class="type">NextFunction</span> &#125; <span class="keyword">from</span> <span class="string">'express'</span>;
+       <h3>Logger Middleware</h3>
+       <pre><code>// logger.middleware.ts
+import &#123; Injectable, NestMiddleware &#125; from '&#64;nestjs/common';
+import &#123; Request, Response, NextFunction &#125; from 'express';
 
-<span class="decorator">&#64;Injectable</span>()
-<span class="keyword">export class</span> <span class="type">LoggerMiddleware</span> <span class="keyword">implements</span> <span class="type">NestMiddleware</span> &#123;
-  use(req: <span class="type">Request</span>, res: <span class="type">Response</span>, next: <span class="type">NextFunction</span>) &#123;
-    console.log(`Request: $&#123;req.method&#125; $&#123;req.originalUrl&#125; at $&#123;<span class="keyword">new</span> <span class="type">Date</span>().toISOString()&#125;`);
+&#64;Injectable()
+export class LoggerMiddleware implements NestMiddleware &#123;
+  use(req: Request, res: Response, next: NextFunction) &#123;
+    console.log(`Request: $&#123;req.method&#125; $&#123;req.originalUrl&#125; at $&#123;new Date().toISOString()&#125;`);
     next();
   &#125;
 &#125;
 </code></pre>
 
-       <h3>Key Middleware Elements</h3>
+       <h3>Key Points</h3>
        <div class="feature-grid">
          <div class="feature-card">
            <h4>NestMiddleware</h4>
-           <p>Interface for middleware classes with a <code>use</code> method</p>
+           <p>Interface that requires a <code>use</code> method</p>
          </div>
          <div class="feature-card">
            <h4>Request/Response</h4>
-           <p>Access to Express request and response objects</p>
+           <p>Gives access to request and response objects from Express</p>
          </div>
          <div class="feature-card">
            <h4>NextFunction</h4>
-           <p>Calls the next middleware or route handler</p>
+           <p>Continues to the next middleware or controller</p>
          </div>
          <div class="feature-card">
            <h4>Injectable</h4>
-           <p>Allows dependency injection in middleware</p>
+           <p>Allows dependency injection inside middleware</p>
          </div>
        </div>
      </div>
 
      <div class="step">
        <h2>2. Applying Middleware</h2>
-       <p>Middleware can be applied to specific routes, controllers, or globally:</p>
+       <p>Middleware can be added to specific routes, modules, or globally:</p>
 
-       <h3>Step 1: Apply Middleware to a Module</h3>
-       <p>Configure middleware in a module for specific routes:</p>
-       <pre><code><span class="comment">// users.module.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">NestModule</span>, <span class="type">MiddlewareConsumer</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
-<span class="keyword">import</span> &#123; <span class="type">LoggerMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">'./logger.middleware'</span>;
+       <h3>Step 1: Apply to a Module</h3>
+       <p>Attach middleware to routes in a module:</p>
+       <pre><code>// users.module.ts
+import &#123; Module, NestModule, MiddlewareConsumer &#125; from '&#64;nestjs/common';
+import &#123; UsersController &#125; from './users.controller';
+import &#123; UsersService &#125; from './users.service';
+import &#123; LoggerMiddleware &#125; from './logger.middleware';
 
-<span class="decorator">&#64;Module</span>(&#123;
-  controllers: [<span class="type">UsersController</span>],
-  providers: [<span class="type">UsersService</span>]
+&#64;Module(&#123;
+  controllers: [UsersController],
+  providers: [UsersService]
 &#125;)
-<span class="keyword">export class</span> <span class="type">UsersModule</span> <span class="keyword">implements</span> <span class="type">NestModule</span> &#123;
-  configure(consumer: <span class="type">MiddlewareConsumer</span>) &#123;
+export class UsersModule implements NestModule &#123;
+  configure(consumer: MiddlewareConsumer) &#123;
     consumer
-      .apply(<span class="type">LoggerMiddleware</span>)
-      .forRoutes(<span class="string">'api/users'</span>);
+      .apply(LoggerMiddleware)
+      .forRoutes('api/users');
   &#125;
 &#125;
 </code></pre>
 
-       <h3>Step 2: Apply Middleware Globally</h3>
-       <p>Configure middleware globally in the main application:</p>
-       <pre><code><span class="comment">// main.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">NestFactory</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/core'</span>;
-<span class="keyword">import</span> &#123; <span class="type">AppModule</span> &#125; <span class="keyword">from</span> <span class="string">'./app.module'</span>;
-<span class="keyword">import</span> &#123; <span class="type">LoggerMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">'./logger.middleware'</span>;
+       <h3>Step 2: Apply Globally</h3>
+       <pre><code>// main.ts
+import &#123; NestFactory &#125; from '&#64;nestjs/core';
+import &#123; AppModule &#125; from './app.module';
+import &#123; LoggerMiddleware &#125; from './logger.middleware';
 
-<span class="keyword">async function</span> bootstrap() &#123;
-  <span class="keyword">const</span> app = <span class="keyword">await</span> <span class="type">NestFactory</span>.create(<span class="type">AppModule</span>);
-  app.use(<span class="keyword">new</span> <span class="type">LoggerMiddleware</span>().use.bind(<span class="keyword">new</span> <span class="type">LoggerMiddleware</span>()));
-  <span class="keyword">await</span> app.listen(3000);
+async function bootstrap() &#123;
+  const app = await NestFactory.create(AppModule);
+  app.use(new LoggerMiddleware().use.bind(new LoggerMiddleware()));
+  await app.listen(3000);
 &#125;
 bootstrap();
 </code></pre>
 
-       <h3>Step 3: Middleware with Dependencies</h3>
-       <p>Use dependency injection in middleware:</p>
-       <pre><code><span class="comment">// auth.middleware.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">Injectable</span>, <span class="type">NestMiddleware</span>, <span class="type">UnauthorizedException</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
-<span class="keyword">import</span> &#123; <span class="type">Request</span>, <span class="type">Response</span>, <span class="type">NextFunction</span> &#125; <span class="keyword">from</span> <span class="string">'express'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
+       <h3>Step 3: Middleware with Services</h3>
+       <p>Middleware can use services via dependency injection:</p>
+       <pre><code>// auth.middleware.ts
+import &#123; Injectable, NestMiddleware, UnauthorizedException &#125; from '&#64;nestjs/common';
+import &#123; Request, Response, NextFunction &#125; from 'express';
+import &#123; UsersService &#125; from './users.service';
 
-<span class="decorator">&#64;Injectable</span>()
-<span class="keyword">export class</span> <span class="type">AuthMiddleware</span> <span class="keyword">implements</span> <span class="type">NestMiddleware</span> &#123;
-  <span class="keyword">constructor</span>(<span class="keyword">private</span> usersService: <span class="type">UsersService</span>) &#123;&#125;
+&#64;Injectable()
+export class AuthMiddleware implements NestMiddleware &#123;
+  constructor(private usersService: UsersService) &#123;&#125;
 
-  use(req: <span class="type">Request</span>, res: <span class="type">Response</span>, next: <span class="type">NextFunction</span>) &#123;
-    <span class="keyword">const</span> authHeader = req.headers.authorization;
-    <span class="keyword">if</span> (!authHeader) &#123;
-      <span class="keyword">throw new</span> <span class="type">UnauthorizedException</span>(<span class="string">'Authorization header missing'</span>);
+  use(req: Request, res: Response, next: NextFunction) &#123;
+    const authHeader = req.headers.authorization;
+    if (!authHeader) &#123;
+      throw new UnauthorizedException('Authorization header missing');
     &#125;
-    <span class="keyword">const</span> userId = +authHeader.split(<span class="string">' '</span>)[1]; <span class="comment">// Simplified token parsing</span>
-    <span class="keyword">const</span> user = <span class="keyword">this</span>.usersService.findOne(userId);
-    <span class="keyword">if</span> (!user) &#123;
-      <span class="keyword">throw new</span> <span class="type">UnauthorizedException</span>(<span class="string">'Invalid user'</span>);
+    const userId = +authHeader.split(' ')[1]; 
+    const user = this.usersService.findOne(userId);
+    if (!user) &#123;
+      throw new UnauthorizedException('Invalid user');
     &#125;
     req.user = user;
     next();
@@ -122,93 +132,58 @@ bootstrap();
 &#125;
 </code></pre>
 
-       <h3>Key Points</h3>
+       <h3>Quick Recap</h3>
        <ul>
-         <li>Middleware processes requests before controllers.</li>
-         <li>Apply middleware to specific routes or globally.</li>
-         <li>Use <code>NestModule</code> for module-level middleware.</li>
-         <li>Middleware supports dependency injection.</li>
+         <li>Middleware runs before controllers.</li>
+         <li>Can be applied locally (module) or globally (main.ts).</li>
+         <li>Supports dependency injection with <code>&#64;Injectable()</code>.</li>
        </ul>
      </div>
 
      <div class="step">
        <h2>3. Advanced Middleware Features</h2>
-       <p>Middleware can handle complex tasks like authentication or request transformation:</p>
+       <p>Some extra features of middleware:</p>
 
        <h3>Functional Middleware</h3>
-       <p>Create a simple function-based middleware:</p>
-       <pre><code><span class="comment">// request-id.middleware.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">Request</span>, <span class="type">Response</span>, <span class="type">NextFunction</span> &#125; <span class="keyword">from</span> <span class="string">'express'</span>;
+       <pre><code>// request-id.middleware.ts
+import &#123; Request, Response, NextFunction &#125; from 'express';
 
-<span class="keyword">export function</span> requestIdMiddleware(req: <span class="type">Request</span>, res: <span class="type">Response</span>, next: <span class="type">NextFunction</span>) &#123;
-  req[<span class="string">'requestId'</span>] = Math.random().toString(36).substring(2);
+export function requestIdMiddleware(req: Request, res: Response, next: NextFunction) &#123;
+  req['requestId'] = Math.random().toString(36).substring(2);
   next();
 &#125;
 </code></pre>
 
-       <h3>Applying Multiple Middleware</h3>
-       <p>Chain multiple middleware for a route:</p>
-       <pre><code><span class="comment">// users.module.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">NestModule</span>, <span class="type">MiddlewareConsumer</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
-<span class="keyword">import</span> &#123; <span class="type">LoggerMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">'./logger.middleware'</span>;
-<span class="keyword">import</span> &#123; <span class="type">AuthMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">'./auth.middleware'</span>;
-<span class="keyword">import</span> &#123; requestIdMiddleware &#125; <span class="keyword">from</span> <span class="string">'./request-id.middleware'</span>;
-
-<span class="decorator">&#64;Module</span>(&#123;
-  controllers: [<span class="type">UsersController</span>],
-  providers: [<span class="type">UsersService</span>]
-&#125;)
-<span class="keyword">export class</span> <span class="type">UsersModule</span> <span class="keyword">implements</span> <span class="type">NestModule</span> &#123;
-  configure(consumer: <span class="type">MiddlewareConsumer</span>) &#123;
-    consumer
-      .apply(requestIdMiddleware, <span class="type">LoggerMiddleware</span>, <span class="type">AuthMiddleware</span>)
-      .forRoutes(<span class="type">UsersController</span>);
-  &#125;
-&#125;
+       <h3>Multiple Middleware</h3>
+       <pre><code>// users.module.ts
+consumer
+  .apply(requestIdMiddleware, LoggerMiddleware, AuthMiddleware)
+  .forRoutes(UsersController);
 </code></pre>
 
-       <h3>Excluding Routes</h3>
-       <p>Exclude specific routes from middleware:</p>
-       <pre><code><span class="comment">// users.module.ts</span>
-<span class="keyword">import</span> &#123; <span class="type">Module</span>, <span class="type">NestModule</span>, <span class="type">MiddlewareConsumer</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersController</span> &#125; <span class="keyword">from</span> <span class="string">'./users.controller'</span>;
-<span class="keyword">import</span> &#123; <span class="type">UsersService</span> &#125; <span class="keyword">from</span> <span class="string">'./users.service'</span>;
-<span class="keyword">import</span> &#123; <span class="type">AuthMiddleware</span> &#125; <span class="keyword">from</span> <span class="string">'./auth.middleware'</span>;
-
-<span class="decorator">&#64;Module</span>(&#123;
-  controllers: [<span class="type">UsersController</span>],
-  providers: [<span class="type">UsersService</span>]
-&#125;)
-<span class="keyword">export class</span> <span class="type">UsersModule</span> <span class="keyword">implements</span> <span class="type">NestModule</span> &#123;
-  configure(consumer: <span class="type">MiddlewareConsumer</span>) &#123;
-    consumer
-      .apply(<span class="type">AuthMiddleware</span>)
-      .exclude(
-        &#123; path: <span class="string">'api/users'</span>, method: <span class="type">RequestMethod</span>.GET &#125;
-      )
-      .forRoutes(<span class="type">UsersController</span>);
-  &#125;
-&#125;
+       <h3>Exclude Routes</h3>
+       <pre><code>// users.module.ts
+consumer
+  .apply(AuthMiddleware)
+  .exclude(&#123; path: 'api/users', method: RequestMethod.GET &#125;)
+  .forRoutes(UsersController);
 </code></pre>
 
-       <h3>Key Points</h3>
+       <h3>Quick Recap</h3>
        <ul>
-         <li>Functional middleware is lightweight for simple tasks.</li>
-         <li>Chain multiple middleware for complex logic.</li>
-         <li>Exclude routes to bypass middleware for specific paths.</li>
-         <li>Middleware executes in the order applied.</li>
+         <li>Use functional middleware for small tasks.</li>
+         <li>You can chain multiple middleware together.</li>
+         <li>You can skip middleware for certain routes.</li>
+         <li>Middleware runs in the order you apply it.</li>
        </ul>
      </div>
 
      <div class="step">
-       <h2>4. Best Practices for Middleware</h2>
-       <p>Organize middleware for scalability and maintainability:</p>
+       <h2>4. Best Practices</h2>
+       <p>Tips to use middleware effectively:</p>
        
-       <h3>Directory Structure</h3>
-       <pre><code><span class="comment">// Recommended project structure</span>
-project/
+       <h3>Directory Example</h3>
+       <pre><code>project/
 ├── src/
 │   ├── users/
 │   │   ├── middleware/
@@ -225,101 +200,86 @@ project/
        <h3>Best Practices</h3>
        <div class="feature-grid">
          <div class="feature-card">
-           <h4>Single Responsibility</h4>
-           <p>Each middleware should handle one specific task</p>
+           <h4>Single Purpose</h4>
+           <p>Each middleware should handle one task only</p>
          </div>
          <div class="feature-card">
-           <h4>Modular Middleware</h4>
-           <p>Group middleware by feature in dedicated folders</p>
+           <h4>Keep It Modular</h4>
+           <p>Place middleware inside feature folders</p>
          </div>
          <div class="feature-card">
-           <h4>Order Matters</h4>
-           <p>Apply middleware in the correct order for desired behavior</p>
+           <h4>Order is Important</h4>
+           <p>Apply middleware in the correct sequence</p>
          </div>
          <div class="feature-card">
-           <h4>Minimal Scope</h4>
-           <p>Apply middleware only to necessary routes</p>
+           <h4>Limit Scope</h4>
+           <p>Apply only where needed</p>
          </div>
        </div>
      </div>
 
      <div class="interview-questions step">
-       <h2>15 Important Interview Questions on NestJS Middleware</h2>
+       <h2>15 Common Interview Questions on Middleware</h2>
        <ol class="question-list">
          <li>
            <strong class="question-title">What is middleware in NestJS?</strong>
-           <p class="answer">Middleware are functions or classes that process requests before or after controllers, handling tasks like logging or authentication.</p>
-           <span class="category">Basics</span>
+           <p class="answer">Middleware is code that runs before  a request hits a controller. It’s used for logging, security, or modifying requests.</p>
          </li>
          <li>
-           <strong class="question-title">How do you create middleware in NestJS?</strong>
-           <p class="answer">Implement <code>NestMiddleware</code> with a <code>use</code> method or create a function with <code>req</code>, <code>res</code>, and <code>next</code> parameters.</p>
-           <span class="category">Basics</span>
+           <strong class="question-title">How do you create middleware?</strong>
+           <p class="answer">By writing a class with <code>use</code> method (implements NestMiddleware) or a simple function with <code>req</code>, <code>res</code>, and <code>next</code>.</p>
          </li>
          <li>
-           <strong class="question-title">What is the role of the use method?</strong>
-           <p class="answer">The <code>use</code> method in middleware processes the request and response, calling <code>next()</code> to proceed.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">What does the use method do?</strong>
+           <p class="answer">It processes the request and then calls <code>next()</code> to move on.</p>
          </li>
          <li>
            <strong class="question-title">How do you apply middleware to a module?</strong>
-           <p class="answer">Implement <code>NestModule</code> and use <code>MiddlewareConsumer</code> in the <code>configure</code> method.</p>
-           <span class="category">Middleware</span>
+           <p class="answer">By using <code>MiddlewareConsumer</code> inside the <code>configure</code> method of a module.</p>
          </li>
          <li>
            <strong class="question-title">How do you apply middleware globally?</strong>
-           <p class="answer">Use <code>app.use()</code> in <code>main.ts</code> with the middleware’s <code>use</code> method.</p>
-           <span class="category">Middleware</span>
+           <p class="answer">In <code>main.ts</code>, call <code>app.use()</code> with your middleware.</p>
          </li>
          <li>
            <strong class="question-title">What is MiddlewareConsumer?</strong>
-           <p class="answer">A utility to apply middleware to specific routes or controllers in a module.</p>
-           <span class="category">Middleware</span>
+           <p class="answer">A helper that lets you attach middleware to specific routes or controllers.</p>
          </li>
          <li>
-           <strong class="question-title">How do you exclude routes from middleware?</strong>
-           <p class="answer">Use the <code>exclude</code> method in <code>MiddlewareConsumer</code> with path and method specifications.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">How can you exclude routes?</strong>
+           <p class="answer">By calling <code>exclude()</code> in <code>MiddlewareConsumer</code>.</p>
          </li>
          <li>
-           <strong class="question-title">Can middleware use dependency injection?</strong>
-           <p class="answer">Yes, class-based middleware with <code> &#64;Injectable()</code> supports dependency injection.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">Can middleware use services?</strong>
+           <p class="answer">Yes, if you use class-based middleware with <code>&#64;Injectable()</code>.</p>
          </li>
          <li>
-           <strong class="question-title">What is the difference between functional and class-based middleware?</strong>
-           <p class="answer">Functional middleware is simpler, while class-based middleware supports dependency injection and modularity.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">What’s the difference between function and class middleware?</strong>
+           <p class="answer">Functions are simple. Classes support dependency injection and are better for complex logic.</p>
          </li>
          <li>
-           <strong class="question-title">How do you chain multiple middleware?</strong>
-           <p class="answer">Pass multiple middleware to the <code>apply</code> method in <code>MiddlewareConsumer</code>.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">How do you run multiple middleware?</strong>
+           <p class="answer">Pass multiple middleware in <code>apply()</code>.</p>
          </li>
          <li>
-           <strong class="question-title">Why is middleware order important?</strong>
-           <p class="answer">Middleware executes sequentially, so order affects request processing logic.</p>
-           <span class="category">Best Practices</span>
+           <strong class="question-title">Why does order matter?</strong>
+           <p class="answer">Because middleware runs in the same order you apply it.</p>
          </li>
          <li>
-           <strong class="question-title">How do you handle errors in middleware?</strong>
-           <p class="answer">Throw exceptions (e.g., <code>UnauthorizedException</code>) or pass errors to <code>next(err)</code>.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">How do you handle errors?</strong>
+           <p class="answer">Throw exceptions (like <code>UnauthorizedException</code>) or use <code>next(err)</code>.</p>
          </li>
          <li>
-           <strong class="question-title">What is a common use case for middleware?</strong>
-           <p class="answer">Authentication, logging, request transformation, or rate limiting.</p>
-           <span class="category">Use Cases</span>
+           <strong class="question-title">What are common use cases?</strong>
+           <p class="answer">Logging, authentication, validation, rate limiting, etc.</p>
          </li>
          <li>
            <strong class="question-title">How do you test middleware?</strong>
-           <p class="answer">Use unit tests to mock <code>req</code>, <code>res</code>, and <code>next</code>, verifying middleware behavior.</p>
-           <span class="category">Testing</span>
+           <p class="answer">By mocking <code>req</code>, <code>res</code>, and <code>next</code> in unit tests.</p>
          </li>
          <li>
-           <strong class="question-title">How does middleware differ from interceptors?</strong>
-           <p class="answer">Middleware runs before controllers and lacks access to NestJS context, while interceptors run in the NestJS pipeline with more control.</p>
-           <span class="category">Middleware</span>
+           <strong class="question-title">How is middleware different from interceptors?</strong>
+           <p class="answer">Middleware runs before controllers and works with raw requests. Interceptors run in the NestJS lifecycle and provide more advanced features.</p>
          </li>
        </ol>
      </div>

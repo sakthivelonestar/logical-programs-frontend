@@ -2,20 +2,31 @@
   <div class="wrapper">
        <img class="swap" *ngIf="nestjsInterceptorsPipes.checkfullscreen() == 'hide'" (click)="nestjsInterceptorsPipes.toggle()" src="../../../assets/expand.svg" alt="Expand">
        <img class="swap" *ngIf="nestjsInterceptorsPipes.checkfullscreen() != 'hide'" (click)="nestjsInterceptorsPipes.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-       <div class="header">
-           <p> <span class="question">What:</span>
-               NestJS <strong>Interceptors</strong> and <strong>Custom Pipes</strong> are mechanisms to transform or process data in the request-response cycle. Interceptors handle cross-cutting concerns like logging or response transformation, while pipes validate or transform input data.
-           </p>
-           <p> <span class="question">Why:</span>
-               Interceptors enable <strong>centralized logic</strong> for tasks like logging, caching, or response formatting. Custom pipes provide <strong>flexible validation</strong> and data transformation, ensuring clean and consistent data processing.
-           </p>
-           <p> <span class="question">Where:</span>
-               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to enhance request handling, enforce data validation, and streamline response management.
-           </p>
-       </div>
+      <div class="header">
+          <p>
+            <span class="question">What:</span>
+            In NestJS, <strong>Interceptors</strong> run before or after a request 
+            to add extra logic (like logging or changing the response). 
+            <strong>Pipes</strong> check and transform incoming data (like validating inputs).
+          </p>
+          <p>
+            <span class="question">Why:</span>
+            Interceptors help with <strong>common tasks</strong> such as logging, caching, 
+            or formatting responses in one place. 
+            Pipes make sure the data coming in is <strong>valid and clean</strong>.
+          </p>
+          <p>
+            <span class="question">Where:</span>
+            Both are used in <strong>REST APIs, GraphQL, and microservices</strong> 
+            to keep request handling safe, clean, and consistent.
+          </p>
+        </div>
    </div>
-   
+
    <div class="examples">
+      <div style="width: 100%;display: flex;justify-content: center;align-items: center; background-color: rgb(90, 87, 87);padding: 10px;">
+            <img src="../../../assets/Interceptors_1.png"  width="60%" height="60%"  alt="">
+    </div>
      <div class="step">
        <h2>1. Basic Interceptor Setup</h2>
        <p>Create an interceptor to log request details or transform responses:</p>
@@ -63,6 +74,52 @@
          </div>
        </div>
      </div>
+
+      <div class="step">
+       <h2>1.1 Applying an Interceptor to a Controller/Method</h2>
+       <p>You can apply interceptors at different levels: globally, at a controller, or at a specific route method.</p>
+
+       <h3>Applying LoggingInterceptor at Controller Level</h3>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="keyword">import</span> &#123; <span class="type">Controller</span>, <span class="type">Get</span>, <span class="type">UseInterceptors</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;nestjs/common'</span>;
+<span class="keyword">import</span> &#123; <span class="type">LoggingInterceptor</span> &#125; <span class="keyword">from</span> <span class="string">'./interceptors/logging.interceptor'</span>;
+
+<span class="decorator">&#64;Controller</span>(<span class="string">'api/users'</span>)
+<span class="decorator">&#64;UseInterceptors</span>(<span class="type">LoggingInterceptor</span>)
+<span class="keyword">export class</span> <span class="type">UsersController</span> &#123;
+  
+  <span class="decorator">&#64;Get</span>()
+  findAll() &#123;
+    <span class="keyword">return</span> [
+      &#123; id: 1, name: <span class="string">'Alice'</span> &#125;,
+      &#123; id: 2, name: <span class="string">'Bob'</span> &#125;
+    ];
+  &#125;
+
+  <span class="decorator">&#64;Get</span>(<span class="string">'/profile'</span>)
+  getProfile() &#123;
+    <span class="keyword">return</span> &#123; id: 99, name: <span class="string">'John Profile'</span> &#125;;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Applying Interceptor at Method Level</h3>
+       <pre><code><span class="comment">// users.controller.ts</span>
+<span class="decorator">&#64;Get</span>(<span class="string">'/:id'</span>)
+<span class="decorator">&#64;UseInterceptors</span>(<span class="type">LoggingInterceptor</span>)
+findOne() &#123;
+  <span class="keyword">return</span> &#123; id: 10, name: <span class="string">'Method Scoped User'</span> &#125;;
+&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li><code>&#64;UseInterceptors()</code> applies interceptor at controller or method scope.</li>
+         <li>Multiple interceptors can be combined: <code>&#64;UseInterceptors(A, B)</code>.</li>
+         <li>Global interceptors affect all routes, while scoped interceptors affect only the decorated class/method.</li>
+       </ul>
+     </div>
+
 
      <div class="step">
        <h2>2. Basic Custom Pipe Setup</h2>

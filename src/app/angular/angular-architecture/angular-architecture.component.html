@@ -1,0 +1,248 @@
+<div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="angular-architecture">
+  <div class="wrapper">
+        <img class="swap" *ngIf="angularArchitecture.checkfullscreen() == 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/expand.svg" alt="Expand">
+        <img class="swap" *ngIf="angularArchitecture.checkfullscreen() != 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <!-- Enhanced Header Section -->
+        <div class="header">
+            <p><span class="question">What:</span> Learn the core <strong>Angular concepts</strong> including <strong>Components</strong>, <strong>Modules</strong>, <strong>Services</strong>, and <strong>Directives</strong> to build maintainable web applications.</p>
+            <p><span class="question">Why:</span> Understanding Angular's architecture allows you to create scalable, testable, and efficient front-end applications with modern best practices.</p>
+            <p><span class="question">Where:</span> Applies to any <strong>Angular project</strong> whether building SPAs, PWAs, or integrating with backend APIs, ensuring clean separation of concerns and reusable code.</p>
+         </div>
+    </div>
+
+    <div class="examples">
+           <!-- Project Setup -->
+            <div class="step">
+            <h3>📦 Project Setup</h3>
+<pre ngNonBindable><code>
+ # Install Angular CLI
+npm install -g &#64;angular/cli
+
+# Create new Angular 18 app
+ng new my-app --standalone --style=scss --routing
+
+# Start server
+cd my-app
+ng serve --open
+
+# Generate component & service
+ng generate component financial
+ng generate service services/api
+</code></pre>      
+           <p><strong>🏗️ Angular 18 Architecture</strong></p>
+            <ul>
+                <li>🔧 <strong>Standalone Components:</strong> No NgModule needed, easy to test</li>
+                <li>📡 <strong>Signals:</strong> Reactive state, fine-grained updates, type-safe</li>
+                <li>⚙️ <strong>App Config:</strong> Centralized config, functional bootstrap, easy DI</li>
+                <li>🚄 <strong>SSR & Hydration:</strong> Server-side rendering, SEO friendly, fast loading</li>
+            </ul>      
+            </div>
+
+            <!-- Detailed Architecture Breakdown -->
+            <div class="step">
+                <h3>📋 Project Structure & Key Files</h3>
+                <div class="code-block-container">
+                    <div class="code-block-header">
+                        <span class="code-lang">Project Structure</span>
+                        <span class="code-description">Angular 18 recommended folder organization</span>
+                    </div>
+                    <pre ngNonBindable><code>src/
+├── app/
+│   ├── components/
+│   │   └── financial/
+│   │       ├── financial.component.ts    # Standalone component
+│   │       ├── financial.component.html
+│   │       ├── financial.component.scss
+│   │       └── financial.component.spec.ts
+│   ├── services/
+│   │   ├── api.service.ts                         # HTTP operations
+│   │   └── utility.service.ts                     # Helper functions
+│   ├── models/
+│   │   ├── interfaces/                            # TypeScript interfaces
+│   │   └── enums/
+│   │       └── api-list.enum.ts                   # API endpoints
+│   ├── shared/
+│   │   ├── components/                            # Reusable components
+│   │   ├── directives/                            # Custom directives  
+│   │   └── pipes/                                 # Custom pipes
+│   ├── app.component.ts                           # Root component
+│   ├── app.config.ts                              # App configuration
+│   └── app.routes.ts                              # Routing configuration
+├── environments/
+│   ├── environment.ts                             # Development config
+│   └── environment.prod.ts                       # Production config
+└── main.ts                                        # Application bootstrap</code></pre>
+                </div>
+            </div>
+
+            <div class="step">
+      <h2>Step 2 — API Service and Endpoints</h2>
+      <p><strong>📌 api.service.ts</strong> — CRUD operations</p>
+      <pre><code>
+Post&lt;T&gt;(apiEndPoint: string, data?: unknown): Observable&lt;T&gt; &#123;
+  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;`, data, &#123; withCredentials: true &#125;);
+&#125;
+
+PostById&lt;T&gt;(apiEndPoint: string, id: number, data: unknown): Observable&lt;T&gt; &#123;
+  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;`, data);
+&#125;
+
+Get&lt;T&gt;(apiEndPoint: string, queryParams?: unknown): Observable&lt;T&gt; &#123;
+  let qp = this.utilityService.jsonToQueryString(queryParams);
+  return this.httpClient.get&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`);
+&#125;
+
+GetByHeaders&lt;T&gt;(apiEndPoint: string, queryParams?: unknown): Observable&lt;T&gt; &#123;
+  let qp = this.utilityService.jsonToQueryString(queryParams);
+  return this.httpClient.get&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`, &#123; responseType: 'blob' as 'json' &#125;);
+&#125;
+
+PostByHeaders&lt;T&gt;(apiEndPoint: string, data: any, queryParams?: unknown): Observable&lt;T&gt; &#123;
+  let qp = this.utilityService.jsonToQueryString(queryParams);
+  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`, data, &#123; responseType: 'blob' as 'json' &#125;);
+&#125;
+
+GetById&lt;T&gt;(apiEndPoint: string, id: number | string, queryParams?: unknown): Observable&lt;T&gt; &#123;
+  let qp = this.utilityService.jsonToQueryString(queryParams);
+  return this.httpClient.get&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;&#36;&#123;qp&#125;`);
+&#125;
+
+Put&lt;T&gt;(apiEndPoint: string, data?: unknown): Observable&lt;T&gt; &#123;
+  return this.httpClient.put&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;`, data);
+&#125;
+
+PutById&lt;T&gt;(apiEndPoint: string, id: number, data: unknown): Observable&lt;T&gt; &#123;
+  return this.httpClient.put&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;`, data);
+&#125;
+
+Delete&lt;T&gt;(apiEndPoint: string, id: number): Observable&lt;T&gt; &#123;
+  return this.httpClient.delete&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;`);
+&#125;
+
+PostByHeaders2&lt;T&gt;(apiEndPoint: string, data: any, queryParams?: unknown): Observable&lt;T&gt; &#123;
+  let qp = this.utilityService.jsonToQueryString(queryParams);
+  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`, data, &#123; responseType: 'json' &#125;);
+&#125;
+</code></pre>
+
+      <p><strong>📌 api-list.ts</strong> — API endpoints</p>
+      <pre><code>
+export enum ApiList &#123;
+  getFinancialCardData = '/api/financial-card'
+&#125;
+</code></pre>
+      <div class="step-description">
+        <p class="title">API Service</p>
+        <p class="details">
+          The <strong>ApiService</strong> provides CRUD operations (Create, Read, Update,
+          Delete) for RESTful API communication, using TypeScript generics. The
+          <strong>ApiList</strong> enum defines the endpoint for financial card data.
+        </p>
+      </div>
+           </div>
+
+     <div class="step">
+      <h2>Step 3 — Financial Component API Calls</h2>
+      <p>
+        <strong>📌 financial.component.ts</strong> — API call examples
+      </p>
+      <pre><code>
+        import &#123; ApiService &#125; from '../../services/api.service';
+        import &#123; ApiList &#125; from '../../core/varibles/api-list';
+        import &#123;  HttpErrorResponse &#125; from '&#64;angular/common/http';
+         constructor(private apiService: ApiService) &#123; &#125;
+
+Post(): void &#123;
+  const data = &#123; totalFPN: 1000, actualForThePeriod: 500, percentageFPN: 50, availableBudget: 2000 &#125;;
+  this.apiService.Post&lt;IRes&gt;(ApiList.getFinancialCardData, data).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+PostById(id: number): void &#123;
+  const data = &#123; totalFPN: 1500, actualForThePeriod: 700, percentageFPN: 60, availableBudget: 2500 &#125;;
+  this.apiService.PostById&lt;IRes&gt;(ApiList.getFinancialCardData, id, data).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+Get(queryParams?: unknown): void &#123;
+  const params = &#123; filter: 'active', limit: 10 &#125;;
+  this.apiService.Get&lt;IRes&gt;(ApiList.getFinancialCardData, params).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+GetByHeaders(queryParams?: unknown): void &#123;
+  const params = &#123; format: 'blob' &#125;;
+  this.apiService.GetByHeaders&lt;IRes&gt;(ApiList.getFinancialCardData, params).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+PostByHeaders(queryParams?: unknown): void &#123;
+  const data = &#123; totalFPN: 2000, actualForThePeriod: 800, percentageFPN: 70, availableBudget: 3000 &#125;;
+  const params = &#123; format: 'blob' &#125;;
+  this.apiService.PostByHeaders&lt;IRes&gt;(ApiList.getFinancialCardData, data, params).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+GetById(id: number | string, queryParams?: unknown): void &#123;
+  const params = &#123; details: 'full' &#125;;
+  this.apiService.GetById&lt;IRes&gt;(ApiList.getFinancialCardData, id, params).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+Put(): void &#123;
+  const data = &#123; totalFPN: 2500, actualForThePeriod: 900, percentageFPN: 80, availableBudget: 3500 &#125;;
+  this.apiService.Put&lt;IRes&gt;(ApiList.getFinancialCardData, data).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+PutById(id: number): void &#123;
+  const data = &#123; totalFPN: 3000, actualForThePeriod: 1000, percentageFPN: 90, availableBudget: 4000 &#125;;
+  this.apiService.PutById&lt;IRes&gt;(ApiList.getFinancialCardData, id, data).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+Delete(id: number): void &#123;
+  this.apiService.Delete&lt;IRes&gt;(ApiList.getFinancialCardData, id).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+
+PostByHeaders2(queryParams?: unknown): void &#123;
+  const data = &#123; totalFPN: 3500, actualForThePeriod: 1100, percentageFPN: 95, availableBudget: 4500 &#125;;
+  const params = &#123; format: 'json' &#125;;
+  this.apiService.PostByHeaders2&lt;IRes&gt;(ApiList.getFinancialCardData, data, params).subscribe(&#123;
+    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+  &#125;);
+&#125;
+</code></pre>
+
+      <div class="step-description">
+        <p class="title">Financial API Calls</p>
+        <p class="details">
+          The <strong>FinancialComponent</strong> demonstrates API calls using all
+          CRUD methods from the <strong>ApiService</strong>, with example data, function
+          names matching HTTP methods, and error handling using
+          <code>.subscribe(&#123; next: ..., error: ... &#125;)</code>.
+        </p>
+      </div>
+   
+    </div>
+</div>

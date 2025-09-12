@@ -2,17 +2,23 @@
   <div class="wrapper">
        <img class="swap" *ngIf="nestjsCustomDecorators.checkfullscreen() == 'hide'" (click)="nestjsCustomDecorators.toggle()" src="../../../assets/expand.svg" alt="Expand">
        <img class="swap" *ngIf="nestjsCustomDecorators.checkfullscreen() != 'hide'" (click)="nestjsCustomDecorators.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-       <div class="header">
-           <p> <span class="question">What:</span>
-               NestJS <strong>Custom Decorators</strong> are user-defined TypeScript decorators that encapsulate reusable logic for controllers, services, or other components, simplifying code and enhancing readability.
-           </p>
-           <p> <span class="question">Why:</span>
-               Custom decorators promote <strong>code reuse</strong>, reduce boilerplate, and improve maintainability by abstracting common patterns, such as authentication, logging, or parameter handling.
-           </p>
-           <p> <span class="question">Where:</span>
-               Used in <strong>REST APIs, GraphQL applications, microservices,</strong> and web applications to streamline controller methods, handle metadata, or enforce specific behaviors across routes.
-           </p>
-       </div>
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          In NestJS, <strong>Custom Decorators</strong> are small reusable functions
+          that you create to add extra behavior to controllers, services, or other parts of your app.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          They help you <strong>avoid repeating code</strong>, make your code cleaner,
+          and can handle things like authentication, logging, or reading request data easily.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          You can use them in <strong>REST APIs, GraphQL, microservices,</strong>
+          or any NestJS project to simplify controller methods and keep your app organized.
+        </p>
+      </div>
    </div>
    
    <div class="examples">

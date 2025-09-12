@@ -156,8 +156,8 @@ JWT_EXPIRES=1h</code></pre>
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (cfg: ConfigService) =&gt; (&#123;
-        secret: cfg.get(<span class="string">'JWT_SECRET'</span>),
-        signOptions: &#123; expiresIn: cfg.get(<span class="string">'JWT_EXPIRES'</span>) || <span class="string">'1h'</span> &#125;,
+        secret: env.<span class="string">JWT_SECRET</span>,
+        signOptions: &#123; expiresIn: env.<span class="string">JWT_EXPIRES</span>|| <span class="string">1h</span> &#125;,
       &#125;),
     &#125;),
   ],
@@ -236,7 +236,7 @@ JWT_EXPIRES=1h</code></pre>
     <span class="keyword">super</span>(&#123;
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: <span class="keyword">false</span>,
-      secretOrKey: cfg.get(<span class="string">'JWT_SECRET'</span>),
+      secretOrKey: env.<span class="string">JWT_SECRET</span>,
     &#125;);
   &#125;
 
