@@ -1,16 +1,18 @@
 <div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="angular-architecture">
-  <div class="wrapper">
-        <img class="swap" *ngIf="angularArchitecture.checkfullscreen() == 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/expand.svg" alt="Expand">
-        <img class="swap" *ngIf="angularArchitecture.checkfullscreen() != 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-        <!-- Enhanced Header Section -->
+        <div class="wrapper">
+            <img class="swap" *ngIf="angularArchitecture.checkfullscreen() == 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="angularArchitecture.checkfullscreen() != 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            <!-- Enhanced Header Section -->
         <div class="header">
-            <p><span class="question">What:</span> Learn the core <strong>Angular concepts</strong> including <strong>Components</strong>, <strong>Modules</strong>, <strong>Services</strong>, and <strong>Directives</strong> to build maintainable web applications.</p>
-            <p><span class="question">Why:</span> Understanding Angular's architecture allows you to create scalable, testable, and efficient front-end applications with modern best practices.</p>
-            <p><span class="question">Where:</span> Applies to any <strong>Angular project</strong> whether building SPAs, PWAs, or integrating with backend APIs, ensuring clean separation of concerns and reusable code.</p>
-         </div>
-    </div>
+                <p><span class="question">What:</span> Learn how to set up an <strong>Angular project</strong> using the CLI and understand its <strong>project structure</strong>, including files like <code>main.ts</code>, <code>app.module.ts</code>, <code>app.component.ts</code>, and the <code>assets</code> and <code>environments</code> folders.</p>
+                
+                <p><span class="question">Why:</span> A clear understanding of project setup and structure ensures you can efficiently configure, organize, and scale Angular applications while following best practices.</p>
+                
+                <p><span class="question">Where:</span> Applies when starting any new <strong>Angular project</strong>, contributing to an existing codebase, or preparing applications for <strong>deployment</strong> and <strong>maintenance</strong>.</p>
+            </div>
+        </div>
 
-    <div class="examples">
+         <div class="examples">
            <!-- Project Setup -->
             <div class="step">
             <h3>📦 Project Setup</h3>
@@ -39,210 +41,278 @@ ng generate service services/api
             </div>
 
             <!-- Detailed Architecture Breakdown -->
-            <div class="step">
-                <h3>📋 Project Structure & Key Files</h3>
-                <div class="code-block-container">
-                    <div class="code-block-header">
-                        <span class="code-lang">Project Structure</span>
-                        <span class="code-description">Angular 18 recommended folder organization</span>
-                    </div>
-                    <pre ngNonBindable><code>src/
+           <div class="step">
+  <h3>📋 Project Structure & Key Files</h3>
+  <div class="code-block-container">
+    <div class="code-block-header">
+      <span class="code-lang">Project Structure</span>
+      <span class="code-description">Angular 18 recommended folder organization</span>
+    </div>
+    <pre ngNonBindable><code>src/
 ├── app/
 │   ├── components/
 │   │   └── financial/
-│   │       ├── financial.component.ts    # Standalone component
+│   │       ├── financial.component.ts    <span class="comment"># Standalone component</span>
 │   │       ├── financial.component.html
 │   │       ├── financial.component.scss
 │   │       └── financial.component.spec.ts
 │   ├── services/
-│   │   ├── api.service.ts                         # HTTP operations
-│   │   └── utility.service.ts                     # Helper functions
+│   │   ├── api.service.ts                <span class="comment"># HTTP operations</span>
+│   │   └── utility.service.ts            <span class="comment"># Helper functions</span>
 │   ├── models/
-│   │   ├── interfaces/                            # TypeScript interfaces
+│   │   ├── interfaces/                   <span class="comment"># TypeScript interfaces</span>
 │   │   └── enums/
-│   │       └── api-list.enum.ts                   # API endpoints
+│   │       └── api-list.enum.ts          <span class="comment"># API endpoints</span>
 │   ├── shared/
-│   │   ├── components/                            # Reusable components
-│   │   ├── directives/                            # Custom directives  
-│   │   └── pipes/                                 # Custom pipes
-│   ├── app.component.ts                           # Root component
-│   ├── app.config.ts                              # App configuration
-│   └── app.routes.ts                              # Routing configuration
+│   │   ├── components/                   <span class="comment"># Reusable components</span>
+│   │   ├── directives/                   <span class="comment"># Custom directives</span>
+│   │   └── pipes/                        <span class="comment"># Custom pipes</span>
+│   ├── app.component.ts                  <span class="comment"># Root component</span>
+│   ├── app.config.ts                     <span class="comment"># App configuration</span>
+│   └── app.routes.ts                     <span class="comment"># Routing configuration</span>
 ├── environments/
-│   ├── environment.ts                             # Development config
-│   └── environment.prod.ts                       # Production config
-└── main.ts                                        # Application bootstrap</code></pre>
-                </div>
-            </div>
+│   ├── environment.ts                    <span class="comment"># Development config</span>
+│   └── environment.prod.ts               <span class="comment"># Production config</span>
+└── main.ts                               <span class="comment"># Application bootstrap</span></code></pre>
+  </div>
+</div>
 
             <div class="step">
-      <h2>Step 2 — API Service and Endpoints</h2>
-      <p><strong>📌 api.service.ts</strong> — CRUD operations</p>
-      <pre><code>
-Post&lt;T&gt;(apiEndPoint: string, data?: unknown): Observable&lt;T&gt; &#123;
-  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;`, data, &#123; withCredentials: true &#125;);
+  <h2>Step 2 — API Service and Endpoints</h2>
+  <p><strong>📌 api.service.ts</strong> — CRUD operations</p>
+  <pre><code>
+<span class="keyword">import</span> &#123; HttpClient &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/common/http'</span>;
+<span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; environment &#125; <span class="keyword">from</span> <span class="string">'../../environments/environment'</span>;
+
+<span class="keyword">&#64;Injectable</span>(&#123;
+  providedIn: <span class="string">'root'</span>
+&#125;)
+constructor(private httpClient: HttpClient) &#123; &#125;
+
+<span class="keyword">Post</span>&lt;any&gt;(apiEndPoint: <span class="string">string</span>, data?: <span class="string">unknown</span>): Observable&lt;any&gt; &#123;
+  <span class="keyword">return</span> this.httpClient.post&lt;any&gt;(<span class="string">`$&#123;environment.url&#125;$&#123;apiEndPoint&#125;`</span>, data, &#123; withCredentials: <span class="keyword">true</span> &#125;);
 &#125;
 
-PostById&lt;T&gt;(apiEndPoint: string, id: number, data: unknown): Observable&lt;T&gt; &#123;
-  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;`, data);
+<span class="keyword">PostById</span>&lt;any&gt;(apiEndPoint: <span class="string">string</span>, id: <span class="string">number</span>, data: <span class="string">unknown</span>): Observable&lt;any&gt; &#123;
+  <span class="keyword">return</span> this.httpClient.post&lt;any&gt;(<span class="string">`$&#123;environment.url&#125;$&#123;apiEndPoint&#125;/$&#123;id&#125;`</span>, data);
 &#125;
 
-Get&lt;T&gt;(apiEndPoint: string, queryParams?: unknown): Observable&lt;T&gt; &#123;
+<span class="keyword">Get</span>&lt;T&gt;(apiEndPoint: <span class="string">string</span>, queryParams?: <span class="string">unknown</span>): Observable&lt;T&gt; &#123;
   let qp = this.utilityService.jsonToQueryString(queryParams);
-  return this.httpClient.get&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`);
+  <span class="keyword">return</span> this.httpClient.get&lt;T&gt;(<span class="string">`$&#123;environment.url&#125;$&#123;apiEndPoint&#125;$&#123;qp&#125;`</span>);
 &#125;
 
-GetByHeaders&lt;T&gt;(apiEndPoint: string, queryParams?: unknown): Observable&lt;T&gt; &#123;
-  let qp = this.utilityService.jsonToQueryString(queryParams);
-  return this.httpClient.get&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`, &#123; responseType: 'blob' as 'json' &#125;);
+<span class="keyword">Put</span>&lt;T&gt;(apiEndPoint: <span class="string">string</span>, data?: <span class="string">unknown</span>): Observable&lt;T&gt; &#123;
+  <span class="keyword">return</span> this.httpClient.put&lt;T&gt;(<span class="string">`$&#123;environment.url&#125;$&#123;apiEndPoint&#125;`</span>, data);
 &#125;
 
-PostByHeaders&lt;T&gt;(apiEndPoint: string, data: any, queryParams?: unknown): Observable&lt;T&gt; &#123;
-  let qp = this.utilityService.jsonToQueryString(queryParams);
-  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`, data, &#123; responseType: 'blob' as 'json' &#125;);
-&#125;
-
-GetById&lt;T&gt;(apiEndPoint: string, id: number | string, queryParams?: unknown): Observable&lt;T&gt; &#123;
-  let qp = this.utilityService.jsonToQueryString(queryParams);
-  return this.httpClient.get&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;&#36;&#123;qp&#125;`);
-&#125;
-
-Put&lt;T&gt;(apiEndPoint: string, data?: unknown): Observable&lt;T&gt; &#123;
-  return this.httpClient.put&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;`, data);
-&#125;
-
-PutById&lt;T&gt;(apiEndPoint: string, id: number, data: unknown): Observable&lt;T&gt; &#123;
-  return this.httpClient.put&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;`, data);
-&#125;
-
-Delete&lt;T&gt;(apiEndPoint: string, id: number): Observable&lt;T&gt; &#123;
-  return this.httpClient.delete&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;/$&#123;id&#125;`);
-&#125;
-
-PostByHeaders2&lt;T&gt;(apiEndPoint: string, data: any, queryParams?: unknown): Observable&lt;T&gt; &#123;
-  let qp = this.utilityService.jsonToQueryString(queryParams);
-  return this.httpClient.post&lt;T&gt;(`&#36;&#123;environment.url&#125;&#36;&#123;apiEndPoint&#125;&#36;&#123;qp&#125;`, data, &#123; responseType: 'json' &#125;);
+<span class="keyword">Delete</span>&lt;T&gt;(apiEndPoint: <span class="string">string</span>, id: <span class="string">number</span>): Observable&lt;T&gt; &#123;
+  <span class="keyword">return</span> this.httpClient.delete&lt;T&gt;(<span class="string">`$&#123;environment.url&#125;$&#123;apiEndPoint&#125;/$&#123;id&#125;`</span>);
 &#125;
 </code></pre>
 
-      <p><strong>📌 api-list.ts</strong> — API endpoints</p>
-      <pre><code>
-export enum ApiList &#123;
-  getFinancialCardData = '/api/financial-card'
+  <p><strong>📌 api-list.ts</strong> — API endpoints</p>
+  <pre><code>
+<span class="keyword">export enum</span> ApiList &#123;
+  getFinancialCardData = <span class="string">'/api/financial-card'</span>
 &#125;
 </code></pre>
-      <div class="step-description">
-        <p class="title">API Service</p>
-        <p class="details">
-          The <strong>ApiService</strong> provides CRUD operations (Create, Read, Update,
-          Delete) for RESTful API communication, using TypeScript generics. The
-          <strong>ApiList</strong> enum defines the endpoint for financial card data.
-        </p>
-      </div>
-           </div>
 
-     <div class="step">
-      <h2>Step 3 — Financial Component API Calls</h2>
-      <p>
-        <strong>📌 financial.component.ts</strong> — API call examples
-      </p>
-      <pre><code>
-        import &#123; ApiService &#125; from '../../services/api.service';
-        import &#123; ApiList &#125; from '../../core/varibles/api-list';
-        import &#123;  HttpErrorResponse &#125; from '&#64;angular/common/http';
-         constructor(private apiService: ApiService) &#123; &#125;
+  <div class="step-description">
+    <p class="title">API Service</p>
+    <p class="details">
+      The <strong>ApiService</strong> provides CRUD operations (Create, Read, Update,
+      Delete) for RESTful API communication, using TypeScript generics. The
+      <strong>ApiList</strong> enum defines the endpoint for financial card data.
+    </p>
+  </div>
+</div>
 
-Post(): void &#123;
-  const data = &#123; totalFPN: 1000, actualForThePeriod: 500, percentageFPN: 50, availableBudget: 2000 &#125;;
+           <div class="step">
+  <h2>Step 3 — Financial Component API Calls</h2>
+  <p><strong>📌 financial.component.ts</strong> — API call examples</p>
+
+  <pre><code>
+<span class="keyword">import</span> &#123; ApiService &#125; <span class="keyword">from</span> <span class="string">'../../services/api.service'</span>;
+<span class="keyword">import</span> &#123; ApiList &#125; <span class="keyword">from</span> <span class="string">'../../core/varibles/api-list'</span>;
+<span class="keyword">import</span> &#123; HttpErrorResponse &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/common/http'</span>;
+
+<span class="keyword">constructor</span>(private apiService: ApiService) &#123; &#125;
+
+<span class="keyword">Post</span>(): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> data = &#123; totalFPN: <span class="number">1000</span>, actualForThePeriod: <span class="number">500</span>, percentageFPN: <span class="number">50</span>, availableBudget: <span class="number">2000</span> &#125;;
   this.apiService.Post&lt;IRes&gt;(ApiList.getFinancialCardData, data).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-PostById(id: number): void &#123;
-  const data = &#123; totalFPN: 1500, actualForThePeriod: 700, percentageFPN: 60, availableBudget: 2500 &#125;;
+<span class="keyword">PostById</span>(id: <span class="string">number</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> data = &#123; totalFPN: <span class="number">1500</span>, actualForThePeriod: <span class="number">700</span>, percentageFPN: <span class="number">60</span>, availableBudget: <span class="number">2500</span> &#125;;
   this.apiService.PostById&lt;IRes&gt;(ApiList.getFinancialCardData, id, data).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-Get(queryParams?: unknown): void &#123;
-  const params = &#123; filter: 'active', limit: 10 &#125;;
+<span class="keyword">Get</span>(queryParams?: <span class="string">unknown</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> params = &#123; filter: <span class="string">'active'</span>, limit: <span class="number">10</span> &#125;;
   this.apiService.Get&lt;IRes&gt;(ApiList.getFinancialCardData, params).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-GetByHeaders(queryParams?: unknown): void &#123;
-  const params = &#123; format: 'blob' &#125;;
+<span class="keyword">GetByHeaders</span>(queryParams?: <span class="string">unknown</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> params = &#123; format: <span class="string">'blob'</span> &#125;;
   this.apiService.GetByHeaders&lt;IRes&gt;(ApiList.getFinancialCardData, params).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-PostByHeaders(queryParams?: unknown): void &#123;
-  const data = &#123; totalFPN: 2000, actualForThePeriod: 800, percentageFPN: 70, availableBudget: 3000 &#125;;
-  const params = &#123; format: 'blob' &#125;;
+<span class="keyword">PostByHeaders</span>(queryParams?: <span class="string">unknown</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> data = &#123; totalFPN: <span class="number">2000</span>, actualForThePeriod: <span class="number">800</span>, percentageFPN: <span class="number">70</span>, availableBudget: <span class="number">3000</span> &#125;;
+  <span class="keyword">const</span> params = &#123; format: <span class="string">'blob'</span> &#125;;
   this.apiService.PostByHeaders&lt;IRes&gt;(ApiList.getFinancialCardData, data, params).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-GetById(id: number | string, queryParams?: unknown): void &#123;
-  const params = &#123; details: 'full' &#125;;
+<span class="keyword">GetById</span>(id: <span class="string">number</span> | <span class="string">string</span>, queryParams?: <span class="string">unknown</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> params = &#123; details: <span class="string">'full'</span> &#125;;
   this.apiService.GetById&lt;IRes&gt;(ApiList.getFinancialCardData, id, params).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-Put(): void &#123;
-  const data = &#123; totalFPN: 2500, actualForThePeriod: 900, percentageFPN: 80, availableBudget: 3500 &#125;;
+<span class="keyword">Put</span>(): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> data = &#123; totalFPN: <span class="number">2500</span>, actualForThePeriod: <span class="number">900</span>, percentageFPN: <span class="number">80</span>, availableBudget: <span class="number">3500</span> &#125;;
   this.apiService.Put&lt;IRes&gt;(ApiList.getFinancialCardData, data).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-PutById(id: number): void &#123;
-  const data = &#123; totalFPN: 3000, actualForThePeriod: 1000, percentageFPN: 90, availableBudget: 4000 &#125;;
+<span class="keyword">PutById</span>(id: <span class="string">number</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> data = &#123; totalFPN: <span class="number">3000</span>, actualForThePeriod: <span class="number">1000</span>, percentageFPN: <span class="number">90</span>, availableBudget: <span class="number">4000</span> &#125;;
   this.apiService.PutById&lt;IRes&gt;(ApiList.getFinancialCardData, id, data).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-Delete(id: number): void &#123;
+<span class="keyword">Delete</span>(id: <span class="string">number</span>): <span class="string">void</span> &#123;
   this.apiService.Delete&lt;IRes&gt;(ApiList.getFinancialCardData, id).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 
-PostByHeaders2(queryParams?: unknown): void &#123;
-  const data = &#123; totalFPN: 3500, actualForThePeriod: 1100, percentageFPN: 95, availableBudget: 4500 &#125;;
-  const params = &#123; format: 'json' &#125;;
+<span class="keyword">PostByHeaders2</span>(queryParams?: <span class="string">unknown</span>): <span class="string">void</span> &#123;
+  <span class="keyword">const</span> data = &#123; totalFPN: <span class="number">3500</span>, actualForThePeriod: <span class="number">1100</span>, percentageFPN: <span class="number">95</span>, availableBudget: <span class="number">4500</span> &#125;;
+  <span class="keyword">const</span> params = &#123; format: <span class="string">'json'</span> &#125;;
   this.apiService.PostByHeaders2&lt;IRes&gt;(ApiList.getFinancialCardData, data, params).subscribe(&#123;
-    next: (res) =&gt; &#123; this.financialCardData = res.status ? res.data : []; &#125;,
-    error: (err: HttpErrorResponse) =&gt; &#123; this.financialCardData = []; &#125;
+    next: (res) => &#123; this.financialCardData = res.status ? res.data : []; &#125;,
+    error: (err: HttpErrorResponse) => &#123; this.financialCardData = []; &#125;
   &#125;);
 &#125;
 </code></pre>
 
-      <div class="step-description">
-        <p class="title">Financial API Calls</p>
-        <p class="details">
-          The <strong>FinancialComponent</strong> demonstrates API calls using all
-          CRUD methods from the <strong>ApiService</strong>, with example data, function
-          names matching HTTP methods, and error handling using
-          <code>.subscribe(&#123; next: ..., error: ... &#125;)</code>.
-        </p>
-      </div>
-   
-    </div>
+  <div class="step-description">
+    <p class="title">Financial API Calls</p>
+    <p class="details">
+      The <strong>FinancialComponent</strong> demonstrates API calls using all
+      CRUD methods from the <strong>ApiService</strong>, with example data, function
+      names matching HTTP methods, and error handling using
+      <code>.subscribe(&#123; next: ..., error: ... &#125;)</code>.
+    </p>
+  </div>
+</div>
+
+             
+            <div class="interview-questions step">
+                <h2>15 Important Interview Questions on Angular Architecture & Project Setup</h2>
+                <ol class="question-list">
+                    <li>
+                    <strong class="question-title">What are the prerequisites for creating an Angular project?</strong>
+                    <p class="answer">You need Node.js (v16 or higher), npm or yarn package manager, and Angular CLI installed globally.</p>
+                    <span class="category">Basics</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">How do you create a new Angular project?</strong>
+                    <p class="answer">Run <code>npm install -g &#64;angular/cli</code> to install Angular CLI, then create a project using <code>ng new my-app</code>, configure routing and styles, and start the server with <code>ng serve -o</code>.</p>
+                    <span class="category">Setup</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What are the key configuration files in an Angular project?</strong>
+                    <p class="answer"><code>angular.json</code> (build and project config), <code>package.json</code> (dependencies), <code>tsconfig.json</code> (TypeScript settings), <code>.browserslistrc</code> (browser compatibility), and <code>src/environments/</code> (environment configs).</p>
+                    <span class="category">Configuration</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What is the role of main.ts in Angular?</strong>
+                    <p class="answer"><code>main.ts</code> is the entry point of the application. It bootstraps the root module (AppModule) using <code>platformBrowserDynamic().bootstrapModule()</code>.</p>
+                    <span class="category">Core</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What are the core building blocks of Angular architecture?</strong>
+                    <p class="answer">Modules, Components, Services, Directives, Pipes, and Routing are the key building blocks of Angular applications.</p>
+                    <span class="category">Architecture</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What is the purpose of Angular modules?</strong>
+                    <p class="answer">Modules group related functionality. The root module is AppModule, and feature modules are created to organize large-scale applications.</p>
+                    <span class="category">Modules</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">How should you structure a large-scale Angular application?</strong>
+                    <p class="answer">Use <code>core/</code> (singleton services, guards, interceptors), <code>shared/</code> (reusable components), <code>features/</code> (feature modules), <code>layout/</code> (UI structure), <code>assets/</code> (static files), and <code>environments/</code> (config).</p>
+                    <span class="category">Best Practices</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What is the role of Angular CLI in project development?</strong>
+                    <p class="answer">Angular CLI simplifies project setup, scaffolding, building, serving, and testing through commands like <code>ng new</code>, <code>ng serve</code>, and <code>ng build</code>.</p>
+                    <span class="category">CLI</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">How do you generate Angular components, services, and modules?</strong>
+                    <p class="answer">Use CLI commands like <code>ng generate component [name]</code>, <code>ng generate service [name]</code>, and <code>ng generate module [name]</code>.</p>
+                    <span class="category">Development</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What is the role of Dependency Injection in Angular?</strong>
+                    <p class="answer">Dependency Injection (DI) allows services and resources to be provided where needed, ensuring reusability and maintainability.</p>
+                    <span class="category">Core</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">How is routing handled in Angular?</strong>
+                    <p class="answer">Angular uses <code>RouterModule</code> to configure routes. It supports lazy loading, route guards, and child routes.</p>
+                    <span class="category">Routing</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">How do you handle environment-specific settings in Angular?</strong>
+                    <p class="answer">Use <code>src/environments/environment.ts</code> for development and <code>environment.prod.ts</code> for production, configured in <code>angular.json</code>.</p>
+                    <span class="category">Configuration</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What are Angular services, and why are they important?</strong>
+                    <p class="answer">Services contain business logic and data access. They are injected into components and other services using Angular’s DI system.</p>
+                    <span class="category">Services</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">How do you test Angular applications?</strong>
+                    <p class="answer">Use <code>ng test</code> for unit tests (Jasmine & Karma) and <code>ng e2e</code> for end-to-end tests (Protractor or Cypress).</p>
+                    <span class="category">Testing</span>
+                    </li>
+                    <li>
+                    <strong class="question-title">What are some best practices for Angular project setup?</strong>
+                    <p class="answer">Use feature modules, lazy loading, shared modules for reusability, environment-specific configs, consistent naming conventions, and follow Angular style guide.</p>
+                    <span class="category">Best Practices</span>
+                    </li>
+                </ol>
+            </div>
+        </div>
 </div>

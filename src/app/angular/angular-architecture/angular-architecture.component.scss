@@ -100,14 +100,14 @@ p, h1, h2, h3, h4, h5, h6 {
 
       code {
         background: transparent;
-        color: inherit;
+        color: white;
         padding: 0;
         border-radius: 0;
         font-size: inherit;
         
         // SQL syntax highlighting
         .keyword {
-          color: #e74c3c;
+          color: #d06fd7;
           font-weight: bold;
         }
         
@@ -120,7 +120,7 @@ p, h1, h2, h3, h4, h5, h6 {
         }
         
         .comment {
-          color: #95a5a6;
+          color: #20d2df;
           font-style: italic;
         }
       }
@@ -387,58 +387,6 @@ p, h1, h2, h3, h4, h5, h6 {
         border-bottom: 1px solid #e9ecef;
       }
     }
-
-    td {
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #34495e;
-      vertical-align: middle;
-
-      .method-badge {
-        display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 15px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-        
-        &.get {
-          background-color: #2ecc71;
-          color: white;
-        }
-
-        &.post {
-          background-color: #3498db;
-          color: white;
-        }
-
-        &.put {
-          background-color: #f1c40f;
-          color: #2c3e50;
-        }
-
-        &.delete {
-          background-color: #e74c3c;
-          color: white;
-        }
-      }
-
-      &:nth-child(2) { // Route column
-        font-family: 'Consolas', monospace;
-        color: #2c3e50;
-        font-weight: 500;
-      }
-
-      &:nth-child(3) { // Handler Method column
-        font-family: 'Consolas', monospace;
-        color: #8e44ad;
-      }
-
-      &:last-child { // Description column
-        color: #7f8c8d;
-        font-style: italic;
-      }
-    }
   }
 
   // Responsive styles
@@ -538,7 +486,7 @@ html {
 .step-description {
   margin: 1rem 0 2rem;
   padding: 1rem;
-  background: #f8fafc;
+  background: #fcfaf8;
   border-left: 4px solid #3498db;
   border-radius: 0 8px 8px 0;
   
