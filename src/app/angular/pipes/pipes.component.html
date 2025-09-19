@@ -1,1 +1,139 @@
-<p>pipes works!</p>
+<div class="overall-wrapper" appMaximize #pipes="maximize" id="pipes">
+  <div class="wrapper">
+    <img class="swap" *ngIf="pipes.checkfullscreen() == 'hide'" (click)="pipes.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="pipes.checkfullscreen() != 'hide'" (click)="pipes.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <!-- Header Section -->
+    <div class="header">
+      <p><span class="question">What:</span> Learn <strong>Angular Pipes</strong>, which transform data in templates before displaying it to the user.</p>
+
+      <p><span class="question">Why:</span> Pipes simplify data formatting (like dates, numbers, currency) without modifying the component logic.</p>
+
+      <p><span class="question">Where:</span> Used in templates for formatting text, numbers, dates, currencies, JSON, and also for custom transformations.</p>
+    </div>
+  </div>
+
+  <div class="examples">
+
+    <!-- Step 1: Built-in Pipes -->
+    <div class="step">
+      <h3>⚙️ Step 1 — Built-in Pipes</h3>
+      <pre ngNonBindable><code>
+&lt;p&gt;Uppercase: &#123;&#123; name | uppercase &#125;&#125;&lt;/p&gt;
+&lt;p&gt;Date: &#123;&#123; today | date:'fullDate' &#125;&#125;&lt;/p&gt;
+&lt;p&gt;Currency: &#123;&#123; price | currency:'USD' &#125;&#125;&lt;/p&gt;
+&lt;p&gt;JSON: &#123;&#123; user | json &#125;&#125;&lt;/p&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  name = 'sakthivel';
+  today = new Date();
+  price = 1200.5;
+  user = &#123; id: 1, role: 'Full Stack Developer' &#125;;
+&#125;
+      </code></pre>
+      <p>👉 Angular provides several built-in pipes like <code>uppercase</code>, <code>date</code>, <code>currency</code>, <code>json</code>, <code>percent</code>, etc.</p>
+    </div>
+
+    <!-- Step 2: Custom Pipe -->
+    <div class="step">
+      <h3>🛠 Step 2 — Custom Pipe</h3>
+      <p><strong>Truncate Pipe (truncate.pipe.ts)</strong></p>
+      <pre ngNonBindable><code>
+import &#123; Pipe, PipeTransform &#125; from '&#64;angular/core';
+
+&#64;Pipe(&#123;
+  name: 'truncate'
+&#125;)
+export class TruncatePipe implements PipeTransform &#123;
+  transform(value: string, limit: number = 20): string &#123;
+    return value.length > limit ? value.substring(0, limit) + '...' : value;
+  &#125;
+&#125;
+      </code></pre>
+
+      <p><strong>Usage:</strong></p>
+      <pre ngNonBindable><code>
+&lt;p&gt;&#123;&#123; 'This is a very long sentence for demo.' | truncate:15 &#125;&#125;&lt;/p&gt;
+      </code></pre>
+      <p>👉 Custom pipes let you implement reusable transformations not covered by built-in ones.</p>
+    </div>
+
+    <!-- Step 3: Chaining Pipes -->
+    <div class="step">
+      <h3>⛓ Step 3 — Chaining Pipes</h3>
+      <pre ngNonBindable><code>
+&lt;p&gt;&#123;&#123; today | date:'short' | uppercase &#125;&#125;&lt;/p&gt;
+      </code></pre>
+      <p>👉 Multiple pipes can be chained together for combined transformations.</p>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Pipes</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is a pipe in Angular?</strong>
+          <p class="answer">A pipe is a function that transforms input data into a desired output format in templates.</p>
+        </li>
+        <li>
+          <strong class="question-title">Give examples of built-in pipes.</strong>
+          <p class="answer">Examples include <code>uppercase</code>, <code>lowercase</code>, <code>date</code>, <code>currency</code>, <code>json</code>, and <code>percent</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">How do you create a custom pipe?</strong>
+          <p class="answer">Use the <code>&#64;Pipe</code> decorator and implement the <code>PipeTransform</code> interface with a <code>transform()</code> method.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between pure and impure pipes?</strong>
+          <p class="answer">Pure pipes run only when input values change, while impure pipes run on every change detection cycle.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the default behavior of custom pipes?</strong>
+          <p class="answer">By default, custom pipes are pure (optimized for performance).</p>
+        </li>
+        <li>
+          <strong class="question-title">Can pipes take arguments?</strong>
+          <p class="answer">Yes, arguments can be passed after a colon, e.g., <code>&#123; &#123; amount | currency:'EUR' &#125;&#125;</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we chain multiple pipes?</strong>
+          <p class="answer">Yes, Angular allows chaining pipes like <code>&#123; &#123; today | date:'short' | uppercase &#125;&#125;</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between a pipe and a function call in template?</strong>
+          <p class="answer">Pipes are optimized and cached, while template functions may cause performance issues since they run on every change detection cycle.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the async pipe?</strong>
+          <p class="answer">The async pipe automatically subscribes to Observables/Promises and displays their latest value.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is a parameterized pipe?</strong>
+          <p class="answer">A pipe that accepts arguments to control its transformation, e.g., <code>&#123; &#123; text | slice:0:10 &#125;&#125;</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we use pipes in component TypeScript code?</strong>
+          <p class="answer">Pipes are designed for templates, but you can inject and call them in code if needed.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is an impure custom pipe use case?</strong>
+          <p class="answer">Useful for filtering arrays or objects that change frequently during runtime.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between slice pipe and ngFor with slice?</strong>
+          <p class="answer">The slice pipe transforms displayed output, while *ngFor with slice limits rendered items in the DOM.</p>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular optimize pure pipes?</strong>
+          <p class="answer">Pure pipes execute only when inputs change, reducing unnecessary recalculations.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is a custom pipe example you’ve built?</strong>
+          <p class="answer">A truncate pipe to shorten long text with "..." at the end.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

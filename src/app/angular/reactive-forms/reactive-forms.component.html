@@ -1,1 +1,210 @@
-<p>reactive-forms works!</p>
+<div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="angular-architecture">
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() == 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() != 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+
+    <!-- Enhanced Header Section -->
+    <div class="header">
+      <p>
+        <span class="question">What:</span> In Angular,
+        <strong>reactive forms</strong> are forms built using
+        <strong>FormControl</strong>, <strong>FormGroup</strong>, and
+        <strong>FormBuilder</strong> classes. They provide a
+        <strong>model-driven and programmatic approach</strong> to manage form
+        inputs, track state, and apply both synchronous and asynchronous
+        validations directly in the component class.
+      </p>
+
+      <p>
+        <span class="question">Why:</span> Reactive forms offer better
+        scalability, testability, and flexibility. They are ideal for complex
+        or dynamic forms that require advanced validation logic, reactive
+        updates, or fine-grained control over form behavior.
+      </p>
+
+      <p>
+        <span class="question">Where:</span> Useful for building
+        <strong>dynamic forms</strong>, <strong>complex validation flows</strong>,
+        and large-scale applications where form logic needs to be centralized in
+        TypeScript.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <!-- Step 1: Reactive Form Basics -->
+    <div class="step">
+      <h3>📄 Reactive Form Example</h3>
+      <pre ngNonBindable><code>
+&lt;form [formGroup]="userForm" (ngSubmit)="onSubmit()"&gt;
+  &lt;label&gt;Name:&lt;/label&gt;
+  &lt;input type="text" formControlName="name" /&gt;
+
+  &lt;label&gt;Email:&lt;/label&gt;
+  &lt;input type="email" formControlName="email" /&gt;
+
+  &lt;label&gt;Password:&lt;/label&gt;
+  &lt;input type="password" formControlName="password" /&gt;
+
+  &lt;button type="submit" [disabled]="userForm.invalid"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+      <p><strong>✔️ Features:</strong></p>
+      <ul>
+        <li>Form built with <code>FormGroup</code> and <code>FormControl</code></li>
+        <li>Validation rules defined in the component class</li>
+        <li>Centralized, strongly typed form model</li>
+      </ul>
+    </div>
+
+    <!-- Step 2: Component Handling -->
+    <div class="step">
+      <h3>⚙️ Handling Form Data in Component</h3>
+      <pre ngNonBindable><code>
+import &#123; Component &#125; from '&#64;angular/core';
+import &#123; FormGroup, FormControl, Validators &#125; from '&#64;angular/forms';
+
+&#64;Component(&#123;
+  selector: 'app-user-form',
+  templateUrl: './user-form.component.html'
+&#125;)
+export class UserFormComponent &#123;
+  userForm = new FormGroup(&#123;
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    password: new FormControl('', [Validators.required, Validators.minLength(6)])
+  &#125;);
+
+  onSubmit() &#123;
+    console.log('Form Data:', this.userForm.value);
+  &#125;
+&#125;
+</code></pre>
+    </div>
+
+    <!-- Step 3: Validation Messages + Control States -->
+    <div class="step">
+      <h3>✅ Validation with Error Messages & Control States</h3>
+      <pre ngNonBindable><code>
+&lt;input type="text" formControlName="name" /&gt;
+
+&lt;div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched"&gt;
+  &lt;small *ngIf="userForm.get('name')?.errors?.['required']"&gt;Name is required&lt;/small&gt;
+  &lt;small *ngIf="userForm.get('name')?.errors?.['minlength']"&gt;
+    Minimum &#123;&#123; userForm.get('name')?.errors?.['minlength'].requiredLength &#125;&#125; characters required
+  &lt;/small&gt;
+&lt;/div&gt;
+
+&lt;!-- Control States --&gt;
+&lt;div class="debug"&gt;
+  &lt;p&gt;Touched: &#123;&#123; userForm.get('name')?.touched &#125;&#125;&lt;/p&gt;
+  &lt;p&gt;Dirty: &#123;&#123; userForm.get('name')?.dirty &#125;&#125;&lt;/p&gt;
+  &lt;p&gt;Valid: &#123;&#123; userForm.get('name')?.valid &#125;&#125;&lt;/p&gt;
+  &lt;p&gt;Invalid: &#123;&#123; userForm.get('name')?.invalid &#125;&#125;&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+      <p>
+        Reactive form controls expose the same states as template-driven forms:
+        <code>touched</code>, <code>untouched</code>, <code>dirty</code>,
+        <code>pristine</code>, <code>valid</code>, <code>invalid</code>, and
+        <code>pending</code>.
+      </p>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Reactive Forms</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is a reactive form in Angular?</strong>
+          <p class="answer">It is a model-driven form approach where form logic and validation are defined in the component class using Angular’s form APIs.</p>
+          <span class="category">Basics</span>
+        </li>
+        <li>
+          <strong class="question-title">Which classes are commonly used in reactive forms?</strong>
+          <p class="answer"><code>FormControl</code>, <code>FormGroup</code>, and <code>FormBuilder</code>.</p>
+          <span class="category">Core</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you add validation in reactive forms?</strong>
+          <p class="answer">By passing validator functions such as <code>Validators.required</code> or <code>Validators.email</code> when initializing form controls.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you access a control inside a FormGroup?</strong>
+          <p class="answer">Using the <code>get()</code> method, e.g., <code>form.get('controlName')</code>.</p>
+          <span class="category">Access</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you disable a submit button until the form is valid?</strong>
+          <p class="answer">Bind the button’s <code>[disabled]</code> property to <code>form.invalid</code>.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between reactive and template-driven forms?</strong>
+          <p class="answer">Reactive forms are model-driven and defined in TypeScript, while template-driven forms are defined in HTML templates.</p>
+          <span class="category">Comparison</span>
+        </li>
+        <li>
+          <strong class="question-title">Can you use custom validators in reactive forms?</strong>
+          <p class="answer">Yes, by creating custom validator functions or directives and adding them to the control’s validator list.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the purpose of FormBuilder?</strong>
+          <p class="answer">It simplifies the creation of forms by reducing boilerplate code for <code>FormGroup</code> and <code>FormControl</code>.</p>
+          <span class="category">Utility</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you get form values in the component?</strong>
+          <p class="answer">Access <code>form.value</code> or subscribe to <code>form.valueChanges</code>.</p>
+          <span class="category">Data Handling</span>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular track validity of individual fields?</strong>
+          <p class="answer">Through control states like <code>valid</code>, <code>invalid</code>, <code>touched</code>, <code>dirty</code>, and <code>pending</code>.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">What are the advantages of reactive forms?</strong>
+          <p class="answer">They are scalable, testable, and suitable for complex/dynamic forms with centralized logic in TypeScript.</p>
+          <span class="category">Advantages</span>
+        </li>
+        <li>
+          <strong class="question-title">What are the limitations of reactive forms?</strong>
+          <p class="answer">They require more boilerplate and are less intuitive for simple forms compared to template-driven forms.</p>
+          <span class="category">Limitations</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you reset a reactive form?</strong>
+          <p class="answer">Call <code>form.reset()</code> or <code>form.reset(&#123;values&#125;)</code> to reset values.</p>
+          <span class="category">Forms</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you apply CSS classes based on control state?</strong>
+          <p class="answer">Angular automatically applies classes like <code>ng-valid</code>, <code>ng-invalid</code>, <code>ng-touched</code>, which can be styled in CSS.</p>
+          <span class="category">Styling</span>
+        </li>
+        <li>
+          <strong class="question-title">When should you use reactive forms over template-driven forms?</strong>
+          <p class="answer">Use reactive forms for complex, dynamic, or large-scale forms. Use template-driven for small, simple forms.</p>
+          <span class="category">Best Practices</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

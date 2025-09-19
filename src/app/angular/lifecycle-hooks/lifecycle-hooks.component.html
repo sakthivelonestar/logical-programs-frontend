@@ -1,1 +1,156 @@
-<p>lifecycle-hooks works!</p>
+<div class="overall-wrapper" appMaximize #lifecycleHooks="maximize" id="lifecycle-hooks">
+  <div class="wrapper">
+    <img class="swap" *ngIf="lifecycleHooks.checkfullscreen() == 'hide'" (click)="lifecycleHooks.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="lifecycleHooks.checkfullscreen() != 'hide'" (click)="lifecycleHooks.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <!-- Enhanced Header Section -->
+    <div class="header">
+      <p><span class="question">What:</span> Learn about Angular <strong>Lifecycle Hooks</strong> — special methods that allow you to tap into key moments of a component’s life, such as initialization, change detection, and destruction.</p>
+
+      <p><span class="question">Why:</span> Understanding lifecycle hooks ensures you can properly manage <strong>data fetching</strong>, <strong>DOM updates</strong>, <strong>performance optimizations</strong>, and <strong>cleanup tasks</strong>.</p>
+
+      <p><span class="question">Where:</span> Lifecycle hooks are used inside <strong>components</strong> and <strong>directives</strong> when you need to react to changes, initialize logic, or free resources before destruction.</p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <!-- Example Hooks -->
+    <div class="step">
+      <h3>🔄 Common Lifecycle Hooks</h3>
+      <ul>
+        <li>➡️ <strong>ngOnChanges</strong> – Called when input properties change</li>
+        <li>⚡ <strong>ngOnInit</strong> – Called once after component initialization</li>
+        <li>🌀 <strong>ngDoCheck</strong> – Detect and act on custom changes</li>
+        <li>📦 <strong>ngAfterContentInit</strong> – After projecting external content</li>
+        <li>📦 <strong>ngAfterContentChecked</strong> – After every check of projected content</li>
+        <li>🖼️ <strong>ngAfterViewInit</strong> – After initializing component’s view and child views</li>
+        <li>🖼️ <strong>ngAfterViewChecked</strong> – After every check of component’s views</li>
+        <li>🗑️ <strong>ngOnDestroy</strong> – Cleanup before Angular destroys the component</li>
+      </ul>
+    </div>
+
+    <!-- Code Examples -->
+    <div class="step">
+      <h3>📋 Example: Using Lifecycle Hooks</h3>
+      <pre ngNonBindable><code>
+import &#123; Component, OnInit, OnDestroy, OnChanges, SimpleChanges &#125; from '&#64;angular/core';
+
+&#64;Component(&#123;
+  selector: 'app-logger',
+  template: `&lt;p&gt;Logger works!&lt;/p&gt;`
+&#125;)
+export class LoggerComponent implements OnInit, OnChanges, OnDestroy &#123;
+
+  constructor() &#123;
+    console.log('Constructor called');
+  &#125;
+
+  ngOnChanges(changes: SimpleChanges) &#123;
+    console.log('ngOnChanges called', changes);
+  &#125;
+
+  ngOnInit() &#123;
+    console.log('ngOnInit called');
+  &#125;
+
+  ngOnDestroy() &#123;
+    console.log('ngOnDestroy called - cleanup here');
+  &#125;
+&#125;
+</code></pre>
+    </div>
+
+    <!-- Visual Lifecycle Order -->
+    <div class="step">
+      <h3>📊 Lifecycle Hook Execution Order</h3>
+      <pre ngNonBindable><code>
+Constructor ➝ ngOnChanges ➝ ngOnInit ➝ ngDoCheck
+➝ ngAfterContentInit ➝ ngAfterContentChecked
+➝ ngAfterViewInit ➝ ngAfterViewChecked
+➝ ngOnDestroy
+</code></pre>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Angular Lifecycle Hooks</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What are Angular lifecycle hooks?</strong>
+          <p class="answer">Special methods that Angular calls at specific stages of a component/directive’s life, from creation to destruction.</p>
+          <span class="category">Basics</span>
+        </li>
+        <li>
+          <strong class="question-title">Which hook is called only once in a component’s lifetime?</strong>
+          <p class="answer"><code>ngOnInit</code> is called once after the first <code>ngOnChanges</code>.</p>
+          <span class="category">Core</span>
+        </li>
+        <li>
+          <strong class="question-title">When would you use ngOnDestroy?</strong>
+          <p class="answer">To perform cleanup tasks such as unsubscribing from Observables, removing event listeners, or clearing timers.</p>
+          <span class="category">Cleanup</span>
+        </li>
+        <li>
+          <strong class="question-title">Difference between ngOnChanges and ngDoCheck?</strong>
+          <p class="answer"><code>ngOnChanges</code> triggers only when input properties change, while <code>ngDoCheck</code> allows custom change detection logic.</p>
+          <span class="category">Comparison</span>
+        </li>
+        <li>
+          <strong class="question-title">Which hooks relate to content projection?</strong>
+          <p class="answer"><code>ngAfterContentInit</code> and <code>ngAfterContentChecked</code>.</p>
+          <span class="category">Content</span>
+        </li>
+        <li>
+          <strong class="question-title">Which hooks deal with the component’s view?</strong>
+          <p class="answer"><code>ngAfterViewInit</code> and <code>ngAfterViewChecked</code>.</p>
+          <span class="category">View</span>
+        </li>
+        <li>
+          <strong class="question-title">Can you use lifecycle hooks in directives?</strong>
+          <p class="answer">Yes, directives also support lifecycle hooks like <code>ngOnInit</code>, <code>ngOnChanges</code>, and <code>ngOnDestroy</code>.</p>
+          <span class="category">Directives</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the first lifecycle hook called?</strong>
+          <p class="answer"><code>ngOnChanges</code> (if there are input bindings), otherwise <code>ngOnInit</code>.</p>
+          <span class="category">Order</span>
+        </li>
+        <li>
+          <strong class="question-title">What’s the role of the constructor in lifecycle?</strong>
+          <p class="answer">The constructor is called before Angular lifecycle hooks, used mainly for dependency injection setup.</p>
+          <span class="category">Constructor</span>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular handle hook execution order?</strong>
+          <p class="answer">Angular follows a strict sequence: constructor → changes/init → content → view → destroy.</p>
+          <span class="category">Order</span>
+        </li>
+        <li>
+          <strong class="question-title">When should you avoid heavy logic inside lifecycle hooks?</strong>
+          <p class="answer">Avoid heavy logic in <code>ngDoCheck</code> and <code>ngAfterViewChecked</code> because they run frequently and may hurt performance.</p>
+          <span class="category">Performance</span>
+        </li>
+        <li>
+          <strong class="question-title">Can you implement multiple lifecycle hooks in one component?</strong>
+          <p class="answer">Yes, a component can implement multiple hooks depending on requirements.</p>
+          <span class="category">Flexibility</span>
+        </li>
+        <li>
+          <strong class="question-title">What hook is best for initializing API calls?</strong>
+          <p class="answer"><code>ngOnInit</code> is commonly used to fetch initial data when the component loads.</p>
+          <span class="category">API</span>
+        </li>
+        <li>
+          <strong class="question-title">What happens if you don’t implement ngOnDestroy?</strong>
+          <p class="answer">Memory leaks may occur because subscriptions, intervals, or listeners may remain active even after the component is destroyed.</p>
+          <span class="category">Cleanup</span>
+        </li>
+        <li>
+          <strong class="question-title">How do lifecycle hooks improve testing?</strong>
+          <p class="answer">Hooks provide predictable entry points to test initialization, updates, and cleanup in isolation.</p>
+          <span class="category">Testing</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

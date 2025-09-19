@@ -1,1 +1,152 @@
-<p>directives works!</p>
+<div class="overall-wrapper" appMaximize #directives="maximize" id="directives">
+  <div class="wrapper">
+    <img class="swap" *ngIf="directives.checkfullscreen() == 'hide'" (click)="directives.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="directives.checkfullscreen() != 'hide'" (click)="directives.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <!-- Header Section -->
+    <div class="header">
+      <p><span class="question">What:</span> Learn <strong>Angular Directives</strong>, which are instructions to the DOM. They extend HTML by adding new behavior.</p>
+
+      <p><span class="question">Why:</span> Directives make Angular templates powerful — you can show/hide elements, dynamically create DOM structures, and apply styling or behavior to elements.</p>
+
+      <p><span class="question">Where:</span> Used in every Angular project — for conditional rendering (<code>*ngIf</code>), loops (<code>*ngFor</code>), styling (<code>[ngStyle]</code>, <code>[ngClass]</code>), and custom behaviors.</p>
+    </div>
+  </div>
+
+  <div class="examples">
+
+    <!-- Step 1: Structural Directives -->
+    <div class="step">
+      <h3>🏗 Step 1 — Structural Directives</h3>
+      <pre ngNonBindable><code>
+&lt;div *ngIf="isLoggedIn"&gt;Welcome back!&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li *ngFor="let item of items"&gt;&#123;&#123; item &#125;&#125;&lt;/li&gt;
+&lt;/ul&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  isLoggedIn = true;
+  items = ['Angular', 'NestJS', 'SQL'];
+&#125;
+      </code></pre>
+      <p>👉 Structural directives change the DOM layout by adding or removing elements (e.g., <code>*ngIf</code>, <code>*ngFor</code>, <code>*ngSwitch</code>).</p>
+    </div>
+
+    <!-- Step 2: Attribute Directives -->
+    <div class="step">
+      <h3>🎨 Step 2 — Attribute Directives</h3>
+      <pre ngNonBindable><code>
+&lt;h2 [ngStyle]="&#123;'color': textColor&#125;" [ngClass]="&#123;'highlight': isActive&#125;"&gt;
+  Styled Text
+&lt;/h2&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  textColor = 'blue';
+  isActive = true;
+&#125;
+      </code></pre>
+      <p>👉 Attribute directives modify the appearance or behavior of existing elements (e.g., <code>[ngClass]</code>, <code>[ngStyle]</code>, custom directives).</p>
+    </div>
+
+    <!-- Step 3: Custom Directive Example -->
+    <div class="step">
+      <h3>⚡ Step 3 — Custom Directive</h3>
+      <p><strong>Highlight Directive (highlight.directive.ts)</strong></p>
+      <pre ngNonBindable><code>
+import &#123; Directive, ElementRef, HostListener &#125; from '&#64;angular/core';
+
+&#64;Directive(&#123;
+  selector: '[appHighlight]'
+&#125;)
+export class HighlightDirective &#123;
+  constructor(private el: ElementRef) &#123;&#125;
+
+  &#64;HostListener('mouseenter') onMouseEnter() &#123;
+    this.el.nativeElement.style.backgroundColor = 'yellow';
+  &#125;
+
+  &#64;HostListener('mouseleave') onMouseLeave() &#123;
+    this.el.nativeElement.style.backgroundColor = '';
+  &#125;
+&#125;
+      </code></pre>
+
+      <p><strong>Usage:</strong></p>
+      <pre ngNonBindable><code>
+&lt;p appHighlight&gt;Hover over me to highlight!&lt;/p&gt;
+      </code></pre>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Directives</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is a directive in Angular?</strong>
+          <p class="answer">A directive is a class that adds behavior to elements in Angular applications.</p>
+        </li>
+        <li>
+          <strong class="question-title">What are the types of directives in Angular?</strong>
+          <p class="answer">Three types: Components (with templates), Structural directives (change DOM structure), Attribute directives (change appearance/behavior).</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between Structural and Attribute directives?</strong>
+          <p class="answer">Structural directives modify DOM layout (e.g., *ngIf, *ngFor), while attribute directives modify element style/behavior (e.g., [ngClass], [ngStyle]).</p>
+        </li>
+        <li>
+          <strong class="question-title">What does *ngIf do?</strong>
+          <p class="answer">It conditionally includes or removes elements from the DOM based on a Boolean expression.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is *ngFor used for?</strong>
+          <p class="answer">It iterates over a collection and creates a DOM element for each item.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is *ngSwitch?</strong>
+          <p class="answer">A structural directive that conditionally renders elements based on matching cases.</p>
+        </li>
+        <li>
+          <strong class="question-title">What does ngClass do?</strong>
+          <p class="answer">It adds or removes CSS classes dynamically based on expressions.</p>
+        </li>
+        <li>
+          <strong class="question-title">What does ngStyle do?</strong>
+          <p class="answer">It sets inline styles dynamically on an element based on component data.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can you create a custom directive?</strong>
+          <p class="answer">Yes, using the <code>&#64;Directive</code> decorator with custom logic.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between a Component and a Directive?</strong>
+          <p class="answer">A Component is a directive with a template. Directives without templates are structural or attribute directives.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is HostListener in a directive?</strong>
+          <p class="answer">It listens to DOM events on the host element and triggers directive methods.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is HostBinding in a directive?</strong>
+          <p class="answer">It binds a property in the directive to a property of the host element.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we use multiple directives on a single element?</strong>
+          <p class="answer">Yes, Angular allows applying multiple directives to the same element.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the purpose of the selector in a directive?</strong>
+          <p class="answer">The selector defines how the directive is applied (attribute, element, or class).</p>
+        </li>
+        <li>
+          <strong class="question-title">Give a use case for custom directives.</strong>
+          <p class="answer">Custom directives can be used for tooltips, hover effects, auto-focus, or reusable UI behaviors.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

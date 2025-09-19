@@ -1,1 +1,149 @@
-<p>data-binding works!</p>
+<div class="overall-wrapper" appMaximize #dataBinding="maximize" id="data-binding">
+  <div class="wrapper">
+    <img class="swap" *ngIf="dataBinding.checkfullscreen() == 'hide'" (click)="dataBinding.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="dataBinding.checkfullscreen() != 'hide'" (click)="dataBinding.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <!-- Header Section -->
+    <div class="header">
+      <p><span class="question">What:</span> Learn <strong>Angular Data Binding</strong> techniques — Interpolation, Property Binding, Event Binding, and Two-Way Binding — to connect the template with the component class.</p>
+
+      <p><span class="question">Why:</span> Data binding ensures seamless synchronization between the UI and the underlying logic, making Angular applications dynamic and interactive.</p>
+
+      <p><span class="question">Where:</span> Used in every Angular project — for displaying values (interpolation), binding attributes/properties, handling user actions (events), and building forms (two-way binding).</p>
+    </div>
+  </div>
+
+  <div class="examples">
+
+    <!-- Step 1: Interpolation -->
+    <div class="step">
+      <h3>📝 Step 1 — Interpolation</h3>
+      <pre ngNonBindable><code>
+&lt;h2&gt;Hello &#123;&#123; username &#125;&#125;!&lt;/h2&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  username = 'Sakthivel';
+&#125;
+      </code></pre>
+      <p>👉 Interpolation <code>&#123; &#123; &#125; &#125;</code> is used to display component data inside the template.</p>
+    </div>
+
+    <!-- Step 2: Property Binding -->
+    <div class="step">
+      <h3>🔗 Step 2 — Property Binding</h3>
+      <pre ngNonBindable><code>
+&lt;img [src]="profilePic" [alt]="username"&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  profilePic = 'assets/profile.png';
+  username = 'Sakthivel';
+&#125;
+      </code></pre>
+      <p>👉 Property binding uses <code>[ ]</code> to bind component properties to DOM element attributes.</p>
+    </div>
+
+    <!-- Step 3: Event Binding -->
+    <div class="step">
+      <h3>🎯 Step 3 — Event Binding</h3>
+      <pre ngNonBindable><code>
+&lt;button (click)="sayHello()"&gt;Click Me&lt;/button&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  sayHello() &#123;
+    alert('Hello from Angular!');
+  &#125;
+&#125;
+      </code></pre>
+      <p>👉 Event binding uses <code>( )</code> to listen for user events like clicks, keypress, input changes, etc.</p>
+    </div>
+
+    <!-- Step 4: Two-Way Binding -->
+    <div class="step">
+      <h3>🔄 Step 4 — Two-Way Binding</h3>
+      <pre ngNonBindable><code>
+&lt;input [(ngModel)]="username" placeholder="Enter your name"&gt;
+&lt;p&gt;You typed: &#123;&#123; username &#125;&#125;&lt;/p&gt;
+      </code></pre>
+      <p><strong>Component Example:</strong></p>
+      <pre ngNonBindable><code>
+export class AppComponent &#123;
+  username = '';
+&#125;
+      </code></pre>
+      <p>👉 Two-way binding uses <code>[( )]</code> (banana in a box syntax) to keep input fields and component properties in sync.</p>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Data Binding</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is data binding in Angular?</strong>
+          <p class="answer">Data binding is the mechanism that connects the component class and the template, enabling dynamic updates between UI and logic.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is interpolation in Angular?</strong>
+          <p class="answer">Interpolation uses <code>&#123; &#123; &#125; &#125;</code> to display component data inside the template.</p>
+        </li>
+        <li>
+          <strong class="question-title">How does property binding differ from attribute binding?</strong>
+          <p class="answer">Property binding updates DOM properties (dynamic), while attribute binding sets HTML attributes (static).</p>
+        </li>
+        <li>
+          <strong class="question-title">What is event binding in Angular?</strong>
+          <p class="answer">Event binding uses <code>( )</code> to respond to user actions like clicks, key presses, or mouse movements.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is two-way data binding?</strong>
+          <p class="answer">Two-way binding (<code>[(ngModel)]</code>) keeps component properties and form inputs in sync both ways.</p>
+        </li>
+        <li>
+          <strong class="question-title">Which module is required for two-way data binding?</strong>
+          <p class="answer">The <code>FormsModule</code> must be imported in the module to use <code>[(ngModel)]</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can interpolation be used inside attributes?</strong>
+          <p class="answer">Yes, e.g., <code>&lt;img src="&#123; &#123; imageUrl &#125; &#125;"&gt;</code>, but property binding <code>[src]</code> is preferred.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between (click) and (ngSubmit)?</strong>
+          <p class="answer">Both are event bindings, but <code>(ngSubmit)</code> is used with forms, while <code>(click)</code> is used for button clicks.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we use two-way binding without ngModel?</strong>
+          <p class="answer">Yes, but it requires combining property and event binding manually instead of using <code>[(ngModel)]</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the syntax difference between one-way and two-way binding?</strong>
+          <p class="answer">One-way uses <code>[ ]</code> or <code>( )</code>, while two-way uses <code>[( )]</code>.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we bind to custom component properties?</strong>
+          <p class="answer">Yes, using <code>&#64;Input()</code> for property binding and <code>&#64;Output()</code> for event binding.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the "banana in a box" syntax?</strong>
+          <p class="answer">It refers to <code>[( )]</code>, the syntax for two-way binding in Angular.</p>
+        </li>
+        <li>
+          <strong class="question-title">Why prefer property binding over interpolation for attributes?</strong>
+          <p class="answer">Property binding ensures the DOM updates dynamically, while interpolation works only with string values.</p>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular handle change detection in bindings?</strong>
+          <p class="answer">Angular’s change detection checks component properties and updates the template when values change.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we bind multiple events to the same element?</strong>
+          <p class="answer">Yes, you can bind multiple events like <code>(click)</code>, <code>(mouseover)</code> on the same element.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

@@ -1,1 +1,227 @@
-<p>templates-forms works!</p>
+<div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="angular-architecture">
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() == 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() != 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+
+    <!-- Enhanced Header Section -->
+    <div class="header">
+    <p>
+        <span class="question">What:</span> In Angular,
+        <strong>template-driven forms</strong> are forms created mainly in the
+        <strong>HTML template</strong> using directives like
+        <code>ngModel</code> and <code>ngForm</code>. They provide a
+        <strong>simple and declarative approach</strong> to handle form inputs,
+        track user interactions, and apply validation rules directly in the template
+        without much boilerplate code in the component class.
+    </p>
+
+      <p>
+        <span class="question">Why:</span> Template-driven forms are simple and
+        declarative, making them ideal for smaller applications and quick form
+        setups while still supporting validation and two-way data binding.
+      </p>
+
+      <p>
+        <span class="question">Where:</span> Useful when building
+        <strong>login pages</strong>, <strong>registration forms</strong>, or
+        any <strong>data entry forms</strong> in Angular applications.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <!-- Step 1: Template-Driven Form Basics -->
+    <div class="step">
+      <h3>📄 Template-Driven Form Example</h3>
+      <pre ngNonBindable><code>
+&lt;form #userForm="ngForm" (ngSubmit)="onSubmit(userForm)"&gt;
+  &lt;label&gt;Name:&lt;/label&gt;
+  &lt;input type="text" name="name" [(ngModel)]="user.name" required /&gt;
+
+  &lt;label&gt;Email:&lt;/label&gt;
+  &lt;input type="email" name="email" [(ngModel)]="user.email" required email /&gt;
+
+  &lt;label&gt;Password:&lt;/label&gt;
+  &lt;input type="password" name="password" [(ngModel)]="user.password" minlength="6" /&gt;
+
+  &lt;button type="submit" [disabled]="!userForm.valid"&gt;Submit&lt;/button&gt;
+&lt;/form&gt;
+</code></pre>
+
+      <p><strong>✔️ Features:</strong></p>
+      <ul>
+        <li>Two-way binding using <code>[(ngModel)]</code></li>
+        <li>Form validation (required, email, minlength)</li>
+        <li>Form submission handled with <code>(ngSubmit)</code></li>
+      </ul>
+    </div>
+
+    <!-- Step 2: Component Handling -->
+    <div class="step">
+      <h3>⚙️ Handling Form Data in Component</h3>
+      <pre ngNonBindable><code>
+import &#123; Component &#125; from '&#64;angular/core';
+
+&#64;Component(&#123;
+  selector: 'app-user-form',
+  templateUrl: './user-form.component.html'
+&#125;)
+export class UserFormComponent &#123;
+  user = &#123; name: '', email: '', password: '' &#125;;
+
+  onSubmit(form: any) &#123;
+    console.log('Form Data:', form.value);
+  &#125;
+&#125;
+</code></pre>
+    </div>
+
+  <!-- Step 3: Validation Messages + Control States -->
+<div class="step">
+  <h3>✅ Validation with Error Messages & Control States</h3>
+  <pre ngNonBindable><code>
+&lt;!-- Username with multiple validators --&gt;
+&lt;input
+  type="text"
+  name="username"
+  [(ngModel)]="user.username"
+  #usernameCtrl="ngModel"
+  required
+  minlength="3"
+  maxlength="15"
+  pattern="^[a-zA-Z0-9_]+$"
+/&gt;
+
+&lt;!-- Error Messages --&gt;
+&lt;div *ngIf="usernameCtrl.invalid && (usernameCtrl.dirty || usernameCtrl.touched)"&gt;
+  &lt;small *ngIf="usernameCtrl.errors?.['required']"&gt;Username is required&lt;/small&gt;
+  &lt;small *ngIf="usernameCtrl.errors?.['minlength']"&gt;
+    Minimum {{ usernameCtrl.errors?.['minlength'].requiredLength }} characters required
+  &lt;/small&gt;
+  &lt;small *ngIf="usernameCtrl.errors?.['maxlength']"&gt;
+    Maximum {{ usernameCtrl.errors?.['maxlength'].requiredLength }} characters allowed
+  &lt;/small&gt;
+  &lt;small *ngIf="usernameCtrl.errors?.['pattern']"&gt;
+    Only letters, numbers, and underscores are allowed
+  &lt;/small&gt;
+&lt;/div&gt;
+
+&lt;!-- Show Control States for Debugging --&gt;
+&lt;div class="debug"&gt;
+  &lt;p&gt;Touched: {{ usernameCtrl.touched }}&lt;/p&gt;
+  &lt;p&gt;Untouched: {{ usernameCtrl.untouched }}&lt;/p&gt;
+  &lt;p&gt;Dirty: {{ usernameCtrl.dirty }}&lt;/p&gt;
+  &lt;p&gt;Pristine: {{ usernameCtrl.pristine }}&lt;/p&gt;
+  &lt;p&gt;Valid: {{ usernameCtrl.valid }}&lt;/p&gt;
+  &lt;p&gt;Invalid: {{ usernameCtrl.invalid }}&lt;/p&gt;
+  &lt;p&gt;Pending: {{ usernameCtrl.pending }}&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+  <p>
+    Angular form controls track multiple states:
+  </p>
+  <ul>
+    <li><code>touched</code> / <code>untouched</code> → whether the field was blurred</li>
+    <li><code>dirty</code> / <code>pristine</code> → whether the field value was changed</li>
+    <li><code>valid</code> / <code>invalid</code> → based on applied validators</li>
+    <li><code>pending</code> → waiting for async validation</li>
+  </ul>
+</div>
+
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Templates & Template-Driven Forms</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is a template-driven form in Angular?</strong>
+          <p class="answer">It is a form approach where form logic, structure, and validation are defined directly in the HTML template using Angular directives.</p>
+          <span class="category">Basics</span>
+        </li>
+        <li>
+          <strong class="question-title">Which directives are commonly used in template-driven forms?</strong>
+          <p class="answer"><code>ngModel</code>, <code>ngForm</code>, and validation directives like <code>required</code>, <code>email</code>, and <code>minlength</code>.</p>
+          <span class="category">Directives</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you achieve two-way data binding in template-driven forms?</strong>
+          <p class="answer">By using <code>[(ngModel)]</code> on input elements, which binds form fields to component properties.</p>
+          <span class="category">Data Binding</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the role of the ngForm directive?</strong>
+          <p class="answer">It tracks the form state, including validity, touched/untouched, dirty/pristine, and provides access via a local template variable.</p>
+          <span class="category">Core</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you disable a submit button until the form is valid?</strong>
+          <p class="answer">Bind the button’s <code>[disabled]</code> property to <code>!form.valid</code>.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between template-driven and reactive forms?</strong>
+          <p class="answer">Template-driven forms define form logic in HTML templates, while reactive forms use TypeScript and <code>FormControl</code>/<code>FormGroup</code> classes.</p>
+          <span class="category">Comparison</span>
+        </li>
+        <li>
+          <strong class="question-title">Can you use custom validators in template-driven forms?</strong>
+          <p class="answer">Yes, by creating directive-based custom validators and applying them to form fields.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the purpose of the local template reference variable (#var)?</strong>
+          <p class="answer">It provides access to the form or form control instance in the template for validation checks.</p>
+          <span class="category">Template</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you get form values in the component?</strong>
+          <p class="answer">Pass the form object to the <code>(ngSubmit)</code> method and access its <code>form.value</code>.</p>
+          <span class="category">Data Handling</span>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular track validity of individual fields?</strong>
+          <p class="answer">Through control states like <code>valid</code>, <code>invalid</code>, <code>touched</code>, and <code>dirty</code>.</p>
+          <span class="category">Validation</span>
+        </li>
+        <li>
+          <strong class="question-title">What are the advantages of template-driven forms?</strong>
+          <p class="answer">They are simple, require less boilerplate, and are easier to use for small to medium forms.</p>
+          <span class="category">Advantages</span>
+        </li>
+        <li>
+          <strong class="question-title">What are the limitations of template-driven forms?</strong>
+          <p class="answer">Not suitable for large or dynamic forms as logic is spread across templates instead of centralized in TypeScript.</p>
+          <span class="category">Limitations</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you reset a template-driven form?</strong>
+          <p class="answer">By calling <code>form.reset()</code> on the form instance.</p>
+          <span class="category">Forms</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you apply CSS classes based on control state?</strong>
+          <p class="answer">Angular automatically applies classes like <code>ng-valid</code>, <code>ng-invalid</code>, <code>ng-touched</code>, which can be styled in CSS.</p>
+          <span class="category">Styling</span>
+        </li>
+        <li>
+          <strong class="question-title">When should you use template-driven forms over reactive forms?</strong>
+          <p class="answer">Use template-driven forms for simple, small-scale forms. Use reactive forms for complex, dynamic, or large forms requiring fine-grained control.</p>
+          <span class="category">Best Practices</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

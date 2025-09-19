@@ -1,1 +1,163 @@
-<p>components-decorators works!</p>
+<div class="overall-wrapper" appMaximize #componentsDecorators="maximize" id="components-decorators">
+  <div class="wrapper">
+    <img class="swap" *ngIf="componentsDecorators.checkfullscreen() == 'hide'" (click)="componentsDecorators.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="componentsDecorators.checkfullscreen() != 'hide'" (click)="componentsDecorators.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <!-- Header Section -->
+    <div class="header">
+      <p><span class="question">What:</span> Learn <strong>Angular Components</strong> and <strong>Decorators</strong>, which are the building blocks of Angular applications.</p>
+
+      <p><span class="question">Why:</span> Components define UI and logic, while decorators provide metadata to Angular so it understands how to process classes, methods, and properties.</p>
+
+      <p><span class="question">Where:</span> Used in every Angular project — from defining UI screens with components to configuring services, directives, and dependency injection using decorators.</p>
+    </div>
+  </div>
+
+  <div class="examples">
+
+    <!-- Step 1: Component Basics -->
+    <div class="step">
+      <h3>📦 Step 1 — Create a Component</h3>
+      <pre ngNonBindable><code>
+# Generate a new component
+ng generate component user-profile
+      </code></pre>
+
+      <p><strong>Example: user-profile.component.ts</strong></p>
+      <pre ngNonBindable><code>
+import &#123; Component &#125; from '&#64;angular/core';
+
+&#64;Component(&#123;
+  selector: 'app-user-profile',
+  templateUrl: './user-profile.component.html',
+  styleUrls: ['./user-profile.component.scss']
+&#125;)
+export class UserProfileComponent &#123;
+  name = 'Sakthivel';
+  role = 'Full Stack Developer';
+&#125;
+      </code></pre>
+
+      <p><strong>Example: user-profile.component.html</strong></p>
+      <pre ngNonBindable><code>
+<h2>User Profile</h2>
+<p>Name: &#123;&#123; name &#125;&#125;</p>
+<p>Role: &#123;&#123; role &#125;&#125;</p>
+      </code></pre>
+    </div>
+
+    <!-- Step 2: Decorators Overview -->
+    <div class="step">
+      <h3>📋 Step 2 — Important Angular Decorators</h3>
+      <ul>
+        <li><strong>&#64;Component</strong> → Defines metadata for a component (selector, template, styles)</li>
+        <li><strong>&#64;NgModule</strong> → Defines metadata for a module (declarations, imports, providers)</li>
+        <li><strong>&#64;Injectable</strong> → Marks a service class for Dependency Injection</li>
+        <li><strong>&#64;Input</strong> → Passes data from parent to child component</li>
+        <li><strong>&#64;Output</strong> → Sends events/data from child to parent</li>
+        <li><strong>&#64;Directive</strong> → Defines custom attribute or structural directives</li>
+        <li><strong>&#64;Pipe</strong> → Defines a custom data transformation pipe</li>
+        <li><strong>&#64;HostListener</strong> → Listens to DOM events on the host element</li>
+        <li><strong>&#64;HostBinding</strong> → Binds a property to the host element</li>
+      </ul>
+    </div>
+
+    <!-- Step 3: Input and Output Example -->
+    <div class="step">
+      <h3>🔄 Step 3 — Input & Output Example</h3>
+      <p><strong>Child Component (child.component.ts)</strong></p>
+      <pre ngNonBindable><code>
+import &#123; Component, Input, Output, EventEmitter &#125; from '&#64;angular/core';
+
+&#64;Component(&#123;
+  selector: 'app-child',
+  template: `
+    <h3>Hello &#123;&#123; childName &#125;&#125;</h3>
+    &lt;button (click)="sendMessage()"&gt;Send to Parent&lt;/button&gt;
+  `
+&#125;)
+export class ChildComponent &#123;
+  &#64;Input() childName!: string;
+  &#64;Output() messageEvent = new EventEmitter&lt;string&gt;();
+
+  sendMessage() &#123;
+    this.messageEvent.emit('Message from Child Component');
+  &#125;
+&#125;
+      </code></pre>
+
+      <p><strong>Parent Component (parent.component.html)</strong></p>
+      <pre ngNonBindable><code>
+&lt;app-child [childName]="'Sakthi'" (messageEvent)="receiveMessage($event)"&gt;&lt;/app-child&gt;
+<p>Message from child: &#123;&#123; message &#125;&#125;</p>
+      </code></pre>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>15 Important Interview Questions on Components & Decorators</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is a Component in Angular?</strong>
+          <p class="answer">A component controls a portion of the UI. It is defined using the <code>&#64;Component</code> decorator and contains a TypeScript class, HTML template, and optional styles.</p>
+        </li>
+        <li>
+          <strong class="question-title">What does the &#64;Component decorator do?</strong>
+          <p class="answer">The <code>&#64;Component</code> decorator provides metadata such as <code>selector</code>, <code>templateUrl</code>, and <code>styleUrls</code>, which tells Angular how to create and use the component.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between &#64;NgModule and &#64;Component?</strong>
+          <p class="answer">&#64;NgModule is used for modules (groups of components, directives, services), while &#64;Component is used for individual UI components.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is &#64;Injectable used for?</strong>
+          <p class="answer">&#64;Injectable marks a service as available for Dependency Injection so it can be provided in modules or components.</p>
+        </li>
+        <li>
+          <strong class="question-title">How do &#64;Input and &#64;Output decorators work?</strong>
+          <p class="answer">&#64;Input allows data flow from parent to child, while &#64;Output uses EventEmitter to send data from child to parent.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between &#64;Directive and &#64;Component?</strong>
+          <p class="answer">&#64;Directive creates custom attributes/behaviors without a template, while &#64;Component is a directive with a template.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is &#64;Pipe decorator used for?</strong>
+          <p class="answer">It defines a custom pipe that transforms displayed data, e.g., date formatting, string manipulation.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is &#64;HostListener?</strong>
+          <p class="answer">&#64;HostListener listens for DOM events on the host element and triggers a method inside the directive/component.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is &#64;HostBinding?</strong>
+          <p class="answer">&#64;HostBinding binds a property in the directive/component to a host element property or class.</p>
+        </li>
+        <li>
+          <strong class="question-title">What are lifecycle hooks in Components?</strong>
+          <p class="answer">Lifecycle hooks like <code>ngOnInit</code>, <code>ngOnChanges</code>, <code>ngOnDestroy</code> allow execution of code at specific stages of a component’s life.</p>
+        </li>
+        <li>
+          <strong class="question-title">Can we use multiple decorators on the same class?</strong>
+          <p class="answer">Yes, but typically one main decorator is used per class, e.g., &#64;Component for components, &#64;Injectable for services.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is a selector in &#64;Component?</strong>
+          <p class="answer">The selector defines the custom HTML tag used to embed the component in templates.</p>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular detect changes in &#64;Input properties?</strong>
+          <p class="answer">Angular uses its change detection mechanism to track updates in bound properties, triggering re-rendering as needed.</p>
+        </li>
+        <li>
+          <strong class="question-title">What is the role of metadata in decorators?</strong>
+          <p class="answer">Metadata tells Angular how to process a class, e.g., what template to use for a component or what services to inject in a module.</p>
+        </li>
+        <li>
+          <strong class="question-title">Give an example of a custom decorator in Angular.</strong>
+          <p class="answer">You can create a custom decorator using TypeScript functions to modify classes, e.g., logging class creation or enforcing property rules.</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

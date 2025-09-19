@@ -77,6 +77,17 @@ ng generate service services/api
   </div>
 </div>
 
+<div class="step">
+    <h2>step 1 - environment config</h2>
+    <pre><code>
+  <span class="keyword">export</span>  const environment = &#123;
+       <span class="keyword">production</span>:  false,
+       <span class="keyword">url</span>: <span class="string">'http://localhost:3000/api'</span>,
+ &#125;;
+    </code></pre>
+
+</div>
+
             <div class="step">
   <h2>Step 2 — API Service and Endpoints</h2>
   <p><strong>📌 api.service.ts</strong> — CRUD operations</p>
@@ -117,6 +128,25 @@ constructor(private httpClient: HttpClient) &#123; &#125;
 <span class="keyword">export enum</span> ApiList &#123;
   getFinancialCardData = <span class="string">'/api/financial-card'</span>
 &#125;
+</code></pre>
+
+  <p><strong>📌utilityService.ts</strong> —  Function used in API service to convert json to query string for headers</p>
+  <pre><code>
+ <span class="keyword">import</span> &#123; Injectable &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core';</span>  
+  &#64;<span class="keyword">Injectable</span>(&#123;
+      providedIn:  <span class="string">'root'</span>
+  &#125;)
+ <span class="keyword">export</span> class <span class="string">UtilityService</span> &#123;
+   <span class="keyword">jsonToQueryString</span>(json: any) &#123;
+    <span class="number">if(json)</span> &#123;
+      return '?' +  Object.keys(json).map(function(key) &#123;
+         <span class="keyword">return</span> <span class="string"> encodeURIComponent(key) + '=' +encodeURIComponent(json[key]);</span>
+      &#125;).join('&'); 
+     &#125; <span class="number">else</span> &#123;
+     <span class="keyword">return ''</span> 
+    &#125;
+  &#125;
+&#125; 
 </code></pre>
 
   <div class="step-description">
