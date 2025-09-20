@@ -1,0 +1,401 @@
+<div class="overall-wrapper" appMaximize #javascriptMathConcepts="maximize" id="javascriptMathConcepts">
+  <div class="wrapper">
+       <img class="swap" *ngIf="javascriptMathConcepts.checkfullscreen() == 'hide'" (click)="javascriptMathConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="javascriptMathConcepts.checkfullscreen() != 'hide'" (click)="javascriptMathConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          In JavaScript, <strong>Math Concepts</strong> are built-in mathematical functions and constants
+          that help you perform complex calculations, generate random numbers, and work with numerical data.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          They help you <strong>perform precise calculations</strong>, handle statistical operations,
+          and create dynamic numerical behaviors in web applications without external libraries.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          You can use them in <strong>games, animations, data analysis,</strong>
+          financial applications, or any JavaScript project requiring mathematical operations.
+        </p>
+      </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Math Object Methods</h2>
+       <p>Let's explore fundamental Math object methods for common calculations:</p>
+       
+       <h3>Essential Math Methods</h3>
+       <pre><code><span class="comment">// Basic mathematical operations</span>
+<span class="keyword">const</span> numbers = [2.7, -4.3, 16, 9];
+
+<span class="comment">// Rounding methods</span>
+<span class="keyword">console.log</span>(<span class="type">Math.round</span>(2.7));    <span class="comment">// 3</span>
+<span class="keyword">console.log</span>(<span class="type">Math.floor</span>(2.7));    <span class="comment">// 2</span>
+<span class="keyword">console.log</span>(<span class="type">Math.ceil</span>(2.3));     <span class="comment">// 3</span>
+<span class="keyword">console.log</span>(<span class="type">Math.trunc</span>(2.7));    <span class="comment">// 2</span>
+
+<span class="comment">// Absolute and power operations</span>
+<span class="keyword">console.log</span>(<span class="type">Math.abs</span>(-4.3));     <span class="comment">// 4.3</span>
+<span class="keyword">console.log</span>(<span class="type">Math.pow</span>(2, 3));     <span class="comment">// 8</span>
+<span class="keyword">console.log</span>(<span class="type">Math.sqrt</span>(16));      <span class="comment">// 4</span>
+<span class="keyword">console.log</span>(<span class="type">Math.cbrt</span>(8));       <span class="comment">// 2</span>
+</code></pre>
+
+       <h3>Key Math Method Categories</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Rounding Methods</h4>
+           <p>round(), floor(), ceil(), trunc() for number precision</p>
+         </div>
+         <div class="feature-card">
+           <h4>Power Operations</h4>
+           <p>pow(), sqrt(), cbrt() for exponential calculations</p>
+         </div>
+         <div class="feature-card">
+           <h4>Min/Max Functions</h4>
+           <p>min(), max() for finding extreme values</p>
+         </div>
+         <div class="feature-card">
+           <h4>Trigonometric</h4>
+           <p>sin(), cos(), tan() for angle calculations</p>
+         </div>
+       </div>
+     </div>
+
+     <div class="step">
+       <h2>2. Advanced Mathematical Operations</h2>
+       <p>This example demonstrates advanced math concepts for complex calculations.</p>
+
+       <h3>Step 1: Trigonometric Functions</h3>
+       <p>Functions for working with angles and circles:</p>
+       <pre><code><span class="comment">// Trigonometric calculations</span>
+<span class="keyword">function</span> <span class="type">calculateTriangleProperties</span>(angle) &#123;
+  <span class="keyword">const</span> radians = angle * (<span class="type">Math.PI</span> / 180);
+  
+  <span class="keyword">return</span> &#123;
+    sine: <span class="type">Math.sin</span>(radians),
+    cosine: <span class="type">Math.cos</span>(radians),
+    tangent: <span class="type">Math.tan</span>(radians),
+    arcSine: <span class="type">Math.asin</span>(<span class="type">Math.sin</span>(radians)) * (180 / <span class="type">Math.PI</span>),
+    arcCosine: <span class="type">Math.acos</span>(<span class="type">Math.cos</span>(radians)) * (180 / <span class="type">Math.PI</span>)
+  &#125;;
+&#125;
+
+<span class="keyword">console.log</span>(<span class="type">calculateTriangleProperties</span>(45));
+</code></pre>
+
+       <h3>Step 2: Logarithmic Functions</h3>
+       <p>Functions for exponential growth and decay calculations:</p>
+       <pre><code><span class="comment">// Logarithmic operations</span>
+<span class="keyword">function</span> <span class="type">calculateGrowth</span>(principal, rate, time) &#123;
+  <span class="keyword">const</span> naturalLog = <span class="type">Math.log</span>(principal);
+  <span class="keyword">const</span> log10 = <span class="type">Math.log10</span>(principal);
+  <span class="keyword">const</span> log2 = <span class="type">Math.log2</span>(principal);
+  
+  <span class="comment">// Compound interest using e</span>
+  <span class="keyword">const</span> continuousCompound = principal * <span class="type">Math.exp</span>(rate * time);
+  
+  <span class="keyword">return</span> &#123;
+    naturalLog,
+    log10,
+    log2,
+    continuousCompound,
+    eulerNumber: <span class="type">Math.E</span>
+  &#125;;
+&#125;
+
+<span class="keyword">console.log</span>(<span class="type">calculateGrowth</span>(1000, 0.05, 10));
+</code></pre>
+
+       <h3>Step 3: Random Number Generation</h3>
+       <p>Generate various types of random numbers for applications:</p>
+       <pre><code><span class="comment">// Random number utilities</span>
+<span class="keyword">class</span> <span class="type">RandomGenerator</span> &#123;
+  <span class="comment">// Generate random integer between min and max (inclusive)</span>
+  <span class="keyword">static</span> <span class="type">randomInt</span>(min, max) &#123;
+    <span class="keyword">return</span> <span class="type">Math.floor</span>(<span class="type">Math.random</span>() * (max - min + 1)) + min;
+  &#125;
+
+  <span class="comment">// Generate random float between min and max</span>
+  <span class="keyword">static</span> <span class="type">randomFloat</span>(min, max) &#123;
+    <span class="keyword">return</span> <span class="type">Math.random</span>() * (max - min) + min;
+  &#125;
+
+  <span class="comment">// Generate random boolean</span>
+  <span class="keyword">static</span> <span class="type">randomBoolean</span>() &#123;
+    <span class="keyword">return</span> <span class="type">Math.random</span>() >= 0.5;
+  &#125;
+
+  <span class="comment">// Pick random element from array</span>
+  <span class="keyword">static</span> <span class="type">randomChoice</span>(array) &#123;
+    <span class="keyword">return</span> array[<span class="type">Math.floor</span>(<span class="type">Math.random</span>() * array.length)];
+  &#125;
+&#125;
+
+<span class="keyword">console.log</span>(<span class="type">RandomGenerator.randomInt</span>(1, 10));
+<span class="keyword">console.log</span>(<span class="type">RandomGenerator.randomFloat</span>(1.5, 5.8));
+</code></pre>
+
+       <h3>Step 4: Statistical Calculations</h3>
+       <p>Functions for analyzing numerical data sets:</p>
+       <pre><code><span class="comment">// Statistical utility functions</span>
+<span class="keyword">class</span> <span class="type">Statistics</span> &#123;
+  <span class="keyword">static</span> <span class="type">mean</span>(numbers) &#123;
+    <span class="keyword">return</span> numbers.reduce((sum, num) => sum + num, 0) / numbers.length;
+  &#125;
+
+  <span class="keyword">static</span> <span class="type">median</span>(numbers) &#123;
+    <span class="keyword">const</span> sorted = [...numbers].sort((a, b) => a - b);
+    <span class="keyword">const</span> middle = <span class="type">Math.floor</span>(sorted.length / 2);
+    <span class="keyword">return</span> sorted.length % 2 === 0 
+      ? (sorted[middle - 1] + sorted[middle]) / 2
+      : sorted[middle];
+  &#125;
+
+  <span class="keyword">static</span> <span class="type">standardDeviation</span>(numbers) &#123;
+    <span class="keyword">const</span> avg = <span class="keyword">this</span>.mean(numbers);
+    <span class="keyword">const</span> squaredDiffs = numbers.map(num => <span class="type">Math.pow</span>(num - avg, 2));
+    <span class="keyword">return</span> <span class="type">Math.sqrt</span>(<span class="keyword">this</span>.mean(squaredDiffs));
+  &#125;
+&#125;
+
+<span class="keyword">const</span> data = [2, 4, 4, 4, 5, 5, 7, 9];
+<span class="keyword">console.log</span>(<span class="type">Statistics.mean</span>(data));
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Math object provides comprehensive mathematical operations.</li>
+         <li>Trigonometric functions work with radians, not degrees.</li>
+         <li>Random number generation enables dynamic behaviors.</li>
+         <li>Statistical functions help analyze data patterns.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. Practical Math Applications</h2>
+       <p>Real-world examples of JavaScript math concepts in action:</p>
+
+       <h3>Game Physics Calculations</h3>
+       <p>Calculate movement, collision, and physics in games:</p>
+       <pre><code><span class="comment">// Game physics utilities</span>
+<span class="keyword">class</span> <span class="type">GamePhysics</span> &#123;
+  <span class="comment">// Calculate distance between two points</span>
+  <span class="keyword">static</span> <span class="type">distance</span>(x1, y1, x2, y2) &#123;
+    <span class="keyword">return</span> <span class="type">Math.sqrt</span>(<span class="type">Math.pow</span>(x2 - x1, 2) + <span class="type">Math.pow</span>(y2 - y1, 2));
+  &#125;
+
+  <span class="comment">// Calculate angle between two points</span>
+  <span class="keyword">static</span> <span class="type">angle</span>(x1, y1, x2, y2) &#123;
+    <span class="keyword">return</span> <span class="type">Math.atan2</span>(y2 - y1, x2 - x1) * (180 / <span class="type">Math.PI</span>);
+  &#125;
+
+  <span class="comment">// Normalize value to range [0, 1]</span>
+  <span class="keyword">static</span> <span class="type">normalize</span>(value, min, max) &#123;
+    <span class="keyword">return</span> (value - min) / (max - min);
+  &#125;
+
+  <span class="comment">// Linear interpolation</span>
+  <span class="keyword">static</span> <span class="type">lerp</span>(start, end, t) &#123;
+    <span class="keyword">return</span> start * (1 - t) + end * t;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Financial Calculations</h3>
+       <p>Mathematical functions for financial applications:</p>
+       <pre><code><span class="comment">// Financial calculation utilities</span>
+<span class="keyword">class</span> <span class="type">FinancialMath</span> &#123;
+  <span class="comment">// Compound interest calculation</span>
+  <span class="keyword">static</span> <span class="type">compoundInterest</span>(principal, rate, time, frequency = 1) &#123;
+    <span class="keyword">return</span> principal * <span class="type">Math.pow</span>(1 + rate / frequency, frequency * time);
+  &#125;
+
+  <span class="comment">// Monthly payment for loans</span>
+  <span class="keyword">static</span> <span class="type">monthlyPayment</span>(principal, rate, months) &#123;
+    <span class="keyword">const</span> monthlyRate = rate / 12;
+    <span class="keyword">return</span> principal * (monthlyRate * <span class="type">Math.pow</span>(1 + monthlyRate, months)) 
+           / (<span class="type">Math.pow</span>(1 + monthlyRate, months) - 1);
+  &#125;
+
+  <span class="comment">// Present value calculation</span>
+  <span class="keyword">static</span> <span class="type">presentValue</span>(futureValue, rate, time) &#123;
+    <span class="keyword">return</span> futureValue / <span class="type">Math.pow</span>(1 + rate, time);
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Animation and Easing Functions</h3>
+       <p>Mathematical functions for smooth animations:</p>
+       <pre><code><span class="comment">// Animation easing functions</span>
+<span class="keyword">class</span> <span class="type">Easing</span> &#123;
+  <span class="comment">// Ease in quadratic</span>
+  <span class="keyword">static</span> <span class="type">easeInQuad</span>(t) &#123;
+    <span class="keyword">return</span> t * t;
+  &#125;
+
+  <span class="comment">// Ease out quadratic</span>
+  <span class="keyword">static</span> <span class="type">easeOutQuad</span>(t) &#123;
+    <span class="keyword">return</span> t * (2 - t);
+  &#125;
+
+  <span class="comment">// Sine wave animation</span>
+  <span class="keyword">static</span> <span class="type">sineWave</span>(time, amplitude = 1, frequency = 1, phase = 0) &#123;
+    <span class="keyword">return</span> amplitude * <span class="type">Math.sin</span>(2 * <span class="type">Math.PI</span> * frequency * time + phase);
+  &#125;
+
+  <span class="comment">// Bounce effect</span>
+  <span class="keyword">static</span> <span class="type">bounce</span>(t) &#123;
+    <span class="keyword">if</span> (t < 1/2.75) &#123;
+      <span class="keyword">return</span> 7.5625 * t * t;
+    &#125; <span class="keyword">else if</span> (t < 2/2.75) &#123;
+      <span class="keyword">return</span> 7.5625 * (t -= 1.5/2.75) * t + 0.75;
+    &#125; <span class="keyword">else if</span> (t < 2.5/2.75) &#123;
+      <span class="keyword">return</span> 7.5625 * (t -= 2.25/2.75) * t + 0.9375;
+    &#125; <span class="keyword">else</span> &#123;
+      <span class="keyword">return</span> 7.5625 * (t -= 2.625/2.75) * t + 0.984375;
+    &#125;
+  &#125;
+&#125;
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Math concepts enable realistic game physics and animations.</li>
+         <li>Financial calculations require precise mathematical operations.</li>
+         <li>Easing functions create natural motion effects.</li>
+         <li>Distance and angle calculations are fundamental for graphics.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Best Practices for JavaScript Math</h2>
+       <p>Organize and optimize mathematical operations for better performance:</p>
+       
+       <h3>Directory Structure</h3>
+       <pre><code><span class="comment">// Recommended project structure</span>
+project/
+├── src/
+│   ├── math/
+│   │   ├── basic/
+│   │   │   ├── arithmetic.js
+│   │   │   └── rounding.js
+│   │   ├── advanced/
+│   │   │   ├── trigonometry.js
+│   │   │   ├── statistics.js
+│   │   │   └── random.js
+│   │   ├── applications/
+│   │   │   ├── physics.js
+│   │   │   ├── financial.js
+│   │   │   └── animation.js
+│   │   └── utils/
+│   │       └── constants.js
+│   ├── index.js
+│   └── main.js
+</code></pre>
+
+       <h3>Best Practices</h3>
+       <div class="feature-grid">
+         <div class="feature-card">
+           <h4>Precision Handling</h4>
+           <p>Use parseFloat() and toFixed() for decimal precision</p>
+         </div>
+         <div class="feature-card">
+           <h4>Performance</h4>
+           <p>Cache expensive calculations like sqrt() and pow()</p>
+         </div>
+         <div class="feature-card">
+           <h4>Constants</h4>
+           <p>Use Math.PI, Math.E for mathematical constants</p>
+         </div>
+         <div class="feature-card">
+           <h4>Validation</h4>
+           <p>Check for NaN and Infinity in calculations</p>
+         </div>
+       </div>
+     </div>
+
+     <!-- <div class="interview-questions step">
+       <h2>15 Important Interview Questions on JavaScript Math Concepts</h2>
+       <ol class="question-list">
+         <li>
+           <strong class="question-title">What is the Math object in JavaScript?</strong>
+           <p class="answer">A built-in global object that provides mathematical constants and functions for numerical operations.</p>
+           <span class="category">Basics</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you generate a random integer between 1 and 10?</strong>
+           <p class="answer">Use Math.floor(Math.random() * 10) + 1 to get inclusive range.</p>
+           <span class="category">Random Numbers</span>
+         </li>
+         <li>
+           <strong class="question-title">What's the difference between Math.floor() and Math.ceil()?</strong>
+           <p class="answer">Math.floor() rounds down to nearest integer, Math.ceil() rounds up to nearest integer.</p>
+           <span class="category">Rounding</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you calculate the square root of a number?</strong>
+           <p class="answer">Use Math.sqrt(number) or Math.pow(number, 0.5) for square root calculation.</p>
+           <span class="category">Power Operations</span>
+         </li>
+         <li>
+           <strong class="question-title">What does Math.PI represent?</strong>
+           <p class="answer">It represents the mathematical constant π (pi), approximately 3.14159.</p>
+           <span class="category">Constants</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you find the maximum value in an array?</strong>
+           <p class="answer">Use Math.max(...array) with spread operator or Math.max.apply(null, array).</p>
+           <span class="category">Min/Max</span>
+         </li>
+         <li>
+           <strong class="question-title">What trigonometric functions does JavaScript provide?</strong>
+           <p class="answer">Math.sin(), Math.cos(), Math.tan(), and their inverse functions asin(), acos(), atan().</p>
+           <span class="category">Trigonometry</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you handle floating-point precision issues?</strong>
+           <p class="answer">Use parseFloat(num.toFixed(n)) or Number.EPSILON for comparison operations.</p>
+           <span class="category">Precision</span>
+         </li>
+         <li>
+           <strong class="question-title">What's the purpose of Math.abs()?</strong>
+           <p class="answer">Returns the absolute value of a number, removing the negative sign if present.</p>
+           <span class="category">Basic Operations</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you calculate compound interest in JavaScript?</strong>
+           <p class="answer">Use principal * Math.pow(1 + rate/frequency, frequency * time) formula.</p>
+           <span class="category">Applications</span>
+         </li>
+         <li>
+           <strong class="question-title">What does Math.random() return?</strong>
+           <p class="answer">Returns a pseudo-random number between 0 (inclusive) and 1 (exclusive).</p>
+           <span class="category">Random Numbers</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you convert degrees to radians?</strong>
+           <p class="answer">Multiply degrees by Math.PI / 180 to convert to radians.</p>
+           <span class="category">Trigonometry</span>
+         </li>
+         <li>
+           <strong class="question-title">What is Math.log() used for?</strong>
+           <p class="answer">Calculates the natural logarithm (base e) of a number.</p>
+           <span class="category">Logarithms</span>
+         </li>
+         <li>
+           <strong class="question-title">How do you calculate distance between two points?</strong>
+           <p class="answer">Use Math.sqrt(Math.pow(x2-x1, 2) + Math.pow(y2-y1, 2)) - the Pythagorean theorem.</p>
+           <span class="category">Applications</span>
+         </li>
+         <li>
+           <strong class="question-title">Why avoid frequent Math.pow() calls in animations?</strong>
+           <p class="answer">Math.pow() is computationally expensive; cache results or use simpler multiplication for better performance.</p>
+           <span class="category">Performance</span>
+         </li>
+       </ol>
+     </div> -->
+   </div>
+</div>

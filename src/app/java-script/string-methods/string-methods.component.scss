@@ -56,53 +56,7 @@ p, h1, h2, h3, h4, h5, h6 {
     &:first-child {
       margin-top: 0;
     }
-    }
-
-    .flow-step {
-            display: inline-block;
-            background: #3498db;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            margin: 0.25rem;
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .arrow {
-            font-size: 1.5rem;
-            color: #3498db;
-            margin: 0 1rem;
-        }
-
-        /* Pro Tip Styling */
-        .pro-tip {
-            background: #e8f5e8;
-            border: 1px solid #c3e6cb;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-top: 1rem;
-            color: #155724;
-        }
-
-        .pro-tip strong {
-            color: #0d4a1a;
-        }
-
-        /* Step Number Styling */
-        .step-number {
-            background: #3498db;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 1rem;
-            font-size: 1rem;
-        }
+  }
 
   .step {
     background: white;
@@ -146,14 +100,14 @@ p, h1, h2, h3, h4, h5, h6 {
 
       code {
         background: transparent;
-        color: white;
+        color: inherit;
         padding: 0;
         border-radius: 0;
         font-size: inherit;
         
         // SQL syntax highlighting
         .keyword {
-          color: #d06fd7;
+          color: #e74c3c;
           font-weight: bold;
         }
         
@@ -166,7 +120,7 @@ p, h1, h2, h3, h4, h5, h6 {
         }
         
         .comment {
-          color: #20d2df;
+          color: #95a5a6;
           font-style: italic;
         }
       }
@@ -433,6 +387,58 @@ p, h1, h2, h3, h4, h5, h6 {
         border-bottom: 1px solid #e9ecef;
       }
     }
+
+    td {
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #34495e;
+      vertical-align: middle;
+
+      .method-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 15px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        
+        &.get {
+          background-color: #2ecc71;
+          color: white;
+        }
+
+        &.post {
+          background-color: #3498db;
+          color: white;
+        }
+
+        &.put {
+          background-color: #f1c40f;
+          color: #2c3e50;
+        }
+
+        &.delete {
+          background-color: #e74c3c;
+          color: white;
+        }
+      }
+
+      &:nth-child(2) { // Route column
+        font-family: 'Consolas', monospace;
+        color: #2c3e50;
+        font-weight: 500;
+      }
+
+      &:nth-child(3) { // Handler Method column
+        font-family: 'Consolas', monospace;
+        color: #8e44ad;
+      }
+
+      &:last-child { // Description column
+        color: #7f8c8d;
+        font-style: italic;
+      }
+    }
   }
 
   // Responsive styles
@@ -525,44 +531,4 @@ html {
 
 .mt-4 {
   margin-top: 1.5rem;
-}
-
-
-// Step descriptions styling
-.step-description {
-  margin: 1rem 0 2rem;
-  padding: 1rem;
-  background: #fcfaf8;
-  border-left: 4px solid #3498db;
-  border-radius: 0 8px 8px 0;
-  
-  .title {
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-  }
-  
-  .details {
-    color: #34495e;
-    font-size: 0.95rem;
-    line-height: 1.6;
-  }
-
-  .key-points {
-    margin-top: 0.75rem;
-    padding-left: 1.25rem;
-    
-    li {
-      color: #576574;
-      margin: 0.4rem 0;
-      position: relative;
-      
-      &::before {
-        content: "→";
-        position: absolute;
-        left: -1.25rem;
-        color: #3498db;
-      }
-    }
-  }
 }

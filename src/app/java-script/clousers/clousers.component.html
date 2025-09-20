@@ -1,1 +1,139 @@
-<p>clousers works!</p>
+<div class="overall-wrapper" appMaximize #javascriptClosures="maximize" id="javascriptClosures">
+  <div class="wrapper">
+       <img class="swap" *ngIf="javascriptClosures.checkfullscreen() == 'hide'" (click)="javascriptClosures.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="javascriptClosures.checkfullscreen() != 'hide'" (click)="javascriptClosures.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          In JavaScript, <strong>Closures</strong> are functions that have access to variables from their <strong>enclosing scope</strong> even after the outer function has executed.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          Closures help <strong>preserve state, create private variables,</strong> and enable function factories or modular code patterns.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          They are used in <strong>callbacks, event handlers, data encapsulation, functional programming</strong>, and anywhere you need persistent state.
+        </p>
+      </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic Closure Example</h2>
+       <p>Understanding how an inner function accesses variables from its outer function:</p>
+       
+       <pre><code><span class="comment">// Outer function</span>
+<span class="keyword">function</span> greet(name) &#123;
+  <span class="keyword">const</span> greeting = 'Hello';
+  
+  <span class="keyword">return</span> <span class="keyword">function</span>() &#123;
+    <span class="keyword">console.log</span>(greeting + ', ' + name + '!');
+  &#125;;
+&#125;
+
+<span class="keyword">const</span> greetAlice = greet('Alice');
+greetAlice(); <span class="comment">// Hello, Alice!</span>
+       </code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Inner function remembers variables from outer scope.</li>
+         <li>Outer function variables are not lost after execution.</li>
+         <li>Closures are created whenever a function is defined inside another function.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>2. Using Closures for Private Variables</h2>
+       <p>Encapsulating data to prevent direct access:</p>
+
+       <pre><code><span class="comment">// Counter using closure</span>
+<span class="keyword">function</span> createCounter() &#123;
+  <span class="keyword">let</span> count = 0;
+  
+  <span class="keyword">return</span> &#123;
+    increment: <span class="keyword">function</span>() &#123; count++; return count; &#125;,
+    decrement: <span class="keyword">function</span>() &#123; count--; return count; &#125;,
+    getValue: <span class="keyword">function</span>() &#123; return count; &#125;
+  &#125;;
+&#125;
+
+<span class="keyword">const</span> counter = createCounter();
+<span class="keyword">console.log</span>(counter.increment()); <span class="comment">// 1</span>
+<span class="keyword">console.log</span>(counter.increment()); <span class="comment">// 2</span>
+<span class="keyword">console.log</span>(counter.getValue());   <span class="comment">// 2</span>
+       </code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Count variable is private and cannot be accessed directly.</li>
+         <li>Only the inner functions can modify or read the value.</li>
+         <li>Closures enable data encapsulation similar to private properties in classes.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. Closures in Function Factories</h2>
+       <p>Creating reusable functions with customized behavior:</p>
+
+       <pre><code><span class="comment">// Multiplier factory</span>
+<span class="keyword">function</span> multiplier(factor) &#123;
+  <span class="keyword">return</span> <span class="keyword">function</span>(number) &#123;
+    <span class="keyword">return</span> number * factor;
+  &#125;;
+&#125;
+
+<span class="keyword">const</span> double = multiplier(2);
+<span class="keyword">const</span> triple = multiplier(3);
+
+<span class="keyword">console.log</span>(double(5)); <span class="comment">// 10</span>
+<span class="keyword">console.log</span>(triple(5)); <span class="comment">// 15</span>
+       </code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Closures retain the argument (factor) from the outer function.</li>
+         <li>Function factories allow dynamic function generation.</li>
+         <li>Useful for building configurable utility functions.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Common Pitfalls with Closures</h2>
+       <p>Be aware of typical issues when using closures:</p>
+
+       <pre><code><span class="comment">// Loop with closure problem</span>
+<span class="keyword">for</span> (<span class="keyword">var</span> i = 1; i &lt;= 3; i++) &#123;
+  <span class="keyword">setTimeout</span>(<span class="keyword">function</span>() &#123;
+    <span class="keyword">console.log</span>(i);
+  &#125;, 1000);
+&#125; <span class="comment">// Prints 4,4,4 instead of 1,2,3</span>
+
+<span class="comment">// Correct using let or IIFE</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> j = 1; j &lt;= 3; j++) &#123;
+  <span class="keyword">setTimeout</span>(() =&gt; <span class="keyword">console.log</span>(j), 1000);
+&#125; <span class="comment">// Prints 1,2,3 correctly</span>
+       </code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Using <code>var</code> inside loops can lead to unexpected closure behavior.</li>
+         <li><code>let</code> or IIFE (Immediately Invoked Function Expressions) fix the problem.</li>
+         <li>Always consider variable scope when creating closures in loops or async callbacks.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>5. Best Practices with Closures</h2>
+       <p>Tips for writing clean and efficient closure-based code:</p>
+
+       <ul>
+         <li>Use closures for <strong>data encapsulation</strong> and <strong>modular code</strong>.</li>
+         <li>Avoid creating unnecessary closures inside frequently called functions to prevent memory overhead.</li>
+         <li>Document the purpose of closures to make code readable for teams.</li>
+         <li>Prefer <code>let</code> and <code>const</code> for block scoping to avoid unexpected behaviors.</li>
+       </ul>
+     </div>
+   </div>
+</div>

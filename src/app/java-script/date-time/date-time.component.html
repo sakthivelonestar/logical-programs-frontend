@@ -1,0 +1,147 @@
+<div class="overall-wrapper" appMaximize #javascriptDateTime="maximize" id="javascriptDateTime">
+  <div class="wrapper">
+       <img class="swap" *ngIf="javascriptDateTime.checkfullscreen() == 'hide'" (click)="javascriptDateTime.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="javascriptDateTime.checkfullscreen() != 'hide'" (click)="javascriptDateTime.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          In JavaScript, <strong>Date & Time Concepts</strong> allow you to work with dates, times, and timestamps,
+          including creating, formatting, and performing calculations on date objects.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          They help you <strong>manage time-based data</strong>, schedule events, calculate differences between dates,
+          and format timestamps for display or storage in applications.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          You can use them in <strong>web applications, scheduling apps, logs, calendars, timers,</strong> 
+          or any feature that relies on date and time management.
+        </p>
+      </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Creating Date Objects</h2>
+       <p>Learn how to create and initialize JavaScript Date objects:</p>
+       
+       <h3>Examples</h3>
+       <pre><code><span class="comment">// Current date and time</span>
+<span class="keyword">const</span> now = <span class="type">new Date</span>();
+<span class="keyword">console.log</span>(now);
+
+<span class="comment">// Specific date</span>
+<span class="keyword">const</span> birthday = <span class="type">new Date</span>("1990-05-15");
+<span class="keyword">console.log</span>(birthday);
+
+<span class="comment">// Date with year, month, day, hours, minutes, seconds</span>
+<span class="keyword">const</span> customDate = <span class="type">new Date</span>(2025, 8, 20, 14, 30, 0);
+<span class="keyword">console.log</span>(customDate);
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Months are zero-indexed (January = 0, December = 11).</li>
+         <li>Day and time components default to 0 if not provided.</li>
+         <li>String parsing may depend on browser implementation.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>2. Date Methods</h2>
+       <p>Methods to extract and manipulate date components:</p>
+
+       <h3>Getting Date Components</h3>
+       <pre><code><span class="comment">// Example Date</span>
+<span class="keyword">const</span> today = <span class="type">new Date</span>();
+
+<span class="keyword">console.log</span>(today.getFullYear());  <span class="comment">// Year</span>
+<span class="keyword">console.log</span>(today.getMonth());     <span class="comment">// Month (0-11)</span>
+<span class="keyword">console.log</span>(today.getDate());      <span class="comment">// Day of the month</span>
+<span class="keyword">console.log</span>(today.getDay());       <span class="comment">// Day of the week (0-6)</span>
+<span class="keyword">console.log</span>(today.getHours());     <span class="comment">// Hours (0-23)</span>
+<span class="keyword">console.log</span>(today.getMinutes());   <span class="comment">// Minutes</span>
+<span class="keyword">console.log</span>(today.getSeconds());   <span class="comment">// Seconds</span>
+</code></pre>
+
+       <h3>Setting Date Components</h3>
+       <pre><code><span class="comment">// Update specific parts of a date</span>
+today.setFullYear(2026);
+today.setMonth(0);      <span class="comment">// January</span>
+today.setDate(1);
+today.setHours(12);
+<span class="keyword">console.log</span>(today);
+</code></pre>
+     </div>
+
+     <div class="step">
+       <h2>3. Date Calculations</h2>
+       <p>Perform calculations such as differences between dates and adding days:</p>
+
+       <h3>Difference Between Dates</h3>
+       <pre><code><span class="keyword">const</span> start = <span class="type">new Date</span>("2025-09-01");
+<span class="keyword">const</span> end = <span class="type">new Date</span>("2025-09-20");
+
+<span class="keyword">const</span> diffTime = end - start; <span class="comment">// Difference in milliseconds</span>
+<span class="keyword">const</span> diffDays = diffTime / (1000 * 60 * 60 * 24);
+<span class="keyword">console.log</span>(diffDays); <span class="comment">// 19 days</span>
+</code></pre>
+
+       <h3>Adding Days to a Date</h3>
+       <pre><code><span class="keyword">function</span> <span class="type">addDays</span>(date, days) &#123;
+  <span class="keyword">const</span> result = <span class="keyword">new</span> Date(date);
+  result.setDate(result.getDate() + days);
+  <span class="keyword">return</span> result;
+&#125;
+
+<span class="keyword">console.log</span>(addDays(new Date(), 10)); <span class="comment">// 10 days later</span>
+</code></pre>
+     </div>
+
+     <div class="step">
+       <h2>4. Formatting Dates</h2>
+       <p>Display dates in readable formats:</p>
+
+       <h3>Common Formatting Methods</h3>
+       <pre><code><span class="keyword">const</span> now = <span class="type">new Date</span>();
+
+<span class="keyword">console.log</span>(now.toDateString());     <span class="comment">// e.g., "Sat Sep 20 2025"</span>
+<span class="keyword">console.log</span>(now.toTimeString());     <span class="comment">// e.g., "14:30:00 GMT+0530"</span>
+<span class="keyword">console.log</span>(now.toLocaleDateString()); <span class="comment">// e.g., "20/09/2025"</span>
+<span class="keyword">console.log</span>(now.toISOString());        <span class="comment">// e.g., "2025-09-20T08:00:00.000Z"</span>
+</code></pre>
+     </div>
+
+     <div class="step">
+       <h2>5. Timers & Intervals</h2>
+       <p>Use Date objects with <code>setTimeout</code> and <code>setInterval</code> for scheduling:</p>
+
+       <h3>Examples</h3>
+       <pre><code><span class="comment">// Execute after a delay</span>
+<span class="keyword">setTimeout</span>(() => &#123;
+  <span class="keyword">console.log</span>("Executed after 2 seconds");
+&#125;, 2000);
+
+<span class="comment">// Execute repeatedly every 1 second</span>
+<span class="keyword">const</span> timer = <span class="keyword">setInterval</span>(() => &#123;
+  <span class="keyword">console.log</span>(new Date().toLocaleTimeString());
+&#125;, 1000);
+
+<span class="comment">// Stop interval after 5 seconds</span>
+<span class="keyword">setTimeout</span>(() => <span class="keyword">clearInterval</span>(timer), 5000);
+</code></pre>
+     </div>
+
+     <div class="step">
+       <h2>6. Key Points</h2>
+       <ul>
+         <li>JavaScript Date object represents a single point in time.</li>
+         <li>Months are zero-indexed; days and times start at 0.</li>
+         <li>Millisecond timestamps are used for date calculations.</li>
+         <li>Use formatting methods to display dates for different locales.</li>
+         <li>Timers allow scheduling tasks using setTimeout and setInterval.</li>
+       </ul>
+     </div>
+   </div>
+</div>

@@ -1,1 +1,435 @@
-<p>component-communication works!</p>
+<div class="overall-wrapper" id="component-communication" appMaximize #angularCommunication="maximize">
+  <div class="wrapper">
+    <!-- Expand/Collapse Buttons -->
+    <img
+      class="swap"
+      *ngIf="angularCommunication.checkfullscreen() == 'hide'"
+      (click)="angularCommunication.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="angularCommunication.checkfullscreen() != 'hide'"
+      (click)="angularCommunication.toggle()"
+      src="../../../assets/minimize.svg"
+      alt="Minimize"
+    /> 
+         <!-- Enhanced Header Section -->
+    <div class="header">
+                <p>
+                    <span class="question">What:</span> In Angular,
+                    <strong>Component Communication</strong> enables data flow and interaction between components using
+                    <code>&#64;Input()</code>, <code>&#64;Output()</code> decorators, and shared <code>Services</code> with dependency injection.
+                </p>
+
+                <p>
+                    <span class="question">Why:</span> It creates
+                    <strong>loosely coupled, reusable components</strong> that can share data and coordinate actions,
+                    essential for building scalable applications with proper separation of concerns.
+                </p>
+
+                <p>
+                    <span class="question">Where:</span> Critical in
+                    <strong>parent-child relationships</strong>, <strong>sibling component communication</strong>,
+                    <strong>global state management</strong>, and any scenario requiring data flow between components.
+                </p>
+    </div>
+  </div>
+
+        <div class="examples">
+            <!-- Step 1: Parent to Child - &#64;Input -->
+            <div class="step">
+                <h3>📥 Parent to Child Communication - &#64;Input()</h3>
+                <pre><code>
+<span class="comment">// child.component.ts - Simple Example</span>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">Input</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+
+<span class="keyword">export</span> <span class="keyword">interface</span> User &#123;
+  id: <span class="keyword">number</span>;
+  name: <span class="keyword">string</span>;
+  email: <span class="keyword">string</span>;
+&#125;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-child'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h3&gt;&#123; &#123; userData.name &#125;&#125;&lt;/h3&gt;
+      &lt;p&gt;&#123; &#123; userData.email &#125;&#125;&lt;/p&gt;
+      &lt;p&gt;Message: &#123; &#123; message &#125;&#125;&lt;/p&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ChildComponent &#123;
+  <span class="comment">// Step 1: Receive data from parent using &#64;Input</span>
+  &#64;Input() userData!: User;
+  &#64;Input() message: <span class="keyword">string</span> = <span class="string">'Default message'</span>;
+&#125;
+
+<span class="comment">// parent.component.ts</span>
+&#64;Component(&#123;
+  selector: <span class="string">'app-parent'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h2&gt;Parent Component&lt;/h2&gt;
+      &lt;!-- Step 2: Send data to child using square brackets [] --&gt;
+      &lt;app-child 
+        [userData]="currentUser"
+        [message]="welcomeMessage"&gt;
+      &lt;/app-child&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ParentComponent &#123;
+  currentUser: User = &#123;
+    id: <span class="number">1</span>,
+    name: <span class="string">'John Doe'</span>,
+    email: <span class="string">'john&#64;example.com'</span>
+  &#125;;
+  
+  welcomeMessage = <span class="string">'Welcome to our application!'</span>;
+&#125;
+                </code></pre>
+            </div>
+
+            <!-- Step 2: Child to Parent - &#64;Output -->
+            <div class="step">
+                <h3>📤 Child to Parent Communication - &#64;Output()</h3>
+                <pre><code>
+<span class="comment">// child.component.ts - Simple Example</span>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">Output</span>, <span class="string">EventEmitter</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-child'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h3&gt;Child Component&lt;/h3&gt;
+      &lt;button (click)="sendMessage()"&gt;Send to Parent&lt;/button&gt;
+      &lt;button (click)="sendData()"&gt;Send User Data&lt;/button&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ChildComponent &#123;
+  <span class="comment">// Step 1: Create EventEmitter to send data to parent</span>
+  &#64;Output() messageEvent = <span class="keyword">new</span> EventEmitter&lt;<span class="keyword">string</span>&gt;();
+  &#64;Output() userEvent = <span class="keyword">new</span> EventEmitter&lt;User&gt;();
+
+  sendMessage() &#123;
+    <span class="comment">// Step 2: Emit event with data</span>
+    <span class="keyword">this</span>.messageEvent.emit(<span class="string">'Hello from Child!'</span>);
+  &#125;
+
+  sendData() &#123;
+    <span class="keyword">const</span> userData: User = &#123;
+      id: <span class="number">2</span>,
+      name: <span class="string">'Jane Smith'</span>,
+      email: <span class="string">'jane&#64;example.com'</span>
+    &#125;;
+    <span class="keyword">this</span>.userEvent.emit(userData);
+  &#125;
+&#125;
+
+<span class="comment">// parent.component.ts</span>
+&#64;Component(&#123;
+  selector: <span class="string">'app-parent'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h2&gt;Parent Component&lt;/h2&gt;
+      &lt;p&gt;Message from child: &#123; &#123; childMessage &#125;&#125;&lt;/p&gt;
+      &lt;p&gt;User from child: &#123; &#123; childUser?.name &#125;&#125;&lt;/p&gt;
+      
+      &lt;!-- Step 3: Listen to child events using parentheses () --&gt;
+      &lt;app-child
+        (messageEvent)="receiveMessage($event)"
+        (userEvent)="receiveUser($event)"&gt;
+      &lt;/app-child&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ParentComponent &#123;
+  childMessage = <span class="string">''</span>;
+  childUser: User | <span class="keyword">null</span> = <span class="keyword">null</span>;
+
+  <span class="comment">// Step 4: Handle events from child</span>
+  receiveMessage(message: <span class="keyword">string</span>) &#123;
+    <span class="keyword">this</span>.childMessage = message;
+  &#125;
+
+  receiveUser(user: User) &#123;
+    <span class="keyword">this</span>.childUser = user;
+  &#125;
+&#125;
+                </code></pre>
+            </div>
+
+            <!-- Step 3: Service Communication -->
+            <div class="step">
+                <h3>🔧 Service-Based Communication - Any Component to Any Component</h3>
+                <pre><code>
+<span class="comment">// data.service.ts - Simple Service</span>
+<span class="keyword">import</span> &#123; <span class="string">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">BehaviorSubject</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+
+&#64;Injectable(&#123;
+  providedIn: <span class="string">'root'</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> DataService &#123;
+  <span class="comment">// Step 1: Create BehaviorSubject to store data</span>
+  <span class="keyword">private</span> messageSource = <span class="keyword">new</span> BehaviorSubject&lt;<span class="keyword">string</span>&gt;(<span class="string">'Default message'</span>);
+  <span class="keyword">private</span> userSource = <span class="keyword">new</span> BehaviorSubject&lt;User | <span class="keyword">null</span>&gt;(<span class="keyword">null</span>);
+
+  <span class="comment">// Step 2: Create public observables</span>
+  currentMessage$ = <span class="keyword">this</span>.messageSource.asObservable();
+  currentUser$ = <span class="keyword">this</span>.userSource.asObservable();
+
+  <span class="comment">// Step 3: Methods to update data</span>
+  updateMessage(message: <span class="keyword">string</span>) &#123;
+    <span class="keyword">this</span>.messageSource.next(message);
+  &#125;
+
+  updateUser(user: User) &#123;
+    <span class="keyword">this</span>.userSource.next(user);
+  &#125;
+&#125;
+
+<span class="comment">// component-a.component.ts - Sender Component</span>
+&#64;Component(&#123;
+  selector: <span class="string">'app-component-a'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h3&gt;Component A (Sender)&lt;/h3&gt;
+      &lt;button (click)="sendMessage()"&gt;Send Message&lt;/button&gt;
+      &lt;button (click)="sendUser()"&gt;Send User&lt;/button&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ComponentAComponent &#123;
+  
+  <span class="comment">// Step 4: Inject the service</span>
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> dataService: DataService) &#123;&#125;
+
+  sendMessage() &#123;
+    <span class="comment">// Step 5: Use service to send data</span>
+    <span class="keyword">this</span>.dataService.updateMessage(<span class="string">'Hello from Component A!'</span>);
+  &#125;
+
+  sendUser() &#123;
+    <span class="keyword">const</span> user: User = &#123;
+      id: <span class="number">3</span>,
+      name: <span class="string">'Service User'</span>,
+      email: <span class="string">'service&#64;example.com'</span>
+    &#125;;
+    <span class="keyword">this</span>.dataService.updateUser(user);
+  &#125;
+&#125;
+
+<span class="comment">// component-b.component.ts - Receiver Component</span>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">OnInit</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-component-b'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h3&gt;Component B (Receiver)&lt;/h3&gt;
+      &lt;p&gt;Message: &#123; &#123; message &#125;&#125;&lt;/p&gt;
+      &lt;p&gt;User: &#123; &#123; user?.name &#125;&#125;&lt;/p&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ComponentBComponent <span class="keyword">implements</span> OnInit &#123;
+  message = <span class="string">''</span>;
+  user: User | <span class="keyword">null</span> = <span class="keyword">null</span>;
+
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> dataService: DataService) &#123;&#125;
+
+  ngOnInit() &#123;
+    <span class="comment">// Step 6: Subscribe to service data</span>
+    <span class="keyword">this</span>.dataService.currentMessage$.subscribe(message => &#123;
+      <span class="keyword">this</span>.message = message;
+    &#125;);
+
+    <span class="keyword">this</span>.dataService.currentUser$.subscribe(user => &#123;
+      <span class="keyword">this</span>.user = user;
+    &#125;);
+  &#125;
+&#125;
+                </code></pre>
+            </div>
+
+            <!-- Step 4: ViewChild Communication -->
+            <div class="step">
+                <h3>👁️ ViewChild Communication - Direct Access</h3>
+                <pre><code>
+<span class="comment">// child.component.ts - Simple Child</span>
+<span class="keyword">import</span> &#123; <span class="string">Component</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-child'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h3&gt;Child Component&lt;/h3&gt;
+      &lt;p&gt;Counter: &#123; &#123; counter &#125;&#125;&lt;/p&gt;
+      &lt;p&gt;Message: &#123; &#123; message &#125;&#125;&lt;/p&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ChildComponent &#123;
+  counter = <span class="number">0</span>;
+  message = <span class="string">'Initial message'</span>;
+
+  <span class="comment">// Public methods that parent can call</span>
+  increment() &#123;
+    <span class="keyword">this</span>.counter++;
+  &#125;
+
+  reset() &#123;
+    <span class="keyword">this</span>.counter = <span class="number">0</span>;
+  &#125;
+
+  updateMessage(newMessage: <span class="keyword">string</span>) &#123;
+    <span class="keyword">this</span>.message = newMessage;
+  &#125;
+&#125;
+
+<span class="comment">// parent.component.ts</span>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">ViewChild</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ChildComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./child.component'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-parent'</span>,
+  template: <span class="string">`
+    &lt;div&gt;
+      &lt;h2&gt;Parent Component&lt;/h2&gt;
+      &lt;button (click)="incrementChild()"&gt;Increment Child&lt;/button&gt;
+      &lt;button (click)="resetChild()"&gt;Reset Child&lt;/button&gt;
+      &lt;button (click)="updateChildMessage()"&gt;Update Message&lt;/button&gt;
+      
+      &lt;!-- Step 1: Create child component reference --&gt;
+      &lt;app-child&gt;&lt;/app-child&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ParentComponent &#123;
+  <span class="comment">// Step 2: Get reference to child component</span>
+  &#64;ViewChild(ChildComponent) child!: ChildComponent;
+
+  <span class="comment">// Step 3: Call child methods directly</span>
+  incrementChild() &#123;
+    <span class="keyword">this</span>.child.increment();
+  &#125;
+
+  resetChild() &#123;
+    <span class="keyword">this</span>.child.reset();
+  &#125;
+
+  updateChildMessage() &#123;
+    <span class="keyword">this</span>.child.updateMessage(<span class="string">'Updated by parent!'</span>);
+  &#125;
+&#125;
+                </code></pre>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="step">
+                <h3>📋 Quick Summary</h3>
+                <h4>When to Use Each Method:</h4>
+                <ul>
+                    <li><strong>&#64;Input:</strong> Parent needs to send data to child</li>
+                    <li><strong>&#64;Output:</strong> Child needs to notify or send data to parent</li>
+                    <li><strong>Service:</strong> Components that are not directly related need to communicate</li>
+                    <li><strong>&#64;ViewChild:</strong> Parent needs direct control over child component (use sparingly)</li>
+                </ul>
+
+                <h4>Simple Rules:</h4>
+                <ol>
+                    <li>Parent to Child: Use &#64;Input with [ ]</li>
+                    <li>Child to Parent: Use &#64;Output with ( )</li>
+                    <li>Any to Any: Use Service</li>
+                    <li>Direct Access: Use &#64;ViewChild</li>
+                </ol>
+            </div>
+
+            <!-- Interview Questions -->
+            <div class="interview-questions step">
+      <h2>15 Simple Interview Questions on Component Communication</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is &#64;Input used for?</strong>
+          <p class="answer">To pass data from parent component to child component.</p>
+          <span class="category">Input</span>
+        </li>
+        <li>
+          <strong class="question-title">What is &#64;Output used for?</strong>
+          <p class="answer">To send events and data from child component to parent component.</p>
+          <span class="category">Output</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you pass data from parent to child?</strong>
+          <p class="answer">Use &#64;Input in child and property binding [property] in parent template.</p>
+          <span class="category">Input</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you send data from child to parent?</strong>
+          <p class="answer">Use &#64;Output with EventEmitter in child and event binding (event) in parent.</p>
+          <span class="category">Output</span>
+        </li>
+        <li>
+          <strong class="question-title">When should you use a service for communication?</strong>
+          <p class="answer">When components are not directly related (siblings, or distant components).</p>
+          <span class="category">Service</span>
+        </li>
+        <li>
+          <strong class="question-title">What is BehaviorSubject?</strong>
+          <p class="answer">An RxJS subject that stores the current value and emits it to new subscribers.</p>
+          <span class="category">RxJS</span>
+        </li>
+        <li>
+          <strong class="question-title">What is &#64;ViewChild?</strong>
+          <p class="answer">A decorator that gives parent component direct access to child component.</p>
+          <span class="category">ViewChild</span>
+        </li>
+        <li>
+          <strong class="question-title">What are the square brackets [] for?</strong>
+          <p class="answer">Property binding - to pass data from parent to child using &#64;Input.</p>
+          <span class="category">Template</span>
+        </li>
+        <li>
+          <strong class="question-title">What are the parentheses () for?</strong>
+          <p class="answer">Event binding - to listen to events from child using &#64;Output.</p>
+          <span class="category">Template</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you make a service available to all components?</strong>
+          <p class="answer">Use providedIn: 'root' in &#64;Injectable decorator.</p>
+          <span class="category">Service</span>
+        </li>
+        <li>
+          <strong class="question-title">What is EventEmitter?</strong>
+          <p class="answer">A class used with &#64;Output to emit events from child to parent component.</p>
+          <span class="category">Output</span>
+        </li>
+        <li>
+          <strong class="question-title">Why avoid &#64;ViewChild for communication?</strong>
+          <p class="answer">It creates tight coupling between components, making them less reusable.</p>
+          <span class="category">Best Practice</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you subscribe to service data?</strong>
+          <p class="answer">Use .subscribe() method on the service observable in ngOnInit.</p>
+          <span class="category">Service</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between Subject and BehaviorSubject?</strong>
+          <p class="answer">BehaviorSubject stores and emits the last value to new subscribers, Subject doesn't.</p>
+          <span class="category">RxJS</span>
+        </li>
+        <li>
+          <strong class="question-title">What is dependency injection in services?</strong>
+          <p class="answer">Angular's way of providing service instances to components through constructor parameters.</p>
+          <span class="category">Service</span>
+        </li>
+      </ol>
+    </div>
+        </div>
+ </div>

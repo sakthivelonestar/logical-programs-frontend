@@ -1,0 +1,910 @@
+<div class="oveall-wraper" appMaximize #jsInterviewConcepts="maximize" id="jsInterviewConcepts">
+    <div class="examples">
+        <div class="wrapper">
+             <h2>JavaScript Interview Questions</h2>
+             <img class="swap" *ngIf="jsInterviewConcepts.checkfullscreen() == 'hide'" (click)="jsInterviewConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="jsInterviewConcepts.checkfullscreen() != 'hide'" (click)="jsInterviewConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        </div>
+   
+
+    <div class="question-answer">
+        <h4>1) What are JavaScript Data Types? Explain Primitive vs Non-Primitive</h4>
+        <p>
+        <strong>Answer:</strong> JavaScript has different data types to store different kinds of values.<br>
+
+        <strong>🔹 Primitive Data Types:</strong><br>
+        • <strong>Number:</strong> <code>let age = 25;</code><br>
+        • <strong>String:</strong> <code>let name = "John";</code><br>
+        • <strong>Boolean:</strong> <code>let isActive = true;</code><br>
+        • <strong>Undefined:</strong> <code>let x;</code><br>
+        • <strong>Null:</strong> <code>let data = null;</code><br>
+        • <strong>Symbol:</strong> <code>let sym = Symbol('id');</code><br>
+        • <strong>BigInt:</strong> <code>let bigNum = 123456789012345678901234567890n;</code><br>
+
+        <strong>🔹 Non-Primitive Data Types:</strong><br>
+        • <strong>Object:</strong> <code>let person = &#123;name: "John", age: 30&#125;;</code><br>
+        • <strong>Array:</strong> <code>let numbers = [1, 2, 3, 4, 5];</code><br>
+        • <strong>Function:</strong> <code>let greet = function() &#123; console.log("Hello"); &#125;;</code><br>
+
+        <strong>Key Differences:</strong><br>
+        ✔️ Primitives are immutable, non-primitives are mutable<br>
+        ✔️ Primitives are stored by value, non-primitives by reference
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>2) What is Hoisting in JavaScript?</h4>
+        <p>
+        <strong>Answer:</strong> Hoisting is JavaScript's behavior of moving variable and function declarations to the top of their scope during compilation phase.<br>
+
+        <strong>🔹 Variable Hoisting:</strong><br>
+        <code>console.log(x); // undefined (not error)</code><br>
+        <code>var x = 5;</code><br>
+        <em>Equivalent to:</em><br>
+        <code>var x;</code><br>
+        <code>console.log(x);</code><br>
+        <code>x = 5;</code><br>
+
+        <strong>🔹 Function Hoisting:</strong><br>
+        <code>sayHello(); // "Hello!" - works fine</code><br>
+        <code>function sayHello() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log("Hello!");</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Let/Const Hoisting:</strong><br>
+        <code>console.log(y); // ReferenceError</code><br>
+        <code>let y = 10;</code><br>
+
+        <strong>🧠 Key Points:</strong><br>
+        ✔️ Only declarations are hoisted, not initializations<br>
+        ✔️ Function declarations are fully hoisted<br>
+        ✔️ let/const are in temporal dead zone until declared
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>3) What are Closures? Explain with Examples</h4>
+        <p>
+        <strong>Answer:</strong> A closure is a function that has access to variables from its outer (enclosing) scope even after the outer function has finished executing.<br>
+
+        <strong>🔹 Basic Closure Example:</strong><br>
+        <code>function outerFunction(x) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return function innerFunction(y) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x + y;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;;</code><br>
+        <code>&#125;</code><br>
+        <code>const addFive = outerFunction(5);</code><br>
+        <code>console.log(addFive(3)); // 8</code><br>
+
+        <strong>🔹 Practical Example - Counter:</strong><br>
+        <code>function createCounter() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;let count = 0;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return function() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ++count;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;;</code><br>
+        <code>&#125;</code><br>
+        <code>const counter = createCounter();</code><br>
+        <code>console.log(counter()); // 1</code><br>
+        <code>console.log(counter()); // 2</code><br>
+
+        <strong>🧠 Use Cases:</strong><br>
+        ✔️ Data privacy and encapsulation<br>
+        ✔️ Function factories<br>
+        ✔️ Module patterns<br>
+        ✔️ Event handlers with state
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>4) What is the Difference Between var, let, and const?</h4>
+        <p>
+        <strong>Answer:</strong> These are different ways to declare variables in JavaScript with different scoping and behavior rules.<br>
+
+        <strong>🔹 var:</strong><br>
+        • Function-scoped or globally-scoped<br>
+        • Hoisted and initialized with undefined<br>
+        • Can be redeclared and updated<br>
+        <code>var name = "John";</code><br>
+        <code>var name = "Jane"; // OK</code><br>
+
+        <strong>🔹 let:</strong><br>
+        • Block-scoped<br>
+        • Hoisted but not initialized (temporal dead zone)<br>
+        • Cannot be redeclared, but can be updated<br>
+        <code>let age = 25;</code><br>
+        <code>age = 26; // OK</code><br>
+        <code>let age = 27; // Error</code><br>
+
+        <strong>🔹 const:</strong><br>
+        • Block-scoped<br>
+        • Hoisted but not initialized<br>
+        • Cannot be redeclared or updated<br>
+        • Must be initialized at declaration<br>
+        <code>const PI = 3.14;</code><br>
+        <code>PI = 3.15; // Error</code><br>
+
+        <strong>🧠 Best Practices:</strong><br>
+        ✔️ Use const by default<br>
+        ✔️ Use let when you need to reassign<br>
+        ✔️ Avoid var in modern JavaScript
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>5) What are Arrow Functions? Differences from Regular Functions</h4>
+        <p>
+        <strong>Answer:</strong> Arrow functions are a shorter syntax for writing functions introduced in ES6, with some key behavioral differences.<br>
+
+        <strong>🔹 Syntax Comparison:</strong><br>
+        <code>// Regular function</code><br>
+        <code>function add(a, b) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return a + b;</code><br>
+        <code>&#125;</code><br>
+
+        <code>// Arrow function</code><br>
+        <code>const add = (a, b) => a + b;</code><br>
+
+        <strong>🔹 Key Differences:</strong><br>
+
+        <strong>1. 'this' Binding:</strong><br>
+        <code>const obj = &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;name: "John",</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;regular: function() &#123; console.log(this.name); &#125;,</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;arrow: () => &#123; console.log(this.name); &#125;</code><br>
+        <code>&#125;;</code><br>
+        <code>obj.regular(); // "John"</code><br>
+        <code>obj.arrow(); // undefined</code><br>
+
+        <strong>2. Arguments Object:</strong><br>
+        <code>function regular() &#123; console.log(arguments); &#125; // Works</code><br>
+        <code>const arrow = () => &#123; console.log(arguments); &#125;; // Error</code><br>
+
+        <strong>3. Hoisting:</strong><br>
+        <code>console.log(regular()); // Works due to hoisting</code><br>
+        <code>function regular() &#123; return "Hello"; &#125;</code><br>
+
+        <code>console.log(arrow()); // Error: Cannot access before initialization</code><br>
+        <code>const arrow = () => "Hello";</code><br>
+
+        <strong>🧠 When to Use:</strong><br>
+        ✔️ Arrow: Callbacks, array methods, when you want lexical 'this'<br>
+        ✔️ Regular: Methods, constructors, when you need 'arguments'
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>6) What is Event Delegation? How Does it Work?</h4>
+        <p>
+        <strong>Answer:</strong> Event delegation is a technique where you attach a single event listener to a parent element to handle events for its child elements, leveraging event bubbling.<br>
+
+        <strong>🔹 Without Event Delegation:</strong><br>
+        <code>const buttons = document.querySelectorAll('.button');</code><br>
+        <code>buttons.forEach(button => &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;button.addEventListener('click', handleClick);</code><br>
+        <code>&#125;);</code><br>
+
+        <strong>🔹 With Event Delegation:</strong><br>
+        <code>document.querySelector('.container').addEventListener('click', function(e) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;if (e.target.classList.contains('button')) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;handleClick(e);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;);</code><br>
+
+        <strong>🔹 Practical Example:</strong><br>
+        <code>&lt;ul id="parent"&gt;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;Item 1&lt;/li&gt;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&lt;li&gt;Item 2&lt;/li&gt;</code><br>
+        <code>&lt;/ul&gt;</code><br>
+
+        <code>document.getElementById('parent').addEventListener('click', function(e) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;if (e.target.tagName === 'LI') &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log('Clicked:', e.target.textContent);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;);</code><br>
+
+        <strong>🧠 Benefits:</strong><br>
+        ✔️ Better performance (fewer event listeners)<br>
+        ✔️ Memory efficient<br>
+        ✔️ Works with dynamically added elements<br>
+        ✔️ Cleaner code maintenance
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>7) What are Promises? Explain Promise States and Methods</h4>
+        <p>
+        <strong>Answer:</strong> Promises are objects that represent the eventual completion or failure of an asynchronous operation and provide a cleaner alternative to callbacks.<br>
+
+        <strong>🔹 Promise States:</strong><br>
+        • <strong>Pending:</strong> Initial state, neither fulfilled nor rejected<br>
+        • <strong>Fulfilled:</strong> Operation completed successfully<br>
+        • <strong>Rejected:</strong> Operation failed<br>
+
+        <strong>🔹 Creating a Promise:</strong><br>
+        <code>const myPromise = new Promise((resolve, reject) => &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;setTimeout(() => &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const success = true;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (success) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;resolve("Operation successful!");</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#125; else &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;reject("Operation failed!");</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;, 2000);</code><br>
+        <code>&#125;);</code><br>
+
+        <strong>🔹 Promise Methods:</strong><br>
+        <code>myPromise</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.then(result => console.log(result))</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.catch(error => console.log(error))</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.finally(() => console.log("Cleanup"));</code><br>
+
+        <strong>🔹 Promise Utility Methods:</strong><br>
+        <code>Promise.all([promise1, promise2, promise3])</code><br>
+        <code>Promise.allSettled([promise1, promise2, promise3])</code><br>
+        <code>Promise.race([promise1, promise2, promise3])</code><br>
+        <code>Promise.resolve("Immediate value")</code><br>
+        <code>Promise.reject("Error message")</code><br>
+
+        <strong>🧠 Advantages:</strong><br>
+        ✔️ Avoids callback hell<br>
+        ✔️ Better error handling<br>
+        ✔️ Chainable operations<br>
+        ✔️ More readable code
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>8) What is async/await? How is it Different from Promises?</h4>
+        <p>
+        <strong>Answer:</strong> async/await is a syntax that makes asynchronous code look and behave more like synchronous code, built on top of Promises.<br>
+
+        <strong>🔹 Promise Chain vs async/await:</strong><br>
+        <code>// Using Promises</code><br>
+        <code>fetchUser()</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.then(user => fetchPosts(user.id))</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.then(posts => console.log(posts))</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.catch(error => console.log(error));</code><br>
+
+        <code>// Using async/await</code><br>
+        <code>async function getUserPosts() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const user = await fetchUser();</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const posts = await fetchPosts(user.id);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(posts);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(error);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Key Rules:</strong><br>
+        • <strong>async</strong> functions always return a Promise<br>
+        • <strong>await</strong> can only be used inside async functions<br>
+        • <strong>await</strong> pauses execution until Promise resolves<br>
+
+        <strong>🔹 Error Handling:</strong><br>
+        <code>async function fetchData() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const response = await fetch('/api/data');</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const data = await response.json();</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return data;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error('Error:', error);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw error;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🧠 Advantages:</strong><br>
+        ✔️ More readable and maintainable<br>
+        ✔️ Easier debugging<br>
+        ✔️ Better error stack traces<br>
+        ✔️ Familiar synchronous-like syntax
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>9) What is the Event Loop in JavaScript?</h4>
+        <p>
+        <strong>Answer:</strong> The Event Loop is the mechanism that allows JavaScript to perform non-blocking operations despite being single-threaded, by handling asynchronous callbacks.<br>
+
+        <strong>🔹 Components:</strong><br>
+        • <strong>Call Stack:</strong> Tracks function calls<br>
+        • <strong>Web APIs:</strong> Browser-provided APIs (setTimeout, DOM events)<br>
+        • <strong>Callback Queue:</strong> Holds callback functions<br>
+        • <strong>Event Loop:</strong> Monitors and moves callbacks to call stack<br>
+
+        <strong>🔹 Example Execution:</strong><br>
+        <code>console.log('1');</code><br>
+        <code>setTimeout(() => console.log('2'), 0);</code><br>
+        <code>console.log('3');</code><br>
+        <em>Output: 1, 3, 2</em><br>
+
+        <strong>🔹 Detailed Flow:</strong><br>
+        <code>function first() &#123; console.log('First'); &#125;</code><br>
+        <code>function second() &#123; console.log('Second'); &#125;</code><br>
+        <code>function third() &#123; console.log('Third'); &#125;</code><br>
+
+        <code>first();</code><br>
+        <code>setTimeout(second, 0);</code><br>
+        <code>third();</code><br>
+
+        <strong>Execution Order:</strong><br>
+        1. first() goes to call stack → executes → removed<br>
+        2. setTimeout goes to Web API → callback goes to queue<br>
+        3. third() goes to call stack → executes → removed<br>
+        4. Event loop moves second() from queue to call stack<br>
+
+        <strong>🧠 Key Points:</strong><br>
+        ✔️ JavaScript is single-threaded but non-blocking<br>
+        ✔️ Event loop enables asynchronous behavior<br>
+        ✔️ Callbacks wait for call stack to be empty<br>
+        ✔️ Microtasks (Promises) have higher priority than macrotasks
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>10) What are JavaScript Array Methods? Explain map, filter, reduce</h4>
+        <p>
+        <strong>Answer:</strong> JavaScript provides many built-in array methods for data manipulation. Here are the most commonly used ones:<br>
+
+        <strong>🔹 map() - Transform Elements:</strong><br>
+        <code>const numbers = [1, 2, 3, 4, 5];</code><br>
+        <code>const doubled = numbers.map(num => num * 2);</code><br>
+        <code>console.log(doubled); // [2, 4, 6, 8, 10]</code><br>
+
+        <strong>🔹 filter() - Filter Elements:</strong><br>
+        <code>const numbers = [1, 2, 3, 4, 5, 6];</code><br>
+        <code>const evenNumbers = numbers.filter(num => num % 2 === 0);</code><br>
+        <code>console.log(evenNumbers); // [2, 4, 6]</code><br>
+
+        <strong>🔹 reduce() - Reduce to Single Value:</strong><br>
+        <code>const numbers = [1, 2, 3, 4, 5];</code><br>
+        <code>const sum = numbers.reduce((acc, curr) => acc + curr, 0);</code><br>
+        <code>console.log(sum); // 15</code><br>
+
+        <strong>🔹 Other Important Methods:</strong><br>
+        <code>// forEach - Execute function for each element</code><br>
+        <code>numbers.forEach(num => console.log(num));</code><br>
+
+        <code>// find - Find first matching element</code><br>
+        <code>const found = numbers.find(num => num > 3); // 4</code><br>
+
+        <code>// some - Check if any element matches</code><br>
+        <code>const hasEven = numbers.some(num => num % 2 === 0); // true</code><br>
+
+        <code>// every - Check if all elements match</code><br>
+        <code>const allPositive = numbers.every(num => num > 0); // true</code><br>
+
+        <strong>🧠 Method Chaining:</strong><br>
+        <code>const result = numbers</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.filter(num => num % 2 === 0)</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.map(num => num * 3)</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;.reduce((acc, curr) => acc + curr, 0);</code>
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>11) What is Destructuring in JavaScript? Object and Array Destructuring</h4>
+        <p>
+        <strong>Answer:</strong> Destructuring is a syntax that allows you to extract values from arrays or properties from objects into distinct variables.<br>
+
+        <strong>🔹 Array Destructuring:</strong><br>
+        <code>const fruits = ['apple', 'banana', 'orange'];</code><br>
+        <code>const [first, second, third] = fruits;</code><br>
+        <code>console.log(first); // 'apple'</code><br>
+
+        <code>// Skip elements</code><br>
+        <code>const [a, , c] = fruits;</code><br>
+        <code>console.log(a, c); // 'apple', 'orange'</code><br>
+
+        <code>// Default values</code><br>
+        <code>const [x, y, z, w = 'default'] = fruits;</code><br>
+        <code>console.log(w); // 'default'</code><br>
+
+        <strong>🔹 Object Destructuring:</strong><br>
+        <code>const person = &#123; name: 'John', age: 30, city: 'New York' &#125;;</code><br>
+        <code>const &#123; name, age, city &#125; = person;</code><br>
+        <code>console.log(name); // 'John'</code><br>
+
+        <code>// Rename variables</code><br>
+        <code>const &#123; name: fullName, age: years &#125; = person;</code><br>
+        <code>console.log(fullName); // 'John'</code><br>
+
+        <code>// Default values</code><br>
+        <code>const &#123; name, age, country = 'USA' &#125; = person;</code><br>
+        <code>console.log(country); // 'USA'</code><br>
+
+        <strong>🔹 Nested Destructuring:</strong><br>
+        <code>const user = &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;name: 'Alice',</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;address: &#123; street: '123 Main St', city: 'Boston' &#125;</code><br>
+        <code>&#125;;</code><br>
+        <code>const &#123; name, address: &#123; street, city &#125; &#125; = user;</code><br>
+
+        <strong>🔹 Function Parameters:</strong><br>
+        <code>function greet(&#123; name, age &#125;) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(`Hello $&#123;name&#125;, you are $&#123;age&#125; years old`);</code><br>
+        <code>&#125;</code><br>
+        <code>greet(&#123; name: 'John', age: 25 &#125;);</code><br>
+
+        <strong>🧠 Use Cases:</strong><br>
+        ✔️ Function parameter extraction<br>
+        ✔️ Swapping variables<br>
+        ✔️ API response handling<br>
+        ✔️ Module imports
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>12) What are Template Literals? Features and Use Cases</h4>
+        <p>
+        <strong>Answer:</strong> Template literals are string literals that allow embedded expressions, multiline strings, and string interpolation using backticks (`).<br>
+
+        <strong>🔹 String Interpolation:</strong><br>
+        <code>const name = 'John';</code><br>
+        <code>const age = 30;</code><br>
+        <code>const message = `Hello, my name is $&#123;name&#125; and I'm $&#123;age&#125; years old.`;</code><br>
+        <code>console.log(message);</code><br>
+
+        <strong>🔹 Multiline Strings:</strong><br>
+        <code>const multiline = `</code><br>
+        <code>This is a</code><br>
+        <code>multiline string</code><br>
+        <code>without concatenation</code><br>
+        <code>`;</code><br>
+
+        <strong>🔹 Expression Evaluation:</strong><br>
+        <code>const a = 10;</code><br>
+        <code>const b = 20;</code><br>
+        <code>console.log(`The sum of $&#123;a&#125; and $&#123;b&#125; is $&#123;a + b&#125;`);</code><br>
+        <code>console.log(`Current time: $&#123;new Date().toLocaleTimeString()&#125;`);</code><br>
+
+        <strong>🔹 Tagged Template Literals:</strong><br>
+        <code>function highlight(strings, ...values) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return strings.reduce((result, string, i) => &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const value = values[i] ? `<strong>$&#123;values[i]&#125;</strong>` : '';</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return result + string + value;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;, '');</code><br>
+        <code>&#125;</code><br>
+
+        <code>const name = 'John';</code><br>
+        <code>const html = highlight`Hello $&#123;name&#125;, welcome!`;</code><br>
+
+        <strong>🔹 Practical Examples:</strong><br>
+        <code>// HTML templating</code><br>
+        <code>const createCard = (title, content) => `</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&lt;div class="card"&gt;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;h2&gt;$&#123;title&#125;&lt;/h2&gt;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;$&#123;content&#125;&lt;/p&gt;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&lt;/div&gt;</code><br>
+        <code>`;</code><br>
+
+        <strong>🧠 Advantages:</strong><br>
+        ✔️ Cleaner string concatenation<br>
+        ✔️ Multiline strings without escape characters<br>
+        ✔️ Expression evaluation inside strings<br>
+        ✔️ Better readability and maintainability
+        </p>
+    </div>\
+    <div class="question-answer">
+        <h4>13) What is the 'this' Keyword in JavaScript? Different Contexts</h4>
+        <p>
+        <strong>Answer:</strong> 'this' is a keyword that refers to the context in which a function is executed. Its value depends on how a function is called.<br>
+
+        <strong>🔹 Global Context:</strong><br>
+        <code>console.log(this); // Window object (browser) or global (Node.js)</code><br>
+
+        <strong>🔹 Object Method:</strong><br>
+        <code>const person = &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;name: "John",</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;greet() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(this.name); // "John"</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;;</code><br>
+
+        <strong>🔹 Constructor Function:</strong><br>
+        <code>function Person(name) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;this.name = name; // refers to new instance</code><br>
+        <code>&#125;</code><br>
+        <code>const john = new Person("John");</code><br>
+
+        <strong>🔹 Call/Apply/Bind:</strong><br>
+        <code>const obj1 = &#123; name: "Alice" &#125;;</code><br>
+        <code>const obj2 = &#123; name: "Bob" &#125;;</code><br>
+        <code>function sayName() &#123; console.log(this.name); &#125;</code><br>
+        <code>sayName.call(obj1); // "Alice"</code><br>
+        <code>sayName.apply(obj2); // "Bob"</code><br>
+
+        <strong>🧠 Key Points:</strong><br>
+        ✔️ Arrow functions inherit 'this' from enclosing scope<br>
+        ✔️ Strict mode affects 'this' behavior<br>
+        ✔️ Event handlers set 'this' to the target element<br>
+        ✔️ 'this' can be explicitly set using call/apply/bind
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>14) What is Scope and Scope Chain in JavaScript?</h4>
+        <p>
+        <strong>Answer:</strong> Scope determines the accessibility of variables, functions, and objects in different parts of your code. Scope chain is the hierarchy of scopes.<br>
+
+        <strong>🔹 Types of Scope:</strong><br>
+        • <strong>Global Scope:</strong> Variables accessible everywhere<br>
+        • <strong>Function Scope:</strong> Variables accessible within function<br>
+        • <strong>Block Scope:</strong> Variables accessible within block (let/const)<br>
+
+        <strong>🔹 Scope Example:</strong><br>
+        <code>var globalVar = "I'm global";</code><br>
+
+        <code>function outerFunction() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;var outerVar = "I'm outer";</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;function innerFunction() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var innerVar = "I'm inner";</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(globalVar); // Accessible</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(outerVar); // Accessible</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log(innerVar); // Accessible</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(innerVar); // ReferenceError</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Block Scope with let/const:</strong><br>
+        <code>if (true) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;let blockScoped = "Inside block";</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;var functionScoped = "Function scoped";</code><br>
+        <code>&#125;</code><br>
+        <code>console.log(functionScoped); // "Function scoped"</code><br>
+        <code>console.log(blockScoped); // ReferenceError</code><br>
+
+        <strong>🧠 Scope Chain:</strong><br>
+        ✔️ Inner functions have access to outer variables<br>
+        ✔️ JavaScript looks up the scope chain to find variables<br>
+        ✔️ Lexical scoping - scope determined by where variables are declared<br>
+        ✔️ Helps in understanding closures and variable resolution
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>15) What are JavaScript Modules? ES6 Import/Export</h4>
+        <p>
+        <strong>Answer:</strong> Modules allow you to break your code into separate files and import/export functionality between them, promoting code reusability and organization.<br>
+
+        <strong>🔹 Named Exports:</strong><br>
+        <code>// math.js</code><br>
+        <code>export const add = (a, b) => a + b;</code><br>
+        <code>export const multiply = (a, b) => a * b;</code><br>
+        <code>export const PI = 3.14159;</code><br>
+
+        <code>// main.js</code><br>
+        <code>import &#123; add, multiply, PI &#125; from './math.js';</code><br>
+        <code>console.log(add(2, 3)); // 5</code><br>
+
+        <strong>🔹 Default Exports:</strong><br>
+        <code>// calculator.js</code><br>
+        <code>export default class Calculator &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;add(a, b) &#123; return a + b; &#125;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;subtract(a, b) &#123; return a - b; &#125;</code><br>
+        <code>&#125;</code><br>
+
+        <code>// main.js</code><br>
+        <code>import Calculator from './calculator.js';</code><br>
+        <code>const calc = new Calculator();</code><br>
+
+        <strong>🔹 Mixed Imports:</strong><br>
+        <code>// utils.js</code><br>
+        <code>export const helper1 = () => "Helper 1";</code><br>
+        <code>export const helper2 = () => "Helper 2";</code><br>
+        <code>export default function mainFunction() &#123; return "Main"; &#125;</code><br>
+
+        <code>// main.js</code><br>
+        <code>import mainFunction, &#123; helper1, helper2 &#125; from './utils.js';</code><br>
+
+        <strong>🔹 Import Aliases:</strong><br>
+        <code>import &#123; add as sum, multiply as product &#125; from './math.js';</code><br>
+        <code>import * as MathUtils from './math.js';</code><br>
+
+        <strong>🧠 Benefits:</strong><br>
+        ✔️ Code organization and maintainability<br>
+        ✔️ Avoiding global namespace pollution<br>
+        ✔️ Dead code elimination (tree shaking)<br>
+        ✔️ Static analysis and better tooling
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>16) What is Prototype and Prototypal Inheritance?</h4>
+        <p>
+        <strong>Answer:</strong> Every JavaScript object has a prototype, which is another object from which it inherits properties and methods. This forms the basis of JavaScript's inheritance model.<br>
+
+        <strong>🔹 Basic Prototype:</strong><br>
+        <code>function Person(name) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;this.name = name;</code><br>
+        <code>&#125;</code><br>
+
+        <code>Person.prototype.greet = function() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return `Hello, I'm $&#123;this.name&#125;`;</code><br>
+        <code>&#125;;</code><br>
+
+        <code>const john = new Person("John");</code><br>
+        <code>console.log(john.greet()); // "Hello, I'm John"</code><br>
+
+        <strong>🔹 Prototype Chain:</strong><br>
+        <code>function Student(name, grade) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;Person.call(this, name);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;this.grade = grade;</code><br>
+        <code>&#125;</code><br>
+
+        <code>Student.prototype = Object.create(Person.prototype);</code><br>
+        <code>Student.prototype.constructor = Student;</code><br>
+
+        <code>Student.prototype.study = function() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return `$&#123;this.name&#125; is studying`;</code><br>
+        <code>&#125;;</code><br>
+
+        <strong>🔹 Modern Class Syntax:</strong><br>
+        <code>class Person &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;constructor(name) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.name = name;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;greet() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return `Hello, I'm $&#123;this.name&#125;`;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;</code><br>
+
+        <code>class Student extends Person &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;constructor(name, grade) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(name);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.grade = grade;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🧠 Key Concepts:</strong><br>
+        ✔️ Objects inherit from their prototype<br>
+        ✔️ Prototype chain enables method/property lookup<br>
+        ✔️ All functions have a prototype property<br>
+        ✔️ Classes are syntactic sugar over prototypes
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>17) What is JSON? Parsing and Stringifying</h4>
+        <p>
+        <strong>Answer:</strong> JSON (JavaScript Object Notation) is a lightweight data interchange format that's easy to read and write, commonly used for API communication.<br>
+
+        <strong>🔹 JSON Syntax Rules:</strong><br>
+        • Data in name/value pairs<br>
+        • Data separated by commas<br>
+        • Objects in curly braces &#123;&#125;<br>
+        • Arrays in square brackets []<br>
+        • Strings must use double quotes<br>
+
+        <strong>🔹 JSON.stringify() - Object to JSON:</strong><br>
+        <code>const user = &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;name: "John",</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;age: 30,</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;hobbies: ["reading", "coding"],</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;active: true</code><br>
+        <code>&#125;;</code><br>
+
+        <code>const jsonString = JSON.stringify(user);</code><br>
+        <code>console.log(jsonString);</code><br>
+        <em>// '&#123;"name":"John","age":30,"hobbies":["reading","coding"],"active":true&#125;'</em><br>
+
+        <strong>🔹 JSON.parse() - JSON to Object:</strong><br>
+        <code>const jsonData = '&#123;"name":"Alice","age":25&#125;';</code><br>
+        <code>const userObject = JSON.parse(jsonData);</code><br>
+        <code>console.log(userObject.name); // "Alice"</code><br>
+
+        <strong>🔹 Advanced Usage:</strong><br>
+        <code>// With replacer function</code><br>
+        <code>const json = JSON.stringify(user, null, 2); // Pretty print</code><br>
+
+        <code>// With reviver function</code><br>
+        <code>const parsed = JSON.parse(jsonString, (key, value) => &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;if (key === 'age') return value + 1;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return value;</code><br>
+        <code>&#125;);</code><br>
+
+        <strong>🔹 Error Handling:</strong><br>
+        <code>try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;const data = JSON.parse(invalidJSON);</code><br>
+        <code>&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.error("Invalid JSON:", error.message);</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🧠 Use Cases:</strong><br>
+        ✔️ API data exchange<br>
+        ✔️ Configuration files<br>
+        ✔️ Local storage data<br>
+        ✔️ Data serialization
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>18) What are Regular Expressions (RegEx) in JavaScript?</h4>
+        <p>
+        <strong>Answer:</strong> Regular Expressions are patterns used to match character combinations in strings, useful for validation, searching, and text manipulation.<br>
+
+        <strong>🔹 Creating RegExp:</strong><br>
+        <code>// Literal notation</code><br>
+        <code>const regex1 = /pattern/flags;</code><br>
+
+        <code>// Constructor</code><br>
+        <code>const regex2 = new RegExp('pattern', 'flags');</code><br>
+
+        <strong>🔹 Common Methods:</strong><br>
+        <code>const text = "Hello World 123";</code><br>
+        <code>const pattern = /\d+/g; // Find all numbers</code><br>
+
+        <code>// test() - returns boolean</code><br>
+        <code>console.log(pattern.test(text)); // true</code><br>
+
+        <code>// match() - returns array of matches</code><br>
+        <code>console.log(text.match(/\d+/g)); // ["123"]</code><br>
+
+        <code>// replace() - replace matches</code><br>
+        <code>console.log(text.replace(/\d+/g, 'XXX')); // "Hello World XXX"</code><br>
+
+        <strong>🔹 Common Patterns:</strong><br>
+        <code>// Email validation</code><br>
+        <code>const emailRegex = /^[^\s&#64;]+&#64;[^\s&#64;]+\.[^\s&#64;]+$/;</code><br>
+
+        <code>// Phone number</code><br>
+        <code>const phoneRegex = /^\(\d&#123;3&#125;\)\s\d&#123;3&#125;-\d&#123;4&#125;$/;</code><br>
+
+        <code>// Password (8+ chars, letter, number, special)</code><br>
+        <code>const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[&#64;$!%*#?&])[A-Za-z\d&#64;$!%*#?&]&#123;8,&#125;$/;</code><br>
+
+        <strong>🔹 Flags:</strong><br>
+        • <strong>g:</strong> Global search<br>
+        • <strong>i:</strong> Case-insensitive<br>
+        • <strong>m:</strong> Multiline<br>
+        • <strong>s:</strong> Dot matches newline<br>
+
+        <strong>🔹 Practical Example:</strong><br>
+        <code>function validateEmail(email) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;const regex = /^[a-zA-Z0-9._%+-]+&#64;[a-zA-Z0-9.-]+\.[a-zA-Z]&#123;2,&#125;$/;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return regex.test(email);</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🧠 Use Cases:</strong><br>
+        ✔️ Form validation<br>
+        ✔️ Text processing and parsing<br>
+        ✔️ Search and replace operations<br>
+        ✔️ Data extraction from strings
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>19) What is Error Handling in JavaScript? try-catch-finally</h4>
+        <p>
+        <strong>Answer:</strong> Error handling allows you to gracefully manage runtime errors and prevent your application from crashing unexpectedly.<br>
+
+        <strong>🔹 Basic try-catch:</strong><br>
+        <code>try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;// Code that might throw an error</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;let result = riskyOperation();</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(result);</code><br>
+        <code>&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.error("An error occurred:", error.message);</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 try-catch-finally:</strong><br>
+        <code>try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;let data = JSON.parse(jsonString);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(data);</code><br>
+        <code>&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.error("JSON parsing failed:", error.message);</code><br>
+        <code>&#125; finally &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log("Cleanup operations");</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Throwing Custom Errors:</strong><br>
+        <code>function divide(a, b) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;if (b === 0) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw new Error("Division by zero is not allowed");</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;return a / b;</code><br>
+        <code>&#125;</code><br>
+
+        <code>try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(divide(10, 0));</code><br>
+        <code>&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.error(error.message);</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Custom Error Classes:</strong><br>
+        <code>class ValidationError extends Error &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;constructor(message) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(message);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this.name = "ValidationError";</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Async Error Handling:</strong><br>
+        <code>async function fetchData() &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;try &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const response = await fetch('/api/data');</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;const data = await response.json();</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return data;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125; catch (error) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.error("Fetch failed:", error);</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;throw error;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;&#125;</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🧠 Best Practices:</strong><br>
+        ✔️ Always handle errors appropriately<br>
+        ✔️ Use specific error messages<br>
+        ✔️ Log errors for debugging<br>
+        ✔️ Don't ignore caught errors
+        </p>
+    </div>
+
+    <div class="question-answer">
+        <h4>20) What are Set and Map in JavaScript?</h4>
+        <p>
+        <strong>Answer:</strong> Set and Map are ES6 data structures. Set stores unique values, and Map stores key-value pairs with any type of keys.<br>
+
+        <strong>🔹 Set - Unique Values:</strong><br>
+        <code>const mySet = new Set();</code><br>
+        <code>mySet.add(1);</code><br>
+        <code>mySet.add(2);</code><br>
+        <code>mySet.add(2); // Duplicate, won't be added</code><br>
+        <code>mySet.add("hello");</code><br>
+
+        <code>console.log(mySet); // Set &#123;1, 2, "hello"&#125;</code><br>
+        <code>console.log(mySet.has(1)); // true</code><br>
+        <code>console.log(mySet.size); // 3</code><br>
+
+        <strong>🔹 Set Methods:</strong><br>
+        <code>// Remove duplicates from array</code><br>
+        <code>const numbers = [1, 2, 2, 3, 4, 4, 5];</code><br>
+        <code>const uniqueNumbers = [...new Set(numbers)];</code><br>
+        <code>console.log(uniqueNumbers); // [1, 2, 3, 4, 5]</code><br>
+
+        <code>// Iteration</code><br>
+        <code>for (let value of mySet) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(value);</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Map - Key-Value Pairs:</strong><br>
+        <code>const myMap = new Map();</code><br>
+        <code>myMap.set('name', 'John');</code><br>
+        <code>myMap.set('age', 30);</code><br>
+        <code>myMap.set(1, 'number key');</code><br>
+        <code>myMap.set(true, 'boolean key');</code><br>
+
+        <code>console.log(myMap.get('name')); // "John"</code><br>
+        <code>console.log(myMap.has('age')); // true</code><br>
+        <code>console.log(myMap.size); // 4</code><br>
+
+        <strong>🔹 Map vs Object:</strong><br>
+        <code>// Map allows any type of keys</code><br>
+        <code>const objKey = &#123; id: 1 &#125;;</code><br>
+        <code>myMap.set(objKey, 'object as key');</code><br>
+
+        <code>// Iteration</code><br>
+        <code>for (let [key, value] of myMap) &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log(`$&#123;key&#125; = $&#123;value&#125;`);</code><br>
+        <code>&#125;</code><br>
+
+        <strong>🔹 Practical Examples:</strong><br>
+        <code>// Counting occurrences</code><br>
+        <code>const words = ['apple', 'banana', 'apple', 'cherry'];</code><br>
+        <code>const wordCount = new Map();</code><br>
+        <code>words.forEach(word => &#123;</code><br>
+        <code>&nbsp;&nbsp;&nbsp;&nbsp;wordCount.set(word, (wordCount.get(word) || 0) + 1);</code><br>
+        <code>&#125;);</code><br>
+
+        <strong>🧠 When to Use:</strong><br>
+        ✔️ Set: Remove duplicates, check membership<br>
+        ✔️ Map: When you need non-string keys<br>
+        ✔️ Both: When you need size property and iteration<br>
+        ✔️ Better performance than arrays for lookups
+        </p>
+    </div>
+
+    </div>
+</div>

@@ -1,1 +1,153 @@
-<p>prototypes works!</p>
+<div class="overall-wrapper" appMaximize #javascriptPrototypes="maximize" id="javascriptPrototypes">
+  <div class="wrapper">
+       <img class="swap" *ngIf="javascriptPrototypes.checkfullscreen() == 'hide'" (click)="javascriptPrototypes.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="javascriptPrototypes.checkfullscreen() != 'hide'" (click)="javascriptPrototypes.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          In JavaScript, <strong>Prototypes & Inheritance</strong> allow objects to inherit properties and methods from other objects, enabling code reuse and dynamic behavior.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          They help you <strong>create efficient object hierarchies</strong>, avoid repetition, and extend functionality across multiple objects without rewriting code.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          You can use them in <strong>object-oriented programming, library development, frameworks</strong>, or any project where shared behavior between objects is needed.
+        </p>
+      </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Understanding Prototypes</h2>
+       <p>Every JavaScript object has an internal link to another object called its prototype. Properties and methods can be inherited from the prototype.</p>
+       
+       <h3>Basic Prototype Example</h3>
+       <pre><code><span class="comment">// Create an object with a method</span>
+const animal = &#123;
+  eat() &#123;
+    console.log(`$&#123;this.name&#125; is eating`);
+  &#125;
+&#125;;
+
+<span class="comment">// Create a new object inheriting from animal</span>
+const dog = Object.create(animal);
+dog.name = "Buddy";
+dog.eat();  <span class="comment">// Buddy is eating</span>
+</code></pre>
+
+       <h3>Key Prototype Concepts</h3>
+       <ul>
+         <li><strong>Object.prototype:</strong> The root prototype from which all objects inherit.</li>
+         <li><strong>__proto__:</strong> Internal property linking to the prototype.</li>
+         <li><strong>Object.create():</strong> Creates an object with a specified prototype.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>2. Constructor Functions & Prototypes</h2>
+       <p>Constructor functions allow you to create multiple similar objects, sharing methods via the prototype.</p>
+
+       <h3>Example: Constructor & Prototype</h3>
+       <pre><code><span class="comment">// Constructor function</span>
+function Person(name, age) &#123;
+  this.name = name;
+  this.age = age;
+&#125;
+
+<span class="comment">// Adding method to prototype</span>
+Person.prototype.greet = function() &#123;
+  console.log(`Hello, my name is $&#123;this.name&#125;`);
+&#125;;
+
+const alice = new Person("Alice", 25);
+alice.greet();  <span class="comment">// Hello, my name is Alice</span>
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Methods defined on the prototype are shared by all instances.</li>
+         <li>Reduces memory usage since functions are not duplicated.</li>
+         <li>Supports inheritance chain through the prototype link.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>3. ES6 Classes & Inheritance</h2>
+       <p>Modern JavaScript uses <strong>classes</strong> to simplify constructor and prototype syntax while still using prototypes under the hood.</p>
+
+       <h3>Example: Class Inheritance</h3>
+       <pre><code><span class="comment">// Base class</span>
+class Animal &#123;
+  constructor(name) &#123;
+    this.name = name;
+  &#125;
+
+  eat() &#123;
+    console.log(`$&#123;this.name&#125; is eating`);
+  &#125;
+&#125;
+
+<span class="comment">// Derived class</span>
+class Dog extends Animal &#123;
+  bark() &#123;
+    console.log(`$&#123;this.name&#125; is barking`);
+  &#125;
+&#125;
+
+const max = new Dog("Max");
+max.eat();  <span class="comment">// Max is eating</span>
+max.bark(); <span class="comment">// Max is barking</span>
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li><strong>extends:</strong> Sets up prototype inheritance between classes.</li>
+         <li><strong>super():</strong> Calls the parent class constructor.</li>
+         <li>Class syntax is syntactic sugar over JavaScript's prototype-based inheritance.</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>4. Practical Use Cases</h2>
+       <p>Common scenarios for prototypes and inheritance in JavaScript:</p>
+
+       <h3>Shared Methods</h3>
+       <p>Define methods once in prototype for all objects:</p>
+       <pre><code>
+function Vehicle(type) &#123;
+  this.type = type;
+&#125;
+
+Vehicle.prototype.move = function() &#123;
+  console.log(`$&#123;this.type&#125; is moving`);
+&#125;;
+
+const car = new Vehicle("Car");
+const bike = new Vehicle("Bike");
+car.move();  <span class="comment">// Car is moving</span>
+bike.move(); <span class="comment">// Bike is moving</span>
+</code></pre>
+
+       <h3>Library/Framework Objects</h3>
+       <p>Objects in libraries like jQuery or frameworks often rely on prototype inheritance to share functionality.</p>
+
+       <h3>Extending Built-in Objects</h3>
+       <pre><code><span class="comment">// Add new method to Array prototype</span>
+Array.prototype.first = function() &#123;
+  return this[0];
+&#125;;
+
+const arr = [10, 20, 30];
+console.log(arr.first());  <span class="comment">// 10</span>
+</code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Use prototypes to save memory by sharing methods.</li>
+         <li>Inheritance helps organize code and create hierarchies.</li>
+         <li>ES6 classes make inheritance syntax cleaner but still use prototypes internally.</li>
+       </ul>
+     </div>
+</div>

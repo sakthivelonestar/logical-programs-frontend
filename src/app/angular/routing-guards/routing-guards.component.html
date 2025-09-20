@@ -1,1 +1,391 @@
-<p>routing-guards works!</p>
+<div class="overall-wrapper" appMaximize #directives="maximize" id="directives">
+  <div class="wrapper">
+    <img class="swap" *ngIf="directives.checkfullscreen() == 'hide'" (click)="directives.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="directives.checkfullscreen() != 'hide'" (click)="directives.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+            
+            <!-- Header Section -->
+            <div class="header">
+                <p>
+                    <span class="question">What:</span> In Angular,
+                    <strong>Route Guards</strong> control access to routes based on conditions 
+                    (e.g., authentication, unsaved changes), while 
+                    <strong>Resolvers</strong> pre-fetch required data before the route is activated.
+                </p>
+
+                <p>
+                    <span class="question">Why:</span> Guards improve <strong>security</strong> and 
+                    <strong>user experience</strong> by restricting unauthorized access, 
+                    while Resolvers ensure that the required data is available before rendering a view.
+                </p>
+
+                <p>
+                    <span class="question">Where:</span> Use in applications requiring 
+                    <strong>authentication/authorization checks</strong>, 
+                    <strong>data preloading</strong>, and 
+                    <strong>preventing navigation</strong> from unsaved forms.
+                </p>
+            </div>
+        </div>
+
+        <div class="examples">
+            <!-- Flow Diagram -->
+            <div class="flow-diagram">
+                <h3 style="margin-bottom: 1rem; border-bottom: none;">Navigation Flow</h3>
+                <div class="flow-step">Route Request</div>
+                <span class="arrow">→</span>
+                <div class="flow-step">canActivate</div>
+                <span class="arrow">→</span>
+                <div class="flow-step">Resolve Data</div>
+                <span class="arrow">→</span>
+                <div class="flow-step">Load Component</div>
+                <span class="arrow">→</span>
+                <div class="flow-step">canDeactivate</div>
+            </div>
+
+            <!-- Step 1 -->
+    <div class="step">
+      <h3><span class="step-number">1</span>🔒 Create Authentication Guard</h3>
+      <div class="step-description">
+        <div class="title">Purpose & Implementation</div>
+        <div class="details">
+          The <span class="highlight">CanActivate</span> guard checks if a user is authenticated before allowing access to a route. 
+          If not authenticated, it redirects to the login page.
+        </div>
+      </div>
+
+<pre ngNonBindable><code><span class="comment">// auth.guard.ts</span>
+import <span class="punctuation">&#123;</span> Injectable <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> CanActivate, Router, UrlTree <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/router'</span>;
+import <span class="punctuation">&#123;</span> Observable <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+import <span class="punctuation">&#123;</span> AuthService <span class="punctuation">&#125;</span> from <span class="string">'./auth.service'</span>;
+
+&#64;<span class="keyword">Injectable</span>(<span class="punctuation">&#123;</span> providedIn: <span class="string">'root'</span> <span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">AuthGuard</span> <span class="keyword">implements</span> <span class="class">CanActivate</span> <span class="punctuation">&#123;</span>
+  <span class="keyword">constructor</span>(
+    <span class="keyword">private</span> authService: <span class="class">AuthService</span>, 
+    <span class="keyword">private</span> router: <span class="class">Router</span>
+  ) <span class="punctuation">&#123;&#125;</span>
+
+  <span class="function">canActivate</span>(): <span class="class">Observable</span>&lt;<span class="keyword">boolean</span> | <span class="class">UrlTree</span>&gt; 
+  | <span class="class">Promise</span>&lt;<span class="keyword">boolean</span> | <span class="class">UrlTree</span>&gt; 
+  | <span class="keyword">boolean</span> | <span class="class">UrlTree</span> <span class="punctuation">&#123;</span>
+    <span class="keyword">if</span> (this.authService.isLoggedIn()) <span class="punctuation">&#123;</span>
+      <span class="keyword">return</span> <span class="keyword">true</span>;
+    <span class="punctuation">&#125;</span> <span class="keyword">else</span> <span class="punctuation">&#123;</span>
+      <span class="comment">// Redirect to login and return UrlTree</span>
+      <span class="keyword">return</span> this.router.createUrlTree([<span class="string">'/login'</span>]);
+    <span class="punctuation">&#125;</span>
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span></code></pre>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h3><span class="step-number">2</span>⚠️ Create Can Deactivate Guard</h3>
+<pre ngNonBindable><code><span class="comment">// can-deactivate.guard.ts</span>
+import <span class="punctuation">&#123;</span> Injectable <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> CanDeactivate <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/router'</span>;
+import <span class="punctuation">&#123;</span> Observable <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+
+<span class="comment">// Interface that components must implement</span>
+<span class="keyword">export interface</span> <span class="class">CanComponentDeactivate</span> <span class="punctuation">&#123;</span>
+  canDeactivate: () =&gt; <span class="class">Observable</span>&lt;<span class="keyword">boolean</span>&gt; | <span class="class">Promise</span>&lt;<span class="keyword">boolean</span>&gt; | <span class="keyword">boolean</span>;
+<span class="punctuation">&#125;</span>
+
+&#64;<span class="keyword">Injectable</span>(<span class="punctuation">&#123;</span> providedIn: <span class="string">'root'</span> <span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">CanDeactivateGuard</span> <span class="keyword">implements</span> <span class="class">CanDeactivate</span>&lt;<span class="class">CanComponentDeactivate</span>&gt; <span class="punctuation">&#123;</span>
+  canDeactivate(component: <span class="class">CanComponentDeactivate</span>): 
+    <span class="class">Observable</span>&lt;<span class="keyword">boolean</span>&gt; | <span class="class">Promise</span>&lt;<span class="keyword">boolean</span>&gt; | <span class="keyword">boolean</span> <span class="punctuation">&#123;</span>
+    <span class="comment">// Check if component has canDeactivate method</span>
+    <span class="keyword">return</span> component.canDeactivate ? component.canDeactivate() : <span class="keyword">true</span>;
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span></code></pre>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h3><span class="step-number">3</span>📦 Create Data Resolver</h3>
+<pre ngNonBindable><code><span class="comment">// user.resolver.ts</span>
+import <span class="punctuation">&#123;</span> Injectable <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> Resolve, ActivatedRouteSnapshot, RouterStateSnapshot <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/router'</span>;
+import <span class="punctuation">&#123;</span> Observable, of <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+import <span class="punctuation">&#123;</span> catchError <span class="punctuation">&#125;</span> from <span class="string">'rxjs/operators'</span>;
+import <span class="punctuation">&#123;</span> UserService <span class="punctuation">&#125;</span> from <span class="string">'./user.service'</span>;
+import <span class="punctuation">&#123;</span> User <span class="punctuation">&#125;</span> from <span class="string">'./user.model'</span>;
+
+&#64;<span class="keyword">Injectable</span>(<span class="punctuation">&#123;</span> providedIn: <span class="string">'root'</span> <span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">UserResolver</span> <span class="keyword">implements</span> <span class="class">Resolve</span>&lt;<span class="class">User</span> | <span class="keyword">null</span>&gt; <span class="punctuation">&#123;</span>
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> userService: <span class="class">UserService</span>) <span class="punctuation">&#123;&#125;</span>
+
+  resolve(route: <span class="class">ActivatedRouteSnapshot</span>, state: <span class="class">RouterStateSnapshot</span>): 
+    <span class="class">Observable</span>&lt;<span class="class">User</span> | <span class="keyword">null</span>&gt; <span class="punctuation">&#123;</span>
+    <span class="keyword">const</span> id = route.paramMap.get(<span class="string">'id'</span>);
+    <span class="keyword">if</span> (id) <span class="punctuation">&#123;</span>
+      <span class="keyword">return</span> this.userService.getUserById(id).pipe(
+        catchError(() =&gt; of(<span class="keyword">null</span>)) <span class="comment">// Handle errors gracefully</span>
+      );
+    <span class="punctuation">&#125;</span>
+    <span class="keyword">return</span> of(<span class="keyword">null</span>);
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span></code></pre>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h3><span class="step-number">4</span>🧩 Implement CanDeactivate in Component</h3>
+<pre ngNonBindable><code><span class="comment">// user-form.component.ts</span>
+import <span class="punctuation">&#123;</span> Component <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> CanComponentDeactivate <span class="punctuation">&#125;</span> from <span class="string">'./can-deactivate.guard'</span>;
+import <span class="punctuation">&#123;</span> Observable <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+
+&#64;<span class="keyword">Component</span>(<span class="punctuation">&#123;</span>
+  selector: <span class="string">'app-user-form'</span>,
+  templateUrl: <span class="string">'./user-form.component.html'</span>
+<span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">UserFormComponent</span> <span class="keyword">implements</span> <span class="class">CanComponentDeactivate</span> <span class="punctuation">&#123;</span>
+  hasUnsavedChanges = <span class="keyword">false</span>;
+
+  canDeactivate(): <span class="class">Observable</span>&lt;<span class="keyword">boolean</span>&gt; | <span class="class">Promise</span>&lt;<span class="keyword">boolean</span>&gt; | <span class="keyword">boolean</span> <span class="punctuation">&#123;</span>
+    <span class="keyword">if</span> (this.hasUnsavedChanges) <span class="punctuation">&#123;</span>
+      <span class="keyword">return</span> confirm(<span class="string">'You have unsaved changes. Do you want to leave?'</span>);
+    <span class="punctuation">&#125;</span>
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+  <span class="punctuation">&#125;</span>
+
+  onFormChange() <span class="punctuation">&#123;</span>
+    this.hasUnsavedChanges = <span class="keyword">true</span>;
+  <span class="punctuation">&#125;</span>
+
+  onSave() <span class="punctuation">&#123;</span>
+    <span class="comment">// Save logic here</span>
+    this.hasUnsavedChanges = <span class="keyword">false</span>;
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span></code></pre>
+    </div>
+
+            <!-- Step 5: Configure Routes -->
+            <div class="step">
+                <h3><span class="step-number">5</span>🛣️ Configure Routes with Guards & Resolvers</h3>
+                
+                <div class="step-description">
+                    <div class="title">Route Configuration & Integration</div>
+                    <div class="details">
+                        Finally, apply the guards and resolvers to your routes. Multiple guards can be applied to a single route, 
+                        and they will execute in the order specified.
+                    </div>
+                    <ul class="key-points">
+                        <li>Multiple guards execute in array order</li>
+                        <li>Resolvers run after guards pass</li>
+                        <li>Use descriptive resolver keys</li>
+                    </ul>
+                </div>
+
+              <pre ngNonBindable><code><span class="comment">// app-routing.module.ts</span>
+import <span class="punctuation">&#123;</span> NgModule <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> RouterModule, Routes <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/router'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">UserListComponent</span> <span class="punctuation">&#125;</span> from <span class="string">'./user-list/user-list.component'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">UserDetailComponent</span> <span class="punctuation">&#125;</span> from <span class="string">'./user-detail/user-detail.component'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">UserFormComponent</span> <span class="punctuation">&#125;</span> from <span class="string">'./user-form/user-form.component'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">AuthGuard</span> <span class="punctuation">&#125;</span> from <span class="string">'./auth.guard'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">CanDeactivateGuard</span> <span class="punctuation">&#125;</span> from <span class="string">'./can-deactivate.guard'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">UserResolver</span> <span class="punctuation">&#125;</span> from <span class="string">'./user.resolver'</span>;
+
+<span class="keyword">const</span> routes: <span class="class">Routes</span> = <span class="punctuation">[</span>
+  <span class="punctuation">&#123;</span>
+    path: <span class="string">'users'</span>,
+    component: <span class="class">UserListComponent</span>,
+    canActivate: <span class="punctuation">[</span><span class="class">AuthGuard</span><span class="punctuation">]</span>
+  <span class="punctuation">&#125;</span>,
+  <span class="punctuation">&#123;</span>
+    path: <span class="string">'user/:id'</span>,
+    component: <span class="class">UserDetailComponent</span>,
+    canActivate: <span class="punctuation">[</span><span class="class">AuthGuard</span><span class="punctuation">]</span>,
+    resolve: <span class="punctuation">&#123;</span> user: <span class="class">UserResolver</span> <span class="punctuation">&#125;</span>
+  <span class="punctuation">&#125;</span>,
+  <span class="punctuation">&#123;</span>
+    path: <span class="string">'user/:id/edit'</span>,
+    component: <span class="class">UserFormComponent</span>,
+    canActivate: <span class="punctuation">[</span><span class="class">AuthGuard</span><span class="punctuation">]</span>,
+    canDeactivate: <span class="punctuation">[</span><span class="class">CanDeactivateGuard</span><span class="punctuation">]</span>,
+    resolve: <span class="punctuation">&#123;</span> user: <span class="class">UserResolver</span> <span class="punctuation">&#125;</span>
+  <span class="punctuation">&#125;</span>,
+  <span class="punctuation">&#123;</span> path: <span class="string">''</span>, redirectTo: <span class="string">'/users'</span>, pathMatch: <span class="string">'full'</span> <span class="punctuation">&#125;</span>
+<span class="punctuation">]</span>;
+
+&#64;<span class="keyword">NgModule</span>(<span class="punctuation">&#123;</span>
+  imports: <span class="punctuation">[</span><span class="class">RouterModule</span>.forRoot(routes)<span class="punctuation">]</span>,
+  exports: <span class="punctuation">[</span><span class="class">RouterModule</span><span class="punctuation">]</span>
+<span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">AppRoutingModule</span> <span class="punctuation">&#123;&#125;</span></code></pre>
+
+
+                <div class="pro-tip">
+                    <strong>💡 Execution Order:</strong> Guards execute in order: canActivate → resolve → component load → canDeactivate (when leaving).
+                </div>
+            </div>
+
+            <!-- Step 6: Access Resolved Data -->
+            <div class="step">
+                <h3><span class="step-number">6</span>🎯 Access Resolved Data in Component</h3>
+                
+                <div class="step-description">
+                    <div class="title">Data Consumption & Usage</div>
+                    <div class="details">
+                        Access the resolved data in your component through the ActivatedRoute service. 
+                        The data will be available immediately when the component initializes.
+                    </div>
+                    <ul class="key-points">
+                        <li>Data available in ngOnInit</li>
+                        <li>Use snapshot for one-time access</li>
+                        <li>Subscribe for dynamic updates</li>
+                    </ul>
+                </div>
+
+            <pre ngNonBindable><code><span class="comment">// user-detail.component.ts</span>
+import <span class="punctuation">&#123;</span> Component, OnInit <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> ActivatedRoute <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/router'</span>;
+import <span class="punctuation">&#123;</span> <span class="class">User</span> <span class="punctuation">&#125;</span> from <span class="string">'./user.model'</span>;
+
+&#64;<span class="keyword">Component</span>(<span class="punctuation">&#123;</span>
+  selector: <span class="string">'app-user-detail'</span>,
+  template: <span class="string">`
+    &lt;div *ngIf="user"&gt;
+      &lt;h2&gt;&#123;&#123; user.name &#125;&#125;&lt;/h2&gt;
+      &lt;p&gt;Email: &#123;&#123; user.email &#125;&#125;&lt;/p&gt;
+      &lt;p&gt;Role: &#123;&#123; user.role &#125;&#125;&lt;/p&gt;
+    &lt;/div&gt;
+    &lt;div *ngIf="!user"&gt;
+      &lt;p&gt;User not found&lt;/p&gt;
+    &lt;/div&gt;
+  `</span>
+<span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">UserDetailComponent</span> <span class="keyword">implements</span> <span class="class">OnInit</span> <span class="punctuation">&#123;</span>
+  user: <span class="class">User</span> | <span class="keyword">null</span> = <span class="keyword">null</span>;
+
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> route: <span class="class">ActivatedRoute</span>) <span class="punctuation">&#123;&#125;</span>
+
+  <span class="function">ngOnInit</span>() <span class="punctuation">&#123;</span>
+    <span class="comment">// Access resolved data - snapshot approach</span>
+    this.user = this.route.snapshot.data[<span class="string">'user'</span>];
+    
+    <span class="comment">// Or subscribe to data changes - reactive approach</span>
+    this.route.data.subscribe(data =&gt; <span class="punctuation">&#123;</span>
+      this.user = data[<span class="string">'user'</span>];
+    <span class="punctuation">&#125;</span>);
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span></code></pre>
+
+
+        <div class="pro-tip">
+            <strong>💡 Performance:</strong> Use snapshot.data for static data or subscribe to data for dynamic route parameter changes.
+        </div>
+    </div>
+
+   <!-- Interview Questions -->
+    <div class="interview-questions step">
+    <h2>20 Advanced Interview Questions on Route Guards & Resolvers</h2>
+    <ol class="question-list">
+        <li>
+        <strong class="question-title">What are Angular Route Guards and why are they used?</strong>
+        <p class="answer">Guards are interfaces that control navigation. They decide whether a route can be activated, deactivated, loaded, or whether data should be resolved before activation.</p>
+        <span class="category">Basics</span>
+        </li>
+        <li>
+        <strong class="question-title">List all types of Angular Route Guards.</strong>
+        <p class="answer">Types are: <code>CanActivate</code>, <code>CanActivateChild</code>, <code>CanDeactivate</code>, <code>CanLoad</code>, and <code>Resolve</code>.</p>
+        <span class="category">Guards</span>
+        </li>
+        <li>
+        <strong class="question-title">What is the difference between <code>CanActivate</code> and <code>CanLoad</code>?</strong>
+        <p class="answer"><code>CanActivate</code> checks access after module load, while <code>CanLoad</code> prevents the lazy-loaded module from even being downloaded.</p>
+        <span class="category">Access Control</span>
+        </li>
+        <li>
+        <strong class="question-title">When should you use <code>CanDeactivate</code> guard?</strong>
+        <p class="answer">When you want to prevent users from leaving a component with unsaved changes, by prompting confirmation.</p>
+        <span class="category">UX</span>
+        </li>
+        <li>
+        <strong class="question-title">How does a Resolver differ from a Guard?</strong>
+        <p class="answer">Resolvers pre-fetch data before activating a route, while guards only control navigation flow without fetching data.</p>
+        <span class="category">Comparison</span>
+        </li>
+        <li>
+        <strong class="question-title">What happens if a Resolver fails to fetch data?</strong>
+        <p class="answer">By default, route activation waits for the resolver. If it throws an error, you can handle it with <code>catchError</code> to return a fallback value or redirect.</p>
+        <span class="category">Error Handling</span>
+        </li>
+        <li>
+        <strong class="question-title">Can you use multiple Guards on a single route?</strong>
+        <p class="answer">Yes, guards are executed in the array order. If one fails (returns false/UrlTree), navigation is canceled.</p>
+        <span class="category">Execution</span>
+        </li>
+        <li>
+        <strong class="question-title">What is the execution order of Guards & Resolvers?</strong>
+        <p class="answer">Order: <code>CanActivate</code>/<code>CanActivateChild</code> → <code>Resolve</code> → Component loads → <code>CanDeactivate</code> (when leaving).</p>
+        <span class="category">Flow</span>
+        </li>
+        <li>
+        <strong class="question-title">How do you pass parameters to a Resolver?</strong>
+        <p class="answer">Use <code>route.paramMap.get()</code> inside the resolver’s <code>resolve()</code> method to access route parameters.</p>
+        <span class="category">Data</span>
+        </li>
+        <li>
+        <strong class="question-title">How can Guards improve application security?</strong>
+        <p class="answer">They restrict unauthorized access by checking authentication/authorization before loading or activating routes.</p>
+        <span class="category">Security</span>
+        </li>
+        <li>
+        <strong class="question-title">How can you reuse the same Guard across multiple routes?</strong>
+        <p class="answer">Provide the guard globally (in root) and reference it in multiple route configurations.</p>
+        <span class="category">Reusability</span>
+        </li>
+        <li>
+        <strong class="question-title">What values can a Guard return?</strong>
+        <p class="answer">A Guard can return <code>boolean</code>, <code>UrlTree</code>, <code>Observable&lt;boolean | UrlTree&gt;</code>, or <code>Promise&lt;boolean | UrlTree&gt;</code>.</p>
+        <span class="category">Return Types</span>
+        </li>
+        <li>
+        <strong class="question-title">How do you access resolved data inside a component?</strong>
+        <p class="answer">Use <code>ActivatedRoute.snapshot.data['key']</code> for static access or <code>ActivatedRoute.data.subscribe()</code> for dynamic updates.</p>
+        <span class="category">Usage</span>
+        </li>
+        <li>
+        <strong class="question-title">Can Guards or Resolvers be asynchronous?</strong>
+        <p class="answer">Yes, they can return Observables or Promises to handle async checks or API calls.</p>
+        <span class="category">Async</span>
+        </li>
+        <li>
+        <strong class="question-title">What is the main difference between <code>CanActivate</code> and <code>CanActivateChild</code>?</strong>
+        <p class="answer"><code>CanActivate</code> controls access to a route, while <code>CanActivateChild</code> controls access to child routes within a parent route.</p>
+        <span class="category">Hierarchy</span>
+        </li>
+        <li>
+        <strong class="question-title">What is a common use case for combining Guards and Resolvers?</strong>
+        <p class="answer">Example: Use a guard to check if a user is logged in, then a resolver to fetch the user’s profile before loading the component.</p>
+        <span class="category">Combination</span>
+        </li>
+        <li>
+        <strong class="question-title">How do you test Route Guards?</strong>
+        <p class="answer">Use Jasmine/Karma with <code>TestBed</code> to inject the guard and mock dependencies like AuthService or Router.</p>
+        <span class="category">Testing</span>
+        </li>
+        <li>
+        <strong class="question-title">How do you handle navigation cancellation in Guards?</strong>
+        <p class="answer">Return <code>false</code> or a <code>UrlTree</code> redirect to cancel navigation or redirect to another route.</p>
+        <span class="category">Navigation</span>
+        </li>
+        <li>
+        <strong class="question-title">Can you use Resolvers for multiple data sources?</strong>
+        <p class="answer">Yes, you can configure multiple resolvers in the route, each providing different data keys.</p>
+        <span class="category">Multiple Resolvers</span>
+        </li>
+        <li>
+        <strong class="question-title">How do Guards & Resolvers contribute to better UX?</strong>
+        <p class="answer">Guards prevent errors by blocking unauthorized navigation, while resolvers ensure data is loaded upfront, avoiding blank screens.</p>
+        <span class="category">UX</span>
+        </li>
+    </ol>
+    </div> 
+</div>
+</div>

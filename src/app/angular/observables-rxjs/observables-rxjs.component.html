@@ -1,1 +1,254 @@
-<p>observables-rxjs works!</p>
+<div class="overall-wrapper" appMaximize #lifecycleHooks="maximize" id="lifecycle-hooks">
+  <div class="wrapper">
+    <img class="swap" *ngIf="lifecycleHooks.checkfullscreen() == 'hide'" (click)="lifecycleHooks.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="lifecycleHooks.checkfullscreen() != 'hide'" (click)="lifecycleHooks.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+    
+    <!-- Header Section -->
+    <div class="header">
+      <p>
+        <span class="question">What:</span> In Angular, 
+        <strong>Observables</strong> (from <strong>RxJS</strong>) are a powerful way to 
+        manage asynchronous data streams like HTTP requests, user input, or real-time updates. 
+        They emit values over time and can be subscribed to by components or services.
+      </p>
+
+      <p>
+        <span class="question">Why:</span> Observables provide a <strong>reactive programming</strong> model, 
+        enabling better handling of async tasks, error management, 
+        and composition of multiple streams compared to Promises.
+      </p>
+
+      <p>
+        <span class="question">Where:</span> Use in <strong>HTTPClient</strong> for API calls, 
+        <strong>Forms & Events</strong> for reactive programming, and 
+        <strong>real-time data</strong> (e.g., WebSockets).
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <!-- Flow Diagram -->
+    <div class="flow-diagram">
+      <h3 style="margin-bottom: 1rem; border-bottom: none;">Observable Flow</h3>
+      <div class="flow-step">Observable Creation</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Subscription</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Data Emission</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Operators Applied</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Unsubscribe / Complete</div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <h3><span class="step-number">1</span>✨ Create an Observable</h3>
+      <div class="step-description">
+        <div class="title">Definition</div>
+        <div class="details">
+          Observables emit data values over time. You can create them manually or use helpers from RxJS.
+        </div>
+      </div>
+
+<pre ngNonBindable><code><span class="comment">// observable-example.ts</span>
+import <span class="punctuation">&#123;</span> Observable <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+
+<span class="keyword">const</span> customObservable = <span class="keyword">new</span> <span class="class">Observable</span>(observer =&gt; <span class="punctuation">&#123;</span>
+  observer.next(<span class="string">'First Value'</span>);
+  observer.next(<span class="string">'Second Value'</span>);
+  observer.complete();
+<span class="punctuation">&#125;</span>);
+
+customObservable.subscribe(value =&gt; <span class="punctuation">&#123;</span>
+  console.log(value);
+<span class="punctuation">&#125;</span>);
+</code></pre>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h3><span class="step-number">2</span>🔄 Common RxJS Operators</h3>
+<pre ngNonBindable><code><span class="comment">// rxjs-operators.ts</span>
+import <span class="punctuation">&#123;</span> from, map, filter <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+
+<span class="keyword">const</span> numbers$ = from([1, 2, 3, 4, 5]);
+
+numbers$.pipe(
+  filter(num =&gt; num % 2 === 0),
+  map(num =&gt; num * 10)
+).subscribe(result =&gt; console.log(result)); 
+<span class="comment">// Output: 20, 40</span>
+</code></pre>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h3><span class="step-number">3</span>🌐 Using Observables with HttpClient</h3>
+<pre ngNonBindable><code><span class="comment">// user.service.ts</span>
+import <span class="punctuation">&#123;</span> Injectable <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> HttpClient <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/common/http'</span>;
+import <span class="punctuation">&#123;</span> Observable <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+
+&#64;<span class="keyword">Injectable</span>(<span class="punctuation">&#123;</span> providedIn: <span class="string">'root'</span> <span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">UserService</span> <span class="punctuation">&#123;</span>
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> http: HttpClient) <span class="punctuation">&#123;&#125;</span>
+
+  getUsers(): Observable&lt;any&gt; <span class="punctuation">&#123;</span>
+    <span class="keyword">return</span> this.http.get(<span class="string">'https://jsonplaceholder.typicode.com/users'</span>);
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span>
+</code></pre>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h3><span class="step-number">4</span>📡 Subscription & Unsubscription</h3>
+<pre ngNonBindable><code><span class="comment">// user.component.ts</span>
+import <span class="punctuation">&#123;</span> Component, OnInit, OnDestroy <span class="punctuation">&#125;</span> from <span class="string">'&#64;angular/core'</span>;
+import <span class="punctuation">&#123;</span> Subscription <span class="punctuation">&#125;</span> from <span class="string">'rxjs'</span>;
+import <span class="punctuation">&#123;</span> UserService <span class="punctuation">&#125;</span> from <span class="string">'./user.service'</span>;
+
+&#64;<span class="keyword">Component</span>(<span class="punctuation">&#123;</span>
+  selector: <span class="string">'app-user'</span>,
+  template: <span class="string">'&lt;ul&gt;&lt;li *ngFor="let u of users"&gt;&#123;&#123;u.name&#125;&#125;&lt;/li&gt;&lt;/ul&gt;'</span>
+<span class="punctuation">&#125;</span>)
+<span class="keyword">export class</span> <span class="class">UserComponent</span> <span class="keyword">implements</span> OnInit, OnDestroy <span class="punctuation">&#123;</span>
+  users: any[] = [];
+  subscription!: Subscription;
+
+  <span class="keyword">constructor</span>(<span class="keyword">private</span> userService: UserService) <span class="punctuation">&#123;&#125;</span>
+
+  ngOnInit() <span class="punctuation">&#123;</span>
+    this.subscription = this.userService.getUsers().subscribe(data =&gt; <span class="punctuation">&#123;</span>
+      this.users = data;
+    <span class="punctuation">&#125;</span>);
+  <span class="punctuation">&#125;</span>
+
+  ngOnDestroy() <span class="punctuation">&#123;</span>
+    this.subscription.unsubscribe();
+  <span class="punctuation">&#125;</span>
+<span class="punctuation">&#125;</span>
+</code></pre>
+    </div>
+
+    <!-- Step 5: Hot vs Cold -->
+    <div class="step">
+      <h3><span class="step-number">5</span>🔥 Cold vs Hot Observables</h3>
+      <div class="step-description">
+        <div class="title">Key Difference</div>
+        <div class="details">
+          - <strong>Cold Observable</strong>: Starts emitting when subscribed (e.g., HttpClient).  
+          - <strong>Hot Observable</strong>: Produces values regardless of subscribers (e.g., DOM events, WebSockets).
+        </div>
+      </div>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>20 Advanced Interview Questions on Observables & RxJS</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What are Observables in Angular?</strong>
+          <p class="answer">Observables represent a stream of asynchronous events that can emit multiple values over time.</p>
+          <span class="category">Basics</span>
+        </li>
+        <li>
+          <strong class="question-title">How are Observables different from Promises?</strong>
+          <p class="answer">Promises return a single value and execute eagerly, while Observables can emit multiple values and are lazy until subscribed.</p>
+          <span class="category">Comparison</span>
+        </li>
+        <li>
+          <strong class="question-title">What is RxJS?</strong>
+          <p class="answer">RxJS is a library for reactive programming using Observables, providing operators to transform, filter, and combine streams.</p>
+          <span class="category">Library</span>
+        </li>
+        <li>
+          <strong class="question-title">What are some commonly used RxJS operators?</strong>
+          <p class="answer"><code>map</code>, <code>filter</code>, <code>switchMap</code>, <code>mergeMap</code>, <code>concatMap</code>, <code>take</code>, <code>debounceTime</code>.</p>
+          <span class="category">Operators</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between <code>switchMap</code>, <code>mergeMap</code>, and <code>concatMap</code>?</strong>
+          <p class="answer"><code>switchMap</code> cancels previous inner observables, <code>mergeMap</code> merges concurrently, <code>concatMap</code> queues sequentially.</p>
+          <span class="category">Advanced</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you cancel an Observable?</strong>
+          <p class="answer">By unsubscribing manually or using operators like <code>takeUntil</code> or <code>first</code>.</p>
+          <span class="category">Unsubscribe</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between Hot and Cold Observables?</strong>
+          <p class="answer">Cold observables start producing values on subscription, while hot observables emit regardless of subscriptions.</p>
+          <span class="category">Hot vs Cold</span>
+        </li>
+        <li>
+          <strong class="question-title">How does Angular HttpClient use Observables?</strong>
+          <p class="answer">HttpClient methods return Observables, making it easy to chain operators and manage async calls.</p>
+          <span class="category">HttpClient</span>
+        </li>
+        <li>
+          <strong class="question-title">What is a Subject in RxJS?</strong>
+          <p class="answer">A Subject is both an Observable and Observer, allowing values to be multicasted to many subscribers.</p>
+          <span class="category">Subject</span>
+        </li>
+        <li>
+          <strong class="question-title">What is BehaviorSubject?</strong>
+          <p class="answer">A BehaviorSubject holds a current value and emits it immediately to new subscribers along with subsequent values.</p>
+          <span class="category">Subject</span>
+        </li>
+        <li>
+          <strong class="question-title">What is ReplaySubject?</strong>
+          <p class="answer">It replays a specified number of previous values to new subscribers.</p>
+          <span class="category">Subject</span>
+        </li>
+        <li>
+          <strong class="question-title">What is AsyncSubject?</strong>
+          <p class="answer">It emits only the last value upon completion to all subscribers.</p>
+          <span class="category">Subject</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you handle errors in Observables?</strong>
+          <p class="answer">Using <code>catchError</code> operator or error callback in <code>subscribe</code>.</p>
+          <span class="category">Error Handling</span>
+        </li>
+        <li>
+          <strong class="question-title">What is <code>takeUntil</code> used for?</strong>
+          <p class="answer">It unsubscribes from an observable when another observable emits a value.</p>
+          <span class="category">Lifecycle</span>
+        </li>
+        <li>
+          <strong class="question-title">What are marble diagrams in RxJS?</strong>
+          <p class="answer">A visual representation of observables, operators, and emitted values over time.</p>
+          <span class="category">Visualization</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you combine multiple Observables?</strong>
+          <p class="answer">Using operators like <code>combineLatest</code>, <code>forkJoin</code>, <code>zip</code>, or <code>merge</code>.</p>
+          <span class="category">Combination</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between <code>forkJoin</code> and <code>combineLatest</code>?</strong>
+          <p class="answer"><code>forkJoin</code> waits for all observables to complete, then emits once. <code>combineLatest</code> emits whenever any observable emits, after all have emitted at least once.</p>
+          <span class="category">Advanced</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between <code>debounceTime</code> and <code>throttleTime</code>?</strong>
+          <p class="answer"><code>debounceTime</code> waits for a pause in emissions, while <code>throttleTime</code> allows emissions at fixed intervals.</p>
+          <span class="category">Performance</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you convert a Promise to an Observable?</strong>
+          <p class="answer">Using <code>from(promise)</code> in RxJS.</p>
+          <span class="category">Conversion</span>
+        </li>
+        <li>
+          <strong class="question-title">Why are Observables important in Angular?</strong>
+          <p class="answer">They enable reactive programming, improve async handling, allow cancellation, and compose complex event streams.</p>
+          <span class="category">Importance</span>
+        </li>
+      </ol>
+    </div> 
+  </div>
+</div>

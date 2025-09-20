@@ -1,1 +1,636 @@
-<p>state-management-basics works!</p>
+ <div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="routing-navigation">
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() == 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() != 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+
+            <!-- Enhanced Header Section -->
+            <div class="header">
+                <p>
+                    <span class="question">What:</span> In Angular,
+                    <strong>State Management</strong> is the practice of managing application state across components
+                    using services, RxJS, and patterns like Observable data services, ensuring data consistency and reactivity.
+                </p>
+
+                <p>
+                    <span class="question">Why:</span> It enables
+                    <strong>predictable data flow</strong>, <strong>component communication</strong>, and
+                    <strong>centralized state</strong>, reducing prop drilling and maintaining consistency across the application.
+                </p>
+
+                <p>
+                    <span class="question">Where:</span> Essential for
+                    <strong>complex applications</strong>, <strong>multi-component data sharing</strong>, 
+                    <strong>real-time applications</strong>, and any app requiring synchronized state across multiple views.
+                </p>
+            </div>
+  </div>
+
+        <div class="examples">
+            <!-- Step 1: Basic Service-Based State Management -->
+            <div class="step">
+                <h3>📊 Basic State Service (user-state.service.ts)</h3>
+                <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">BehaviorSubject</span>, <span class="string">Observable</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; <span class="string">map</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+
+<span class="keyword">export</span> <span class="keyword">interface</span> User &#123;
+  id: <span class="keyword">number</span>;
+  name: <span class="keyword">string</span>;
+  email: <span class="keyword">string</span>;
+  isActive: <span class="keyword">boolean</span>;
+&#125;
+
+<span class="keyword">export</span> <span class="keyword">interface</span> UserState &#123;
+  users: User[];
+  selectedUser: User | <span class="keyword">null</span>;
+  loading: <span class="keyword">boolean</span>;
+  error: <span class="keyword">string</span> | <span class="keyword">null</span>;
+&#125;
+
+&#64;Injectable(&#123;
+  providedIn: <span class="string">'root'</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> UserStateService &#123;
+  <span class="keyword">private</span> <span class="keyword">readonly</span> initialState: UserState = &#123;
+    users: [],
+    selectedUser: <span class="keyword">null</span>,
+    loading: <span class="keyword">false</span>,
+    error: <span class="keyword">null</span>
+  &#125;;
+
+  <span class="keyword">private</span> state$ = <span class="keyword">new</span> BehaviorSubject&lt;UserState&gt;(<span class="keyword">this</span>.initialState);
+
+  <span class="comment">// Selectors - Expose specific slices of state</span>
+  <span class="keyword">readonly</span> users$: Observable&lt;User[]&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.users)
+  );
+
+  <span class="keyword">readonly</span> selectedUser$: Observable&lt;User | <span class="keyword">null</span>&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.selectedUser)
+  );
+
+  <span class="keyword">readonly</span> loading$: Observable&lt;<span class="keyword">boolean</span>&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.loading)
+  );
+
+  <span class="keyword">readonly</span> error$: Observable&lt;<span class="keyword">string</span> | <span class="keyword">null</span>&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.error)
+  );
+
+  <span class="comment">// Actions - Methods to update state</span>
+  setLoading(loading: <span class="keyword">boolean</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; loading &#125;);
+  &#125;
+
+  setError(error: <span class="keyword">string</span> | <span class="keyword">null</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; error &#125;);
+  &#125;
+
+  setUsers(users: User[]): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; users, loading: <span class="keyword">false</span>, error: <span class="keyword">null</span> &#125;);
+  &#125;
+
+  selectUser(user: User): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; selectedUser: user &#125;);
+  &#125;
+
+  addUser(user: User): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> updatedUsers = [...currentState.users, user];
+    <span class="keyword">this</span>.updateState(&#123; users: updatedUsers &#125;);
+  &#125;
+
+  updateUser(updatedUser: User): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> updatedUsers = currentState.users.map(user =>
+      user.id === updatedUser.id ? updatedUser : user
+    );
+    <span class="keyword">this</span>.updateState(&#123; users: updatedUsers &#125;);
+  &#125;
+
+  deleteUser(id: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> updatedUsers = currentState.users.filter(user => user.id !== id);
+    <span class="keyword">this</span>.updateState(&#123; users: updatedUsers &#125;);
+  &#125;
+
+  <span class="keyword">private</span> updateState(partialState: Partial&lt;UserState&gt;): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> newState = &#123; ...currentState, ...partialState &#125;;
+    <span class="keyword">this</span>.state$.next(newState);
+  &#125;
+&#125;
+</code></pre>
+
+                <p><strong>✔️ Features:</strong></p>
+                <ul>
+                    <li>Immutable state updates using spread operator</li>
+                    <li>Reactive selectors for specific state slices</li>
+                    <li>Centralized state management with BehaviorSubject</li>
+                    <li>Type-safe state interface and actions</li>
+                </ul>
+            </div>
+
+            <!-- Step 2: Component Using State Service -->
+            <div class="step">
+                <h3>🎯 Component Implementation (user-list.component.ts)</h3>
+                <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">OnInit</span>, <span class="string">OnDestroy</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">Observable</span>, <span class="string">Subject</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; <span class="string">takeUntil</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+<span class="keyword">import</span> &#123; <span class="string">UserStateService</span>, <span class="string">User</span> &#125; <span class="keyword">from</span> <span class="string">'./user-state.service'</span>;
+<span class="keyword">import</span> &#123; <span class="string">UserApiService</span> &#125; <span class="keyword">from</span> <span class="string">'./user-api.service'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-user-list'</span>,
+  template: <span class="string">`
+    &lt;div class="user-list-container"&gt;
+      &lt;div class="header"&gt;
+        &lt;h2&gt;Users Management&lt;/h2&gt;
+        &lt;button (click)="addNewUser()" class="btn-primary"&gt;Add User&lt;/button&gt;
+      &lt;/div&gt;
+
+      &lt;div *ngIf="loading$ | async" class="loading"&gt;
+        Loading users...
+      &lt;/div&gt;
+
+      &lt;div *ngIf="error$ | async as error" class="error"&gt;
+        Error: &#123;&#123;error&#125;&#125;
+      &lt;/div&gt;
+
+      &lt;div class="user-grid" *ngIf="users$ | async as users"&gt;
+        &lt;div 
+          *ngFor="let user of users; trackBy: trackByUserId"
+          class="user-card"
+          [class.selected]="isSelected(user)"
+          (click)="selectUser(user)"
+        &gt;
+          &lt;h3&gt;&#123;&#123;user.name&#125;&#125;&lt;/h3&gt;
+          &lt;p&gt;&#123;&#123;user.email&#125;&#125;&lt;/p&gt;
+          &lt;div class="user-actions"&gt;
+            &lt;button (click)="editUser(user); $event.stopPropagation()"&gt;Edit&lt;/button&gt;
+            &lt;button (click)="deleteUser(user.id); $event.stopPropagation()"&gt;Delete&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div *ngIf="selectedUser$ | async as selectedUser" class="user-details"&gt;
+        &lt;h3&gt;Selected User: &#123;&#123;selectedUser.name&#125;&#125;&lt;/h3&gt;
+        &lt;p&gt;Status: &#123;&#123;selectedUser.isActive ? 'Active' : 'Inactive'&#125;&#125;&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> UserListComponent <span class="keyword">implements</span> OnInit, OnDestroy &#123;
+  <span class="keyword">private</span> destroy$ = <span class="keyword">new</span> Subject&lt;<span class="keyword">void</span>&gt;();
+
+  <span class="comment">// Reactive state streams</span>
+  users$: Observable&lt;User[]&gt; = <span class="keyword">this</span>.userState.users$;
+  selectedUser$: Observable&lt;User | <span class="keyword">null</span>&gt; = <span class="keyword">this</span>.userState.selectedUser$;
+  loading$: Observable&lt;<span class="keyword">boolean</span>&gt; = <span class="keyword">this</span>.userState.loading$;
+  error$: Observable&lt;<span class="keyword">string</span> | <span class="keyword">null</span>&gt; = <span class="keyword">this</span>.userState.error$;
+
+  <span class="keyword">constructor</span>(
+    <span class="keyword">private</span> userState: UserStateService,
+    <span class="keyword">private</span> userApi: UserApiService
+  ) &#123;&#125;
+
+  ngOnInit(): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.loadUsers();
+  &#125;
+
+  ngOnDestroy(): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.destroy$.next();
+    <span class="keyword">this</span>.destroy$.complete();
+  &#125;
+
+  loadUsers(): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.userState.setLoading(<span class="keyword">true</span>);
+    
+    <span class="keyword">this</span>.userApi.getUsers()
+      .pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(&#123;
+        next: (users) => <span class="keyword">this</span>.userState.setUsers(users),
+        error: (error) => <span class="keyword">this</span>.userState.setError(error.message)
+      &#125;);
+  &#125;
+
+  selectUser(user: User): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.userState.selectUser(user);
+  &#125;
+
+  addNewUser(): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> newUser: User = &#123;
+      id: Date.now(),
+      name: <span class="string">'New User'</span>,
+      email: <span class="string">'new&#64;example.com'</span>,
+      isActive: <span class="keyword">true</span>
+    &#125;;
+    
+    <span class="keyword">this</span>.userApi.createUser(newUser)
+      .pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(&#123;
+        next: (user) => <span class="keyword">this</span>.userState.addUser(user),
+        error: (error) => <span class="keyword">this</span>.userState.setError(error.message)
+      &#125;);
+  &#125;
+
+  editUser(user: User): <span class="keyword">void</span> &#123;
+    <span class="comment">// Navigate to edit form or open modal</span>
+    console.log(<span class="string">'Edit user:'</span>, user);
+  &#125;
+
+  deleteUser(id: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.userApi.deleteUser(id)
+      .pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(&#123;
+        next: () => <span class="keyword">this</span>.userState.deleteUser(id),
+        error: (error) => <span class="keyword">this</span>.userState.setError(error.message)
+      &#125;);
+  &#125;
+
+  trackByUserId(index: <span class="keyword">number</span>, user: User): <span class="keyword">number</span> &#123;
+    <span class="keyword">return</span> user.id;
+  &#125;
+
+  isSelected(user: User): <span class="keyword">boolean</span> &#123;
+    <span class="comment">// Note: In a real app, you'd use a selector for this</span>
+    <span class="keyword">let</span> isSelected = <span class="keyword">false</span>;
+    <span class="keyword">this</span>.selectedUser$.pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(selected => isSelected = selected?.id === user.id);
+    <span class="keyword">return</span> isSelected;
+  &#125;
+&#125;
+</code></pre>
+            </div>
+
+            <!-- Step 3: Advanced State Service with Actions -->
+            <div class="step">
+                <h3>🏗️ Advanced State Service (shopping-cart.service.ts)</h3>
+                <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">BehaviorSubject</span>, <span class="string">Observable</span>, <span class="string">combineLatest</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; <span class="string">map</span>, <span class="string">distinctUntilChanged</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+
+<span class="keyword">export</span> <span class="keyword">interface</span> CartItem &#123;
+  id: <span class="keyword">number</span>;
+  name: <span class="keyword">string</span>;
+  price: <span class="keyword">number</span>;
+  quantity: <span class="keyword">number</span>;
+  image?: <span class="keyword">string</span>;
+&#125;
+
+<span class="keyword">export</span> <span class="keyword">interface</span> CartState &#123;
+  items: CartItem[];
+  isLoading: <span class="keyword">boolean</span>;
+  error: <span class="keyword">string</span> | <span class="keyword">null</span>;
+  discountPercentage: <span class="keyword">number</span>;
+&#125;
+
+&#64;Injectable(&#123;
+  providedIn: <span class="string">'root'</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ShoppingCartService &#123;
+  <span class="keyword">private</span> <span class="keyword">readonly</span> initialState: CartState = &#123;
+    items: [],
+    isLoading: <span class="keyword">false</span>,
+    error: <span class="keyword">null</span>,
+    discountPercentage: <span class="number">0</span>
+  &#125;;
+
+  <span class="keyword">private</span> state$ = <span class="keyword">new</span> BehaviorSubject&lt;CartState&gt;(<span class="keyword">this</span>.initialState);
+
+  <span class="comment">// Basic selectors</span>
+  <span class="keyword">readonly</span> items$: Observable&lt;CartItem[]&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.items),
+    distinctUntilChanged()
+  );
+
+  <span class="keyword">readonly</span> isLoading$: Observable&lt;<span class="keyword">boolean</span>&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.isLoading),
+    distinctUntilChanged()
+  );
+
+  <span class="keyword">readonly</span> error$: Observable&lt;<span class="keyword">string</span> | <span class="keyword">null</span>&gt; = <span class="keyword">this</span>.state$.pipe(
+    map(state => state.error),
+    distinctUntilChanged()
+  );
+
+  <span class="comment">// Computed selectors</span>
+  <span class="keyword">readonly</span> itemCount$: Observable&lt;<span class="keyword">number</span>&gt; = <span class="keyword">this</span>.items$.pipe(
+    map(items => items.reduce((count, item) => count + item.quantity, <span class="number">0</span>))
+  );
+
+  <span class="keyword">readonly</span> subtotal$: Observable&lt;<span class="keyword">number</span>&gt; = <span class="keyword">this</span>.items$.pipe(
+    map(items => items.reduce((total, item) => total + (item.price * item.quantity), <span class="number">0</span>))
+  );
+
+  <span class="keyword">readonly</span> discount$: Observable&lt;<span class="keyword">number</span>&gt; = combineLatest([
+    <span class="keyword">this</span>.subtotal$,
+    <span class="keyword">this</span>.state$.pipe(map(state => state.discountPercentage))
+  ]).pipe(
+    map(([subtotal, discountPercentage]) => subtotal * (discountPercentage / <span class="number">100</span>))
+  );
+
+  <span class="keyword">readonly</span> total$: Observable&lt;<span class="keyword">number</span>&gt; = combineLatest([
+    <span class="keyword">this</span>.subtotal$,
+    <span class="keyword">this</span>.discount$
+  ]).pipe(
+    map(([subtotal, discount]) => subtotal - discount)
+  );
+
+  <span class="keyword">readonly</span> isEmpty$: Observable&lt;<span class="keyword">boolean</span>&gt; = <span class="keyword">this</span>.items$.pipe(
+    map(items => items.length === <span class="number">0</span>)
+  );
+
+  <span class="comment">// Actions</span>
+  addItem(item: Omit&lt;CartItem, <span class="string">'quantity'</span>&gt;): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> existingItem = currentState.items.find(i => i.id === item.id);
+
+    <span class="keyword">if</span> (existingItem) &#123;
+      <span class="keyword">this</span>.updateQuantity(item.id, existingItem.quantity + <span class="number">1</span>);
+    &#125; <span class="keyword">else</span> &#123;
+      <span class="keyword">const</span> newItem: CartItem = &#123; ...item, quantity: <span class="number">1</span> &#125;;
+      <span class="keyword">const</span> updatedItems = [...currentState.items, newItem];
+      <span class="keyword">this</span>.updateState(&#123; items: updatedItems &#125;);
+    &#125;
+  &#125;
+
+  removeItem(itemId: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> updatedItems = currentState.items.filter(item => item.id !== itemId);
+    <span class="keyword">this</span>.updateState(&#123; items: updatedItems &#125;);
+  &#125;
+
+  updateQuantity(itemId: <span class="keyword">number</span>, quantity: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">if</span> (quantity <= <span class="number">0</span>) &#123;
+      <span class="keyword">this</span>.removeItem(itemId);
+      <span class="keyword">return</span>;
+    &#125;
+
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> updatedItems = currentState.items.map(item =>
+      item.id === itemId ? &#123; ...item, quantity &#125; : item
+    );
+    <span class="keyword">this</span>.updateState(&#123; items: updatedItems &#125;);
+  &#125;
+
+  clearCart(): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; items: [] &#125;);
+  &#125;
+
+  applyDiscount(percentage: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; discountPercentage: Math.max(<span class="number">0</span>, Math.min(<span class="number">100</span>, percentage)) &#125;);
+  &#125;
+
+  setLoading(isLoading: <span class="keyword">boolean</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; isLoading &#125;);
+  &#125;
+
+  setError(error: <span class="keyword">string</span> | <span class="keyword">null</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.updateState(&#123; error &#125;);
+  &#125;
+
+  <span class="comment">// Utility method to get current state value</span>
+  getCurrentState(): CartState &#123;
+    <span class="keyword">return</span> <span class="keyword">this</span>.state$.value;
+  &#125;
+
+  <span class="keyword">private</span> updateState(partialState: Partial&lt;CartState&gt;): <span class="keyword">void</span> &#123;
+    <span class="keyword">const</span> currentState = <span class="keyword">this</span>.state$.value;
+    <span class="keyword">const</span> newState = &#123; ...currentState, ...partialState &#125;;
+    <span class="keyword">this</span>.state$.next(newState);
+  &#125;
+&#125;
+</code></pre>
+            </div>
+
+            <!-- Step 4: State Facade Pattern -->
+            <div class="step">
+                <h3>🔗 State Facade Pattern (app-state.facade.ts)</h3>
+             <pre ngNonBindable><code>
+<span class="keyword">  loadUsers()</span>: <span class="keyword">void</span> &#123;
+    <span class="comment">// In a real app, you would fetch users via an API</span>
+    <span class="keyword">const</span> mockUsers: User[] = [
+      &#123; id: 1, name: <span class="string">'Alice'</span>, email: <span class="string">'alice&#64;example.com'</span>, isActive: <span class="keyword">true</span> &#125;,
+      &#123; id: 2, name: <span class="string">'Bob'</span>, email: <span class="string">'bob&#64;example.com'</span>, isActive: <span class="keyword">false</span> &#125;
+    ];
+    <span class="keyword">this</span>.userState.setUsers(mockUsers);
+  &#125;
+
+  selectUser(user: User): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.userState.selectUser(user);
+  &#125;
+
+  <span class="comment">// Shopping cart actions</span>
+  addItemToCart(item: CartItem): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.cartState.addItem(item);
+  &#125;
+
+  removeItemFromCart(itemId: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.cartState.removeItem(itemId);
+  &#125;
+
+  clearCart(): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.cartState.clearCart();
+  &#125;
+
+  applyCartDiscount(percentage: <span class="keyword">number</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.cartState.applyDiscount(percentage);
+  &#125;
+
+  <span class="comment">// Notification actions</span>
+  markAllNotificationsAsRead(): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.notificationService.markAllAsRead();
+  &#125;
+
+  pushNotification(message: <span class="keyword">string</span>): <span class="keyword">void</span> &#123;
+    <span class="keyword">this</span>.notificationService.pushNotification(message);
+  &#125;
+&#125;
+</code></pre>
+            </div>
+
+            <!-- Step 5: NgRx Example -->
+            <!-- <div class="step">
+            <h3>⚡ NgRx Example (user.state.ts, user.actions.ts, user.reducer.ts)</h3>
+            <div class="step-description">
+                <div class="title">State Management with NgRx</div>
+                <div class="details">
+                NgRx is a popular state management library for Angular apps based on Redux principles.  
+                It uses <strong>Actions</strong>, <strong>Reducers</strong>, and <strong>Selectors</strong> for predictable state flow.
+                </div>
+            </div>
+
+            <pre ngNonBindable><code><span class="comment">// src/app/state/user.actions.ts</span>
+            import &#123; createAction, props &#125; from '&#64;ngrx/store';
+            import &#123; User &#125; from '../services/user-state.service';
+
+            export const loadUsers = createAction('[User] Load Users');
+            export const loadUsersSuccess = createAction(
+            '[User] Load Users Success',
+            props&lt;&#123; users: User[] &#125;&gt;()
+            );
+            export const selectUser = createAction(
+            '[User] Select User',
+            props&lt;&#123; user: User &#125;&gt;()
+            );
+            </code></pre>
+
+            <pre ngNonBindable><code><span class="comment">// src/app/state/user.reducer.ts</span>
+            import &#123; createReducer, on &#125; from '&#64;ngrx/store';
+            import * as UserActions from './user.actions';
+            import &#123; User &#125; from '../services/user-state.service';
+
+            export interface UserState &#123;
+            users: User[];
+            selectedUser: User | null;
+            &#125;
+
+            export const initialState: UserState = &#123;
+            users: [],
+            selectedUser: null
+            &#125;;
+
+            export const userReducer = createReducer(
+            initialState,
+            on(UserActions.loadUsersSuccess, (state, &#123; users &#125;) =&gt; (&#123; ...state, users &#125;)),
+            on(UserActions.selectUser, (state, &#123; user &#125;) =&gt; (&#123; ...state, selectedUser: user &#125;))
+            );
+            </code></pre>
+
+            <pre ngNonBindable><code><span class="comment">// src/app/state/user.selectors.ts</span>
+            import &#123; createSelector, createFeatureSelector &#125; from '&#64;ngrx/store';
+            import &#123; UserState &#125; from './user.reducer';
+
+            export const selectUserState = createFeatureSelector&lt;UserState&gt;('user');
+
+            export const selectUsers = createSelector(
+            selectUserState,
+            (state: UserState) =&gt; state.users
+            );
+
+            export const selectSelectedUser = createSelector(
+            selectUserState,
+            (state: UserState) =&gt; state.selectedUser
+            );
+            </code></pre>
+
+            <pre ngNonBindable><code><span class="comment">// src/app/components/user-list-ngrx/user-list-ngrx.component.ts</span>
+            import &#123; Component, OnInit &#125; from '&#64;angular/core';
+            import &#123; Store &#125; from '&#64;ngrx/store';
+            import &#123; Observable &#125; from 'rxjs';
+            import &#123; User &#125; from '../../services/user-state.service';
+            import * as UserActions from '../../state/user.actions';
+            import * as UserSelectors from '../../state/user.selectors';
+
+            &#64;Component(&#123;
+            selector: 'app-user-list-ngrx',
+            template: `
+                &lt;h3&gt;NgRx User List&lt;/h3&gt;
+                &lt;ul&gt;
+                &lt;li *ngFor="let user of users$ | async" (click)="selectUser(user)"&gt;
+                    &#123;&#123; user.name &#125;&#125;
+                &lt;/li&gt;
+                &lt;/ul&gt;
+                &lt;div *ngIf="selectedUser$ | async as user"&gt;
+                Selected: &lt;strong&gt;&#123;&#123; user.name &#125;&#125;&lt;/strong&gt;
+                &lt;/div&gt;
+            `
+            &#125;)
+            export class UserListNgrxComponent implements OnInit &#123;
+            users$: Observable&lt;User[]&gt; = this.store.select(UserSelectors.selectUsers);
+            selectedUser$: Observable&lt;User | null&gt; = this.store.select(UserSelectors.selectSelectedUser);
+
+            constructor(private store: Store) &#123;&#125;
+
+            ngOnInit(): void &#123;
+                this.store.dispatch(UserActions.loadUsers());
+                this.store.dispatch(UserActions.loadUsersSuccess(&#123; 
+                users: [
+                    &#123; id: 1, name: 'Alice', email: 'alice&#64;example.com', isActive: true &#125;,
+                    &#123; id: 2, name: 'Bob', email: 'bob&#64;example.com', isActive: false &#125;
+                ] 
+                &#125;));
+            &#125;
+
+            selectUser(user: User): void &#123;
+                this.store.dispatch(UserActions.selectUser(&#123; user &#125;));
+            &#125;
+            &#125;
+            </code></pre>
+            </div> -->
+
+            <!-- Interview Questions -->
+            <div class="interview-questions step">
+            <h2>10 Key Interview Questions on State Management</h2>
+            <ol class="question-list">
+                <li>
+                <strong class="question-title">What is state management in Angular?</strong>
+                <p class="answer">A strategy to manage and share application data consistently across components and services.</p>
+                <span class="category">Basics</span>
+                </li>
+                <li>
+                <strong class="question-title">Why is state management important?</strong>
+                <p class="answer">It ensures predictable app behavior, reduces data duplication, and makes debugging easier.</p>
+                <span class="category">Purpose</span>
+                </li>
+                <li>
+                <strong class="question-title">What are the common state management approaches in Angular?</strong>
+                <p class="answer">Services with BehaviorSubject, Facade Pattern, and libraries like NgRx or Akita.</p>
+                <span class="category">Patterns</span>
+                </li>
+                <li>
+                <strong class="question-title">What is the difference between local and global state?</strong>
+                <p class="answer">Local state belongs to a single component, while global state is shared across multiple components.</p>
+                <span class="category">Concepts</span>
+                </li>
+                <li>
+                <strong class="question-title">How does NgRx help with state management?</strong>
+                <p class="answer">NgRx provides a Redux-inspired architecture using actions, reducers, selectors, and effects for predictable state flow.</p>
+                <span class="category">NgRx</span>
+                </li>
+                <li>
+                <strong class="question-title">What is the role of selectors in NgRx?</strong>
+                <p class="answer">Selectors efficiently extract and derive specific slices of state for components.</p>
+                <span class="category">Selectors</span>
+                </li>
+                <li>
+                <strong class="question-title">What is the Facade Pattern in state management?</strong>
+                <p class="answer">A facade acts as an abstraction layer between components and state logic, simplifying API usage and testing.</p>
+                <span class="category">Best Practices</span>
+                </li>
+                <li>
+                <strong class="question-title">How do you handle async operations in NgRx?</strong>
+                <p class="answer">By using <code>Effects</code> to manage side effects such as API calls while keeping reducers pure.</p>
+                <span class="category">Advanced</span>
+                </li>
+                <li>
+                <strong class="question-title">What are some challenges of state management?</strong>
+                <p class="answer">Overengineering, boilerplate code, and deciding what data belongs in state vs. local component.</p>
+                <span class="category">Challenges</span>
+                </li>
+                <li>
+                <strong class="question-title">When should you choose NgRx over simple services?</strong>
+                <p class="answer">When your app has complex state interactions, multiple data sources, or requires strict predictability and debugging tools.</p>
+                <span class="category">Decision</span>
+                </li>
+            </ol>
+            </div>
+
+        </div>
+    </div>  

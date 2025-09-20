@@ -1,1 +1,152 @@
-<p>e6 works!</p>
+<div class="overall-wrapper" appMaximize #domManip="maximize" id="dom-manipulation-topic">
+  <div class="wrapper">
+    <button
+      class="swap"
+      type="button"
+      *ngIf="domManip.checkfullscreen() == 'hide'"
+      (click)="domManip.toggle()"
+      aria-label="Expand view"
+    >
+      <img
+        src="../../../assets/expand.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </button>
+    <button
+      class="swap"
+      type="button"
+      *ngIf="domManip.checkfullscreen() != 'hide'"
+      (click)="domManip.toggle()"
+      aria-label="Collapse view"
+    >
+      <img
+        src="../../../assets/collapse.svg"
+        alt=""
+        aria-hidden="true"
+      />
+    </button>
+
+    <div class="examples">
+      <h3>JavaScript DOM Manipulation</h3>
+
+      <!-- What is DOM Manipulation -->
+      <div class="step">
+        <h4>What is DOM Manipulation?</h4>
+        <div class="step-description">
+          <div class="details">
+            The <strong>DOM (Document Object Model)</strong> represents the HTML structure of a webpage.
+            JavaScript can manipulate DOM elements to dynamically change content, style, and structure.
+          </div>
+          <ul class="key-points">
+            <li>Access HTML elements using selectors</li>
+            <li>Modify content, attributes, and styles</li>
+            <li>React to user interactions (events)</li>
+            <li>Create, remove, or move elements</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Selecting Elements -->
+      <div class="step">
+        <h4>Selecting Elements</h4>
+        <div class="step-description">
+          <ul class="key-points">
+            <li><code>getElementById</code> – select by ID</li>
+            <li><code>getElementsByClassName</code> – select by class</li>
+            <li><code>getElementsByTagName</code> – select by tag</li>
+            <li><code>querySelector / querySelectorAll</code> – CSS-style selectors</li>
+          </ul>
+        </div>
+        <pre><code>// By ID
+const header = document.getElementById('main-header');
+
+// By Class
+const items = document.getElementsByClassName('list-item');
+
+// By Tag
+const paragraphs = document.getElementsByTagName('p');
+
+// CSS selectors
+const firstItem = document.querySelector('.list-item:first-child');
+const allItems = document.querySelectorAll('.list-item');</code></pre>
+      </div>
+
+      <!-- Changing Content & Attributes -->
+      <div class="step">
+        <h4>Changing Content &amp; Attributes</h4>
+        <div class="step-description">
+          <ul class="key-points">
+            <li>Use <code>textContent</code> or <code>innerHTML</code> to change content</li>
+            <li>Use <code>setAttribute</code> and <code>getAttribute</code> to modify attributes</li>
+            <li>Modify styles using <code>style</code> property</li>
+          </ul>
+        </div>
+        <pre><code>// Change text
+header.textContent = 'Hello World';
+header.innerHTML = '&lt;span&gt;Hello World&lt;/span&gt;';
+
+// Change attributes
+header.setAttribute('class', 'new-header');
+console.log(header.getAttribute('class'));
+
+// Change styles
+header.style.color = 'blue';
+header.style.fontSize = '24px';</code></pre>
+      </div>
+
+      <!-- Creating & Removing Elements -->
+      <div class="step">
+        <h4>Creating &amp; Removing Elements</h4>
+        <div class="step-description">
+          <ul class="key-points">
+            <li>Create elements with <code>createElement</code></li>
+            <li>Add them to DOM with <code>appendChild</code> or <code>insertBefore</code></li>
+            <li>Remove elements with <code>removeChild</code> or <code>remove()</code></li>
+          </ul>
+        </div>
+        <pre><code>// Create a new paragraph
+const para = document.createElement('p');
+para.textContent = 'I am new!';
+
+// Append to body
+document.body.appendChild(para);
+
+// Remove element
+document.body.removeChild(para); // or para.remove();</code></pre>
+      </div>
+
+      <!-- Event Handling -->
+      <div class="step">
+        <h4>Event Handling</h4>
+        <div class="step-description">
+          <ul class="key-points">
+            <li>Attach events using <code>addEventListener</code></li>
+            <li>Remove events using <code>removeEventListener</code></li>
+            <li>Use event object to access event properties</li>
+          </ul>
+        </div>
+        <pre><code>const button = document.querySelector('button');
+
+button.addEventListener('click', function(event) &#123;
+  console.log('Button clicked!');
+  console.log(event.target); // element that triggered the event
+&#125;);</code></pre>
+      </div>
+
+      <!-- Summary -->
+      <div class="step">
+        <h4>Key Points</h4>
+        <div class="step-description">
+          <ul class="key-points">
+            <li>DOM Manipulation allows dynamic control of HTML, CSS, and user interactions</li>
+            <li>Always select elements before manipulating</li>
+            <li>Use event listeners instead of inline events for cleaner code</li>
+            <li>Remember performance: minimize DOM updates inside loops</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

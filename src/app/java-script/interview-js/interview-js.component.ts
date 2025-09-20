@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { MaximizeDirective } from '../../directives/maximize.directive';
 
 @Component({
-  selector: 'app-observables-rxjs',
+  selector: 'app-interview-js',
   standalone: true,
   imports: [CommonModule, MaximizeDirective],
-  templateUrl: './observables-rxjs.component.html',
-  styleUrl: './observables-rxjs.component.scss'
+  templateUrl: './interview-js.component.html',
+  styleUrl: './interview-js.component.scss'
 })
-export class ObservablesRxjsComponent {
+export class InterviewJsComponent {
 
 }

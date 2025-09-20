@@ -1,1 +1,467 @@
-<p>routing-navigation works!</p>
+
+<div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="routing-navigation">
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() == 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="angularArchitecture.checkfullscreen() != 'hide'"
+      (click)="angularArchitecture.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+
+    <!-- Enhanced Header Section -->
+    <div class="header">
+      <p>
+        <span class="question">What:</span> In Angular,
+        <strong>Routing & Navigation</strong> is the mechanism that allows users
+        to move between different views or components in a single-page
+        application using the <code>RouterModule</code> with advanced features like lazy loading.
+      </p>
+
+      <p>
+        <span class="question">Why:</span> It enables building
+        <strong>SPA (Single Page Applications)</strong> with code splitting and lazy loading,
+        reducing initial bundle size and improving performance by loading modules on-demand.
+      </p>
+
+      <p>
+        <span class="question">Where:</span> Essential for
+        <strong>large-scale applications</strong>, <strong>enterprise dashboards</strong>, 
+        <strong>e-commerce platforms</strong>, and any app requiring optimized loading and structured navigation.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <!-- Step 1: App Routing Module -->
+    <div class="step">
+      <h3>📌 Main App Routing Module (app-routing.module.ts)</h3>
+      <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">NgModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">RouterModule</span>, <span class="string">Routes</span>, <span class="string">PreloadAllModules</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/router'</span>;
+<span class="keyword">import</span> &#123; <span class="string">HomeComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./home/home.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">PageNotFoundComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./page-not-found/page-not-found.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">AuthGuard</span> &#125; <span class="keyword">from</span> <span class="string">'./guards/auth.guard'</span>;
+
+<span class="keyword">const</span> routes: Routes = [
+  &#123; path: <span class="string">''</span>, component: HomeComponent &#125;,
+  &#123; 
+    path: <span class="string">'products'</span>, 
+    loadChildren: <span class="keyword">()</span> => <span class="keyword">import</span>(<span class="string">'./products/products.module'</span>).<span class="keyword">then</span>(m => m.ProductsModule),
+    canLoad: [AuthGuard]
+  &#125;,
+  &#123; 
+    path: <span class="string">'users'</span>, 
+    loadChildren: <span class="keyword">()</span> => <span class="keyword">import</span>(<span class="string">'./users/users.module'</span>).<span class="keyword">then</span>(m => m.UsersModule)
+  &#125;,
+  &#123; 
+    path: <span class="string">'admin'</span>, 
+    loadChildren: <span class="keyword">()</span> => <span class="keyword">import</span>(<span class="string">'./admin/admin.module'</span>).<span class="keyword">then</span>(m => m.AdminModule),
+    canLoad: [AuthGuard],
+    data: &#123; preload: <span class="keyword">true</span> &#125;
+  &#125;,
+  &#123; path: <span class="string">'404'</span>, component: PageNotFoundComponent &#125;,
+  &#123; path: <span class="string">'**'</span>, redirectTo: <span class="string">'/404'</span> &#125;
+];
+
+&#64;NgModule(&#123;
+  imports: [RouterModule.forRoot(routes, &#123;
+    preloadingStrategy: PreloadAllModules,
+    enableTracing: <span class="keyword">false</span> <span class="comment">// Set to true for debugging</span>
+  &#125;)],
+  exports: [RouterModule]
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> AppRoutingModule &#123; &#125;
+</code></pre>
+
+      <p><strong>✔️ Features:</strong></p>
+      <ul>
+        <li>Lazy loading with <code>loadChildren</code> using dynamic imports</li>
+        <li>Route guards for security (<code>canLoad</code>)</li>
+        <li>Preloading strategy for better performance</li>
+        <li>Proper 404 handling with wildcard route</li>
+      </ul>
+    </div>
+
+    <!-- Step 2: Feature Module Routing -->
+    <div class="step">
+      <h3>🎯 Feature Module Routing (products-routing.module.ts)</h3>
+      <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">NgModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">RouterModule</span>, <span class="string">Routes</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/router'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductsComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./products.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductDetailComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./product-detail/product-detail.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductEditComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./product-edit/product-edit.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductCreateComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./product-create/product-create.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductResolver</span> &#125; <span class="keyword">from</span> <span class="string">'./resolvers/product.resolver'</span>;
+<span class="keyword">import</span> &#123; <span class="string">CanDeactivateGuard</span> &#125; <span class="keyword">from</span> <span class="string">'../guards/can-deactivate.guard'</span>;
+
+<span class="keyword">const</span> routes: Routes = [
+  &#123; 
+    path: <span class="string">''</span>, 
+    component: ProductsComponent,
+    children: [
+      &#123; path: <span class="string">''</span>, redirectTo: <span class="string">'list'</span>, pathMatch: <span class="string">'full'</span> &#125;,
+      &#123; path: <span class="string">'list'</span>, component: ProductDetailComponent &#125;,
+      &#123; path: <span class="string">'create'</span>, component: ProductCreateComponent, canDeactivate: [CanDeactivateGuard] &#125;,
+      &#123; 
+        path: <span class="string">':id'</span>, 
+        component: ProductDetailComponent,
+        resolve: &#123; product: ProductResolver &#125;
+      &#125;,
+      &#123; 
+        path: <span class="string">':id/edit'</span>, 
+        component: ProductEditComponent,
+        resolve: &#123; product: ProductResolver &#125;,
+        canDeactivate: [CanDeactivateGuard]
+      &#125;
+    ]
+  &#125;
+];
+
+&#64;NgModule(&#123;
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ProductsRoutingModule &#123; &#125;
+</code></pre>
+    </div>
+
+    <!-- Step 3: Products Feature Module -->
+    <div class="step">
+      <h3>🏗️ Feature Module Structure (products.module.ts)</h3>
+      <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">NgModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">CommonModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/common'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ReactiveFormsModule</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/forms'</span>;
+
+<span class="keyword">import</span> &#123; <span class="string">ProductsRoutingModule</span> &#125; <span class="keyword">from</span> <span class="string">'./products-routing.module'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductsComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./products.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductDetailComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./product-detail/product-detail.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductEditComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./product-edit/product-edit.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductCreateComponent</span> &#125; <span class="keyword">from</span> <span class="string">'./product-create/product-create.component'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductResolver</span> &#125; <span class="keyword">from</span> <span class="string">'./resolvers/product.resolver'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ProductService</span> &#125; <span class="keyword">from</span> <span class="string">'./services/product.service'</span>;
+
+&#64;NgModule(&#123;
+  declarations: [
+    ProductsComponent,
+    ProductDetailComponent,
+    ProductEditComponent,
+    ProductCreateComponent
+  ],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ProductsRoutingModule
+  ],
+  providers: [
+    ProductService,
+    ProductResolver
+  ]
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ProductsModule &#123; &#125;
+</code></pre>
+    </div>
+
+    <!-- Step 4: Advanced Navigation -->
+    <div class="step">
+      <h3>🔗 Advanced Navigation Techniques</h3>
+      <pre ngNonBindable><code>
+<span class="comment">&lt;!-- app.component.html - Navigation with RouterLink --&gt;</span>
+&lt;<span class="keyword">nav</span> <span class="keyword">class</span>=<span class="string">"navbar"</span>&gt;
+  &lt;<span class="keyword">a</span> <span class="keyword">routerLink</span>=<span class="string">"/"</span> <span class="keyword">routerLinkActive</span>=<span class="string">"active"</span> [<span class="keyword">routerLinkActiveOptions</span>]=<span class="string">"&#123;exact: true&#125;"</span>&gt;Home&lt;/<span class="keyword">a</span>&gt;
+  &lt;<span class="keyword">a</span> <span class="keyword">routerLink</span>=<span class="string">"/products"</span> <span class="keyword">routerLinkActive</span>=<span class="string">"active"</span>&gt;Products&lt;/<span class="keyword">a</span>&gt;
+  &lt;<span class="keyword">a</span> <span class="keyword">routerLink</span>=<span class="string">"/users"</span> <span class="keyword">routerLinkActive</span>=<span class="string">"active"</span>&gt;Users&lt;/<span class="keyword">a</span>&gt;
+  &lt;<span class="keyword">a</span> <span class="keyword">routerLink</span>=<span class="string">"/admin"</span> <span class="keyword">routerLinkActive</span>=<span class="string">"active"</span> *<span class="keyword">ngIf</span>=<span class="string">"isAdmin"</span>&gt;Admin&lt;/<span class="keyword">a</span>&gt;
+&lt;/<span class="keyword">nav</span>&gt;
+
+<span class="comment">&lt;!-- Router outlet for displaying routed components --&gt;</span>
+&lt;<span class="keyword">router-outlet</span>&gt;&lt;/<span class="keyword">router-outlet</span>&gt;
+
+<span class="comment">&lt;!-- Named router outlets for auxiliary routes --&gt;</span>
+&lt;<span class="keyword">router-outlet</span> <span class="keyword">name</span>=<span class="string">"sidebar"</span>&gt;&lt;/<span class="keyword">router-outlet</span>&gt;
+</code></pre>
+    </div>
+
+    <!-- Step 5: Programmatic Navigation Component -->
+    <div class="step">
+      <h3>⚙️ Advanced Programmatic Navigation</h3>
+      <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">OnInit</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">Router</span>, <span class="string">ActivatedRoute</span>, <span class="string">NavigationEnd</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/router'</span>;
+<span class="keyword">import</span> &#123; <span class="string">filter</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-navigation'</span>,
+  template: <span class="string">`
+    &lt;div class="navigation-controls"&gt;
+      &lt;button (click)="goToProduct(123)"&gt;Go to Product 123&lt;/button&gt;
+      &lt;button (click)="goToProductEdit(123)"&gt;Edit Product 123&lt;/button&gt;
+      &lt;button (click)="goWithQueryParams()"&gt;Search Products&lt;/button&gt;
+      &lt;button (click)="goBack()"&gt;Go Back&lt;/button&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> NavigationComponent <span class="keyword">implements</span> OnInit &#123;
+  
+  <span class="keyword">constructor</span>(
+    <span class="keyword">private</span> router: Router,
+    <span class="keyword">private</span> route: ActivatedRoute
+  ) &#123;&#125;
+
+  ngOnInit() &#123;
+    <span class="comment">// Listen to route changes</span>
+    <span class="keyword">this</span>.router.events
+      .pipe(filter(event => event <span class="keyword">instanceof</span> NavigationEnd))
+      .subscribe((event: NavigationEnd) => &#123;
+        console.log(<span class="string">'Navigated to:'</span>, event.url);
+      &#125;);
+  &#125;
+
+  <span class="comment">// Navigate with route parameters</span>
+  goToProduct(id: <span class="keyword">number</span>) &#123;
+    <span class="keyword">this</span>.router.navigate([<span class="string">'/products'</span>, id]);
+  &#125;
+
+  <span class="comment">// Navigate with nested routes</span>
+  goToProductEdit(id: <span class="keyword">number</span>) &#123;
+    <span class="keyword">this</span>.router.navigate([<span class="string">'/products'</span>, id, <span class="string">'edit'</span>]);
+  &#125;
+
+  <span class="comment">// Navigate with query parameters</span>
+  goWithQueryParams() &#123;
+    <span class="keyword">this</span>.router.navigate([<span class="string">'/products'</span>], &#123;
+      queryParams: &#123; category: <span class="string">'electronics'</span>, page: <span class="number">1</span> &#125;,
+      fragment: <span class="string">'top'</span>
+    &#125;);
+  &#125;
+
+  <span class="comment">// Navigate relative to current route</span>
+  goBack() &#123;
+    <span class="keyword">this</span>.router.navigate([<span class="string">'../'</span>], &#123; relativeTo: <span class="keyword">this</span>.route &#125;);
+  &#125;
+
+  <span class="comment">// Navigate with state</span>
+  goWithState() &#123;
+    <span class="keyword">this</span>.router.navigate([<span class="string">'/products'</span>], &#123;
+      state: &#123; data: &#123; fromComponent: <span class="string">'navigation'</span> &#125; &#125;
+    &#125;);
+  &#125;
+&#125;
+</code></pre>
+    </div>
+
+    <!-- Step 6: Custom Preloading Strategy -->
+    <div class="step">
+      <h3>🚀 Custom Preloading Strategy</h3>
+      <pre ngNonBindable><code>
+<span class="comment">// custom-preloading.strategy.ts</span>
+<span class="keyword">import</span> &#123; <span class="string">Injectable</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">PreloadingStrategy</span>, <span class="string">Route</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/router'</span>;
+<span class="keyword">import</span> &#123; <span class="string">Observable</span>, <span class="string">of</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+
+&#64;Injectable(&#123; providedIn: <span class="string">'root'</span> &#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> CustomPreloadingStrategy <span class="keyword">implements</span> PreloadingStrategy &#123;
+  
+  preload(route: Route, load: <span class="keyword">()</span> => Observable&lt;<span class="keyword">any</span>&gt;): Observable&lt;<span class="keyword">any</span>&gt; &#123;
+    <span class="comment">// Only preload routes marked with preload: true</span>
+    <span class="keyword">if</span> (route.data && route.data[<span class="string">'preload'</span>]) &#123;
+      console.log(<span class="string">'Preloading module: '</span> + route.path);
+      <span class="keyword">return</span> load();
+    &#125;
+    <span class="keyword">return</span> of(<span class="keyword">null</span>);
+  &#125;
+&#125;
+
+<span class="comment">// Usage in app-routing.module.ts</span>
+imports: [RouterModule.forRoot(routes, &#123;
+  preloadingStrategy: CustomPreloadingStrategy
+&#125;)]
+</code></pre>
+    </div>
+
+    <!-- Step 7: Route Parameters -->
+    <div class="step">
+      <h3>📋 Handling Route Parameters & Query Params</h3>
+      <pre ngNonBindable><code>
+<span class="keyword">import</span> &#123; <span class="string">Component</span>, <span class="string">OnInit</span>, <span class="string">OnDestroy</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/core'</span>;
+<span class="keyword">import</span> &#123; <span class="string">ActivatedRoute</span>, <span class="string">Router</span> &#125; <span class="keyword">from</span> <span class="string">'&#64;angular/router'</span>;
+<span class="keyword">import</span> &#123; <span class="string">Subject</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs'</span>;
+<span class="keyword">import</span> &#123; <span class="string">takeUntil</span> &#125; <span class="keyword">from</span> <span class="string">'rxjs/operators'</span>;
+
+&#64;Component(&#123;
+  selector: <span class="string">'app-product-detail'</span>,
+  template: <span class="string">`
+    &lt;div *ngIf="product"&gt;
+      &lt;h2&gt;&#123;&#123;product.name&#125;&#125;&lt;/h2&gt;
+      &lt;p&gt;Category: &#123;&#123;category&#125;&#125;&lt;/p&gt;
+      &lt;p&gt;Page: &#123;&#123;page&#125;&#125;&lt;/p&gt;
+    &lt;/div&gt;
+  `</span>
+&#125;)
+<span class="keyword">export</span> <span class="keyword">class</span> ProductDetailComponent <span class="keyword">implements</span> OnInit, OnDestroy &#123;
+  product: <span class="keyword">any</span>;
+  category: <span class="keyword">string</span>;
+  page: <span class="keyword">number</span>;
+  <span class="keyword">private</span> destroy$ = <span class="keyword">new</span> Subject&lt;<span class="keyword">void</span>&gt;();
+
+  <span class="keyword">constructor</span>(
+    <span class="keyword">private</span> route: ActivatedRoute,
+    <span class="keyword">private</span> router: Router
+  ) &#123;&#125;
+
+  ngOnInit() &#123;
+    <span class="comment">// Get route parameters</span>
+    <span class="keyword">this</span>.route.params
+      .pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(params => &#123;
+        <span class="keyword">const</span> id = +params[<span class="string">'id'</span>];
+        <span class="keyword">this</span>.loadProduct(id);
+      &#125;);
+
+    <span class="comment">// Get query parameters</span>
+    <span class="keyword">this</span>.route.queryParams
+      .pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(queryParams => &#123;
+        <span class="keyword">this</span>.category = queryParams[<span class="string">'category'</span>] || <span class="string">'all'</span>;
+        <span class="keyword">this</span>.page = +queryParams[<span class="string">'page'</span>] || <span class="number">1</span>;
+      &#125;);
+
+    <span class="comment">// Get resolved data</span>
+    <span class="keyword">this</span>.route.data
+      .pipe(takeUntil(<span class="keyword">this</span>.destroy$))
+      .subscribe(data => &#123;
+        <span class="keyword">if</span> (data[<span class="string">'product'</span>]) &#123;
+          <span class="keyword">this</span>.product = data[<span class="string">'product'</span>];
+        &#125;
+      &#125;);
+  &#125;
+
+  ngOnDestroy() &#123;
+    <span class="keyword">this</span>.destroy$.next();
+    <span class="keyword">this</span>.destroy$.complete();
+  &#125;
+
+  <span class="keyword">private</span> loadProduct(id: <span class="keyword">number</span>) &#123;
+    <span class="comment">// Load product logic</span>
+  &#125;
+&#125;
+</code></pre>
+    </div>
+
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>20 Advanced Interview Questions on Routing & Navigation</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is lazy loading and how do you implement it in Angular?</strong>
+          <p class="answer">Lazy loading loads feature modules only when needed using <code>loadChildren</code> with dynamic imports: <code>loadChildren: () => import('./module').then(m => m.Module)</code></p>
+          <span class="category">Performance</span>
+        </li>
+        <li>
+          <strong class="question-title">What's the difference between <code>canLoad</code> and <code>canActivate</code>?</strong>
+          <p class="answer"><code>canLoad</code> prevents loading the module, while <code>canActivate</code> allows loading but prevents activation. Use <code>canLoad</code> for lazy modules.</p>
+          <span class="category">Guards</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you implement a custom preloading strategy?</strong>
+          <p class="answer">Create a service implementing <code>PreloadingStrategy</code> interface with a <code>preload()</code> method that returns an Observable.</p>
+          <span class="category">Optimization</span>
+        </li>
+        <li>
+          <strong class="question-title">What are auxiliary routes in Angular?</strong>
+          <p class="answer">Secondary routes displayed in named router outlets, useful for sidebar navigation or popup content alongside main content.</p>
+          <span class="category">Advanced</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you handle route data with Resolvers?</strong>
+          <p class="answer">Create a service implementing <code>Resolve</code> interface to pre-fetch data before route activation, ensuring data is available when component loads.</p>
+          <span class="category">Data</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between <code>navigate()</code> and <code>navigateByUrl()</code>?</strong>
+          <p class="answer"><code>navigate()</code> takes an array of route segments, while <code>navigateByUrl()</code> takes a complete URL string.</p>
+          <span class="category">Navigation</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you implement route animations in Angular?</strong>
+          <p class="answer">Use Angular Animations API with route data and <code>&#64;routeAnimation</code> trigger on the router outlet.</p>
+          <span class="category">Animation</span>
+        </li>
+        <li>
+          <strong class="question-title">What are router events and how do you use them?</strong>
+          <p class="answer">Events like <code>NavigationStart</code>, <code>NavigationEnd</code> emitted during navigation, useful for loading indicators and navigation tracking.</p>
+          <span class="category">Events</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you implement breadcrumbs using Angular Router?</strong>
+          <p class="answer">Use route data configuration and <code>ActivatedRoute</code> to build breadcrumb navigation dynamically from route hierarchy.</p>
+          <span class="category">UX</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the purpose of <code>pathMatch</code> in routing?</strong>
+          <p class="answer"><code>pathMatch: 'full'</code> matches the entire URL, while <code>'prefix'</code> (default) matches if URL starts with the path.</p>
+          <span class="category">Configuration</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you pass state during navigation?</strong>
+          <p class="answer">Use <code>router.navigate()</code> with state option: <code>&#123; state: &#123; data: value &#125; &#125;</code> and access via <code>history.state</code>.</p>
+          <span class="category">State</span>
+        </li>
+        <li>
+          <strong class="question-title">What are route guards and name all types?</strong>
+          <p class="answer">Guards control access to routes: <code>CanActivate</code>, <code>CanActivateChild</code>, <code>CanDeactivate</code>, <code>CanLoad</code>, and <code>Resolve</code>.</p>
+          <span class="category">Security</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you handle lazy loading with shared modules?</strong>
+          <p class="answer">Import shared modules in each lazy-loaded feature module, or use a core module pattern with <code>forRoot()</code>/<code>forChild()</code>.</p>
+          <span class="category">Architecture</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between matrix parameters and query parameters?</strong>
+          <p class="answer">Matrix params are part of the URL segment (;key=value), while query params follow ? and are optional for route matching.</p>
+          <span class="category">Params</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you implement route-based feature flags?</strong>
+          <p class="answer">Use route guards or resolver services to check feature flags and conditionally allow access to routes or redirect to alternatives.</p>
+          <span class="category">Features</span>
+        </li>
+        <li>
+          <strong class="question-title">What is router outlet context and how to use it?</strong>
+          <p class="answer">Router outlet exposes route context through template reference variables, allowing parent components to interact with routed child components.</p>
+          <span class="category">Context</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you implement route-level error handling?</strong>
+          <p class="answer">Use <code>ErrorHandler</code> service, route resolvers that handle errors, and navigation error events from router.</p>
+          <span class="category">Error Handling</span>
+        </li>
+        <li>
+          <strong class="question-title">What is the difference between router state and activated route?</strong>
+          <p class="answer"><code>RouterState</code> represents the entire route tree, while <code>ActivatedRoute</code> represents the currently active route with its specific data.</p>
+          <span class="category">State</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you optimize routing for better SEO?</strong>
+          <p class="answer">Use server-side rendering (SSR), proper meta tags via <code>Title</code> and <code>Meta</code> services, and structured URLs with meaningful paths.</p>
+          <span class="category">SEO</span>
+        </li>
+        <li>
+          <strong class="question-title">How do you test Angular routing and navigation?</strong>
+          <p class="answer">Use <code>RouterTestingModule</code>, spy on router methods, test route guards with TestBed, and verify navigation with <code>Location</code> service.</p>
+          <span class="category">Testing</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>

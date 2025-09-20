@@ -1,1 +1,140 @@
-<p>http-client works!</p>
+<div class="overall-wrapper" appMaximize #angularArchitecture="maximize" id="auth-interceptor">
+  <div class="wrapper">
+    <!-- Expand/Collapse -->
+       <img class="swap" *ngIf="angularArchitecture.checkfullscreen() == 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="angularArchitecture.checkfullscreen() != 'hide'" (click)="angularArchitecture.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+           
+   
+    <!-- Header Section -->
+    <div class="header">
+      <p>
+        <span class="question">What:</span> An <strong>HTTP Interceptor</strong> in Angular intercepts outgoing HTTP requests to add an authentication token (e.g., JWT) to the headers, ensuring secure API communication.
+      </p>
+      <p>
+        <span class="question">Why:</span> Centralizes authentication logic, ensuring all HTTP requests include the necessary token without duplicating code in services or components.
+      </p>
+      <p>
+        <span class="question">Where:</span> Use in applications requiring secure API access, such as those with JWT-based authentication, configured via <code>provideHttpClient</code> in standalone Angular apps.
+      </p>
+    </div>
+ </div>
+    <!-- Example Section -->
+    <div class="examples">
+         <!-- Flow Diagram -->
+    <div class="flow-diagram">
+      <h3 style="margin-bottom: 1rem; border-bottom: none;">Auth Interceptor Flow</h3>
+      <div class="flow-step">Component/Service Calls HttpClient</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Auth Interceptor Adds Token</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Send Request to Server</div>
+      <span class="arrow">→</span>
+      <div class="flow-step">Receive Response</div>
+    </div>
+      <!-- Step 1 -->
+      <div class="step">
+        <h3><span class="step-number">1</span>🔒 Implementing the Auth Interceptor</h3>
+        <div class="step-description">
+          <div class="title">Step-by-Step Guide</div>
+          <div class="details">
+            <ol>
+              <li>Define a functional interceptor that clones the request and adds an <code>Authorization</code> header with a token.</li>
+              <li>Retrieve the token from a secure source (e.g., localStorage or an auth service).</li>
+              <li>Provide the interceptor using <code>provideHttpClient(withInterceptors(...))</code> in <code>main.ts</code>.</li>
+            </ol>
+            Functional interceptors are preferred in Angular 18+ for simplicity and predictability.
+          </div>
+        </div>
+
+<pre ngNonBindable><code><span class="comment">// src/app/interceptors/auth.interceptor.ts</span>
+import &#123; HttpInterceptorFn &#125; from '&#64;angular/common/http';
+
+export const authInterceptor: HttpInterceptorFn = (req, next) => &#123;
+  const authToken = localStorage.getItem('authToken'); // Or from auth service
+  if (authToken) &#123;
+    const authReq = req.clone(&#123;
+      setHeaders: &#123; Authorization: `Bearer $&#123;authToken&#125;` &#125;
+    &#125;);
+    return next(authReq);
+  &#125;
+  return next(req);
+&#125;;
+</code></pre>
+
+        <div class="step-description">
+          <div class="title">Register the Interceptor</div>
+          <div class="details">
+            Configure the interceptor in the application’s bootstrap setup.
+          </div>
+        </div>
+
+<pre ngNonBindable><code><span class="comment">// src/main.ts</span>
+import &#123; bootstrapApplication &#125; from '&#64;angular/platform-browser';
+import &#123; provideHttpClient, withInterceptors &#125; from '&#64;angular/common/http';
+import &#123; AppComponent &#125; from './app.component';
+import &#123; authInterceptor &#125; from './app/interceptors/auth.interceptor';
+
+bootstrapApplication(AppComponent, &#123;
+  providers: [provideHttpClient(withInterceptors([authInterceptor]))]
+&#125;);
+</code></pre>
+      </div>
+    </div> 
+    <!-- Interview Questions -->
+    <div class="interview-questions step">
+      <h2>10 Key Interview Questions on Auth Interceptors</h2>
+      <ol class="question-list">
+        <li>
+          <strong class="question-title">What is an HTTP Interceptor in Angular?</strong>
+          <p class="answer">A mechanism to intercept and modify HTTP requests/responses globally.</p>
+          <span class="category">Basics</span>
+        </li>
+        <li>
+          <strong class="question-title">Why use an interceptor for auth tokens?</strong>
+          <p class="answer">To centralize adding tokens to requests, reducing code duplication.</p>
+          <span class="category">Purpose</span>
+        </li>
+        <li>
+          <strong class="question-title">How to add an auth token in an interceptor?</strong>
+          <p class="answer">Clone the request with <code>req.clone</code> and set the <code>Authorization</code> header.</p>
+          <span class="category">Implementation</span>
+        </li>
+        <li>
+          <strong class="question-title">What is a functional interceptor?</strong>
+          <p class="answer">A stateless function for intercepting, preferred in Angular 18+ for predictability.</p>
+          <span class="category">Advanced</span>
+        </li>
+        <li>
+          <strong class="question-title">How to register a functional interceptor?</strong>
+          <p class="answer">Use <code>provideHttpClient(withInterceptors([...]))</code> in <code>main.ts</code>.</p>
+          <span class="category">Setup</span>
+        </li>
+        <li>
+          <strong class="question-title">How to conditionally add tokens?</strong>
+          <p class="answer">Check for token existence before cloning the request.</p>
+          <span class="category">Best Practices</span>
+        </li>
+        <li>
+          <strong class="question-title">Can interceptors handle token refresh?</strong>
+          <p class="answer">Yes, by chaining with <code>switchMap</code> to refresh tokens on 401 errors.</p>
+          <span class="category">Advanced</span>
+        </li>
+        <li>
+          <strong class="question-title">What happens if no token is present?</strong>
+          <p class="answer">The interceptor passes the original request unchanged.</p>
+          <span class="category">Behavior</span>
+        </li>
+        <li>
+          <strong class="question-title">How to secure token storage?</strong>
+          <p class="answer">Use secure storage (e.g., HttpOnly cookies) or services instead of localStorage.</p>
+          <span class="category">Security</span>
+        </li>
+        <li>
+          <strong class="question-title">Why use Observables with interceptors?</strong>
+          <p class="answer">To leverage RxJS for async operations like retries or error handling.</p>
+          <span class="category">RxJS</span>
+        </li>
+      </ol>
+    </div>
+ 
+</div>

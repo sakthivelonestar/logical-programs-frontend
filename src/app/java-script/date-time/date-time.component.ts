@@ -3,12 +3,12 @@ import { Component } from '@angular/core';
 import { MaximizeDirective } from '../../directives/maximize.directive';
 
 @Component({
-  selector: 'app-observables-rxjs',
+  selector: 'app-date-time',
   standalone: true,
   imports: [CommonModule, MaximizeDirective],
-  templateUrl: './observables-rxjs.component.html',
-  styleUrl: './observables-rxjs.component.scss'
+  templateUrl: './date-time.component.html',
+  styleUrl: './date-time.component.scss'
 })
-export class ObservablesRxjsComponent {
+export class DateTimeComponent {
 
 }

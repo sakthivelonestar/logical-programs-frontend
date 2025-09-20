@@ -1,0 +1,123 @@
+<div class="overall-wrapper" appMaximize #javascriptStringConcepts="maximize" id="javascriptStringConcepts">
+  <div class="wrapper">
+       <img class="swap" *ngIf="javascriptStringConcepts.checkfullscreen() == 'hide'" (click)="javascriptStringConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+       <img class="swap" *ngIf="javascriptStringConcepts.checkfullscreen() != 'hide'" (click)="javascriptStringConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+      <div class="header">
+        <p>
+          <span class="question">What:</span>
+          In JavaScript, <strong>String Methods</strong> are built-in functions that allow you to manipulate, format, and analyze strings efficiently.
+        </p>
+        <p>
+          <span class="question">Why:</span>
+          They help you <strong>perform common operations</strong> like searching, replacing, trimming, splitting, joining, and transforming text data easily.
+        </p>
+        <p>
+          <span class="question">Where:</span>
+          You can use them in <strong>form validations, text processing, data formatting,</strong> or any project involving string manipulation.
+        </p>
+      </div>
+   </div>
+   
+   <div class="examples">
+     <div class="step">
+       <h2>1. Basic String Methods</h2>
+       <p>Explore fundamental string methods:</p>
+       
+       <h3>Essential Methods</h3>
+       <pre><code><span class="comment">// Sample string</span>
+<span class="keyword">const</span> str = " Hello World ";
+
+<span class="comment">// Length of string</span>
+<span class="keyword">console.log</span>(str.length); // 12
+
+<span class="comment">// Convert case</span>
+<span class="keyword">console.log</span>(str.toUpperCase()); // " HELLO WORLD "
+<span class="keyword">console.log</span>(str.toLowerCase()); // " hello world "
+
+<span class="comment">// Trim spaces</span>
+<span class="keyword">console.log</span>(str.trim()); // "Hello World"
+
+<span class="comment">// Access characters</span>
+<span class="keyword">console.log</span>(str.charAt(0)); // " "
+<span class="keyword">console.log</span>(str[1]);     // "H"
+       </code></pre>
+
+       <h3>Key Methods</h3>
+       <ul>
+         <li>concat(): Combine strings</li>
+         <li>includes(): Check substring existence</li>
+         <li>startsWith() / endsWith(): Match patterns</li>
+         <li>slice() / substring(): Extract parts of strings</li>
+       </ul>
+     </div>
+
+     <div class="step">
+       <h2>2. String Searching and Replacing</h2>
+       <p>Methods for finding and replacing text:</p>
+
+       <h3>Search Methods</h3>
+       <pre><code><span class="comment">// Searching for substrings</span>
+<span class="keyword">const</span> text = "JavaScript is awesome";
+
+<span class="keyword">console.log</span>(text.indexOf("is"));      // 11
+<span class="keyword">console.log</span>(text.lastIndexOf("a")); // 14
+<span class="keyword">console.log</span>(text.includes("Script")); // true
+<span class="keyword">console.log</span>(text.startsWith("Java")); // true
+<span class="keyword">console.log</span>(text.endsWith("some"));   // true
+       </code></pre>
+
+       <h3>Replace Methods</h3>
+       <pre><code><span class="comment">// Replace text in strings</span>
+<span class="keyword">console.log</span>(text.replace("awesome", "fantastic")); // "JavaScript is fantastic"
+
+// Replace all occurrences using regex
+<span class="keyword">const</span> phrase = "foo bar foo";
+<span class="keyword">console.log</span>(phrase.replace(/foo/g, "baz")); // "baz bar baz"
+       </code></pre>
+     </div>
+
+     <div class="step">
+       <h2>3. String Splitting, Joining, and Repeating</h2>
+       <p>Break strings into arrays or repeat patterns:</p>
+
+       <pre><code><span class="comment">// Split string into array</span>
+<span class="keyword">const</span> csv = "red,green,blue";
+<span class="keyword">console.log</span>(csv.split(",")); // ["red", "green", "blue"]
+
+<span class="comment">// Join array into string</span>
+<span class="keyword">const</span> colors = ["cyan", "magenta", "yellow"];
+<span class="keyword">console.log</span>(colors.join(" | ")); // "cyan | magenta | yellow"
+
+<span class="comment">// Repeat strings</span>
+<span class="keyword">console.log</span>("Ha".repeat(3)); // "HaHaHa"
+       </code></pre>
+     </div>
+
+     <div class="step">
+       <h2>4. Template Literals and Advanced Methods</h2>
+       <p>Using template literals and other modern string features:</p>
+
+       <pre><code><span class="comment">// Template literals</span>
+<span class="keyword">const</span> name = "Alice";
+<span class="keyword">const</span> greeting = `Hello, $&#125;name&#123;!`;
+<span class="keyword">console.log</span>(greeting); // "Hello, Alice!"
+
+<span class="comment">// Padding and repeating</span>
+<span class="keyword">console.log</span>("5".padStart(3, "0")); // "005"
+<span class="keyword">console.log</span>("5".padEnd(3, "0"));   // "500"
+
+// Advanced methods
+<span class="keyword">console.log</span>("  Mixed Case  ".trim().toLowerCase()); // "mixed case"
+<span class="keyword">console.log</span>("split,this,string".split(","));       // ["split","this","string"]
+       </code></pre>
+
+       <h3>Key Points</h3>
+       <ul>
+         <li>Strings are immutable in JavaScript.</li>
+         <li>Use template literals for readable multi-line strings and interpolation.</li>
+         <li>Trim, pad, split, join methods make text processing easier.</li>
+         <li>Includes, startsWith, endsWith, and replace simplify search and modifications.</li>
+       </ul>
+     </div>
+   </div>
+</div>

@@ -1,6 +1,10 @@
 <div class="oveall-wraper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
     <div class="examples">
-  <h2>Interview Questions</h2>
+  <div class="wrapper">
+             <h2>JavaScript Interview Questions</h2>
+             <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() == 'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() != 'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        </div>
 
   <div class="question-answer">
     <h4>1) What is Indexing? Create Syntax and Drop Syntax</h4>
