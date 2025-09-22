@@ -1,0 +1,206 @@
+<div class="overall-wrapper" appMaximize #d3Scales="maximize" id="d3Scales">
+  <div class="wrapper">
+    <img class="swap" *ngIf="d3Scales.checkfullscreen() == 'hide'" 
+         (click)="d3Scales.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="d3Scales.checkfullscreen() != 'hide'" 
+         (click)="d3Scales.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        In D3.js, <strong>Scales</strong> are functions that map data values to visual values
+        (pixels, colors, positions). A <code>scale</code> transforms your raw data into something 
+        that can be displayed on screen.
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        They enable <strong>automatic data-to-visual mapping</strong>, meaning you don't need
+        to manually calculate pixel positions or color values. This is what makes D3 powerful for
+        responsive and dynamic visualizations.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Use scales whenever you need to <strong>transform data to visual properties</strong>,
+        such as bar heights in charts, circle positions in scatter plots, or color intensity in heatmaps.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>Working with Scales in D3.js</h3>
+
+    <div class="step">
+      <h2>Linear Scale in D3.js</h2>
+
+      <!-- Code Example -->
+     <!-- Linear Scale Pre Code Block -->
+<pre><code class="language-js">
+<span class="comment">// Linear Scale Example - exactly matching the code shown</span>
+<span class="keyword">const</span> data = [<span class="number">10</span>, <span class="number">30</span>, <span class="number">50</span>, <span class="number">70</span>, <span class="number">90</span>];
+<span class="keyword">const</span> linearScale = d3.<span class="function">scaleLinear</span>()
+  .<span class="function">domain</span>([<span class="number">0</span>, <span class="number">100</span>])      <span class="comment">// input range (data values)</span>
+  .<span class="function">range</span>([<span class="number">0</span>, <span class="number">300</span>]);       <span class="comment">// output range (pixel width)</span>
+
+console.<span class="function">log</span>(<span class="string">'linearScale(50) ='</span>, linearScale(<span class="number">50</span>)); <span class="comment">// → 150</span>
+
+<span class="keyword">const</span> container = d3.<span class="function">select</span>(<span class="string">'#linear-chart'</span>);
+
+<span class="comment">// Clear existing content</span>
+container.<span class="function">selectAll</span>(<span class="string">'*'</span>).<span class="function">remove</span>();
+
+<span class="comment">// Create bars using D3 but rendering as HTML divs</span>
+<span class="keyword">const</span> bars = container.<span class="function">selectAll</span>(<span class="string">'div.bar'</span>)
+  .<span class="function">data</span>(data)
+  .<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">'div'</span>)
+  .<span class="function">attr</span>(<span class="string">'class'</span>, <span class="string">'bar'</span>)
+  .<span class="function">style</span>(<span class="string">'display'</span>, <span class="string">'inline-block'</span>)
+  .<span class="function">style</span>(<span class="string">'width'</span>, d =&gt; linearScale(d) + <span class="string">'px'</span>)
+  .<span class="function">style</span>(<span class="string">'height'</span>, <span class="string">'25px'</span>)
+  .<span class="function">style</span>(<span class="string">'background-color'</span>, <span class="string">'steelblue'</span>)
+  .<span class="function">style</span>(<span class="string">'margin'</span>, <span class="string">'2px 2px 2px 0'</span>)
+  .<span class="function">style</span>(<span class="string">'color'</span>, <span class="string">'white'</span>)
+  .<span class="function">style</span>(<span class="string">'text-align'</span>, <span class="string">'center'</span>)
+  .<span class="function">style</span>(<span class="string">'line-height'</span>, <span class="string">'25px'</span>)
+  .<span class="function">style</span>(<span class="string">'font-size'</span>, <span class="string">'12px'</span>)
+  .<span class="function">style</span>(<span class="string">'border-radius'</span>, <span class="string">'3px'</span>)
+  .<span class="function">text</span>(d =&gt; <span class="string">`$&#123;d&#125; → $&#123;linearScale(d)&#125;px`</span>);
+
+  <!-- Note -->
+  <span class="keyword">Note</span>
+  <span class="note">This creates bars with widths proportional to data values using linear scaling.</span>
+  <span class="comment"> &lt;div id="linear-chart" class="practices"&gt;&lt;/div&gt;</span>
+</code></pre>
+      <p><strong>Output:</strong></p>
+      <!-- Linear Scale Output -->
+      <div id="linear-chart" class="practices">
+        <!-- Bars will be dynamically added here by D3.js -->
+      </div>
+    </div>
+
+    <div class="step">
+      <h3>Ordinal Scale Example</h3>
+
+      <!-- Ordinal Scale Pre Code Block -->
+<pre><code class="language-js">
+<span class="comment">// Ordinal Scale Example - exactly matching the code shown</span>
+<span class="keyword">const</span> categories = [<span class="string">"A"</span>, <span class="string">"B"</span>, <span class="string">"C"</span>, <span class="string">"D"</span>];
+<span class="keyword">const</span> ordinalScale = d3.<span class="function">scaleOrdinal</span>()
+  .<span class="function">domain</span>(categories)
+  .<span class="function">range</span>([<span class="string">"red"</span>, <span class="string">"green"</span>, <span class="string">"blue"</span>, <span class="string">"orange"</span>]);
+
+console.<span class="function">log</span>(<span class="string">'ordinalScale("B") ='</span>, ordinalScale(<span class="string">"B"</span>)); <span class="comment">// → green</span>
+
+<span class="keyword">const</span> container = d3.<span class="function">select</span>(<span class="string">'#ordinal-example'</span>);
+
+<span class="comment">// Clear existing content</span>
+container.<span class="function">selectAll</span>(<span class="string">'*'</span>).<span class="function">remove</span>();
+
+<span class="comment">// Apply to elements - exactly as shown in the code</span>
+container.<span class="function">selectAll</span>(<span class="string">'div'</span>)
+  .<span class="function">data</span>(categories)
+  .<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">'div'</span>)
+  .<span class="function">style</span>(<span class="string">'display'</span>, <span class="string">'inline-block'</span>)
+  .<span class="function">style</span>(<span class="string">'width'</span>, <span class="string">'60px'</span>)
+  .<span class="function">style</span>(<span class="string">'height'</span>, <span class="string">'60px'</span>)
+  .<span class="function">style</span>(<span class="string">'background-color'</span>, d =&gt; ordinalScale(d))
+  .<span class="function">style</span>(<span class="string">'margin'</span>, <span class="string">'5px'</span>)
+  .<span class="function">style</span>(<span class="string">'color'</span>, <span class="string">'white'</span>)
+  .<span class="function">style</span>(<span class="string">'text-align'</span>, <span class="string">'center'</span>)
+  .<span class="function">style</span>(<span class="string">'line-height'</span>, <span class="string">'60px'</span>)
+  .<span class="function">style</span>(<span class="string">'font-size'</span>, <span class="string">'18px'</span>)
+  .<span class="function">style</span>(<span class="string">'font-weight'</span>, <span class="string">'bold'</span>)
+  .<span class="function">style</span>(<span class="string">'border-radius'</span>, <span class="string">'8px'</span>)
+  .<span class="function">style</span>(<span class="string">'box-shadow'</span>, <span class="string">'0 2px 4px rgba(0,0,0,0.2)'</span>)
+  .<span class="function">text</span>(d =&gt; d);
+
+  <!-- Note -->
+  <span class="keyword">Note</span>
+  <span class="note">This maps discrete categories to discrete visual values (colors).</span>
+  <span class="comment"> &lt;div id="ordinal-example" class="practices"&gt;&lt;/div&gt;</span>
+</code></pre>
+      <p><strong>Output:</strong></p>
+      <div id="ordinal-example" class="practices"></div>
+    </div>
+
+    <div class="step">
+      <h3>Time Scale with SVG Circles</h3>
+
+     <!-- Time Scale Pre Code Block -->
+<pre><code class="language-js">
+<span class="comment">// Time Scale Example - exactly matching the code shown</span>
+<span class="keyword">const</span> dates = [
+  <span class="keyword">new</span> Date(<span class="string">"2025-01-01"</span>), 
+  <span class="keyword">new</span> Date(<span class="string">"2025-04-01"</span>), 
+  <span class="keyword">new</span> Date(<span class="string">"2025-07-01"</span>), 
+  <span class="keyword">new</span> Date(<span class="string">"2025-10-01"</span>)
+];
+
+<span class="keyword">const</span> timeScale = d3.<span class="function">scaleTime</span>()
+  .<span class="function">domain</span>([<span class="keyword">new</span> Date(<span class="string">"2025-01-01"</span>), <span class="keyword">new</span> Date(<span class="string">"2025-12-31"</span>)])
+  .<span class="function">range</span>([<span class="number">20</span>, <span class="number">380</span>]);
+
+<span class="keyword">const</span> svg = d3.<span class="function">select</span>(<span class="string">'#time-chart'</span>);
+
+<span class="comment">// Clear existing content</span>
+svg.<span class="function">selectAll</span>(<span class="string">'*'</span>).<span class="function">remove</span>();
+
+<span class="comment">// Add timeline line</span>
+svg.<span class="function">append</span>(<span class="string">'line'</span>)
+  .<span class="function">attr</span>(<span class="string">'x1'</span>, <span class="number">20</span>)
+  .<span class="function">attr</span>(<span class="string">'y1'</span>, <span class="number">50</span>)
+  .<span class="function">attr</span>(<span class="string">'x2'</span>, <span class="number">380</span>)
+  .<span class="function">attr</span>(<span class="string">'y2'</span>, <span class="number">50</span>)
+  .<span class="function">attr</span>(<span class="string">'stroke'</span>, <span class="string">'#333'</span>)
+  .<span class="function">attr</span>(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Create circles for dates - exactly as shown in code</span>
+svg.<span class="function">selectAll</span>(<span class="string">'circle'</span>)
+  .<span class="function">data</span>(dates)
+  .<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">'circle'</span>)
+  .<span class="function">attr</span>(<span class="string">'cx'</span>, d =&gt; timeScale(d))
+  .<span class="function">attr</span>(<span class="string">'cy'</span>, <span class="number">50</span>)
+  .<span class="function">attr</span>(<span class="string">'r'</span>, <span class="number">8</span>)
+  .<span class="function">attr</span>(<span class="string">'fill'</span>, <span class="string">'steelblue'</span>)
+  .<span class="function">attr</span>(<span class="string">'stroke'</span>, <span class="string">'white'</span>)
+  .<span class="function">attr</span>(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Add date labels</span>
+<span class="keyword">const</span> monthNames = [<span class="string">'Jan'</span>, <span class="string">'Apr'</span>, <span class="string">'Jul'</span>, <span class="string">'Oct'</span>];
+svg.<span class="function">selectAll</span>(<span class="string">'text'</span>)
+  .<span class="function">data</span>(dates)
+  .<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">'text'</span>)
+  .<span class="function">attr</span>(<span class="string">'x'</span>, d =&gt; timeScale(d))
+  .<span class="function">attr</span>(<span class="string">'y'</span>, <span class="number">35</span>)
+  .<span class="function">attr</span>(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+  .<span class="function">attr</span>(<span class="string">'font-size'</span>, <span class="string">'12px'</span>)
+  .<span class="function">attr</span>(<span class="string">'fill'</span>, <span class="string">'#333'</span>)
+  .<span class="function">text</span>((d, i) =&gt; monthNames[i]);
+
+<span class="comment">// Add pixel position indicators</span>
+svg.<span class="function">selectAll</span>(<span class="string">'text.position'</span>)
+  .<span class="function">data</span>(dates)
+  .<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">'text'</span>)
+  .<span class="function">attr</span>(<span class="string">'class'</span>, <span class="string">'position'</span>)
+  .<span class="function">attr</span>(<span class="string">'x'</span>, d =&gt; timeScale(d))
+  .<span class="function">attr</span>(<span class="string">'y'</span>, <span class="number">70</span>)
+  .<span class="function">attr</span>(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+  .<span class="function">attr</span>(<span class="string">'font-size'</span>, <span class="string">'10px'</span>)
+  .<span class="function">attr</span>(<span class="string">'fill'</span>, <span class="string">'#666'</span>)
+  .<span class="function">text</span>(d =&gt; <span class="string">`$&#123;Math.round(timeScale(d))&#125;px`</span>);
+
+  <!-- Note -->
+  <span class="keyword">Note</span>
+  <span class="note">This positions dates along a timeline using time scale mapping.</span>
+  <span class="comment"> &lt;svg id="time-chart" width="400" height="100"&gt;&lt;/svg&gt;</span>
+</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="time-chart" width="400" height="100" style="border:1px solid black;"></svg>
+    </div>
+  </div>
+</div>

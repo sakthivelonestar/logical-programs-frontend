@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { D3Component } from './d3/d3.component';
 import { SvgBasicsComponent } from './svg-basics/svg-basics.component';
+import { SelectionsDataBindingComponent } from './selections-data-binding/selections-data-binding.component';
+import { ScalesComponent } from './scales/scales.component';
 
 const routes: Routes = [
       
@@ -11,12 +13,20 @@ const routes: Routes = [
           children:[
                    {
                       path: '',
-                      redirectTo: 'svg-basic',
+                      redirectTo: 'svg-basics',
                       pathMatch: 'full'   
                   },
                   {
-                    path: 'svg-basic',
+                    path: 'svg-basics',
                     component:SvgBasicsComponent 
+                  },
+                  {
+                    path: 'selections-data-binding',
+                    component:SelectionsDataBindingComponent
+                  },
+                   {
+                    path: 'scales',
+                    component:ScalesComponent
                   },
                 ]
        },
