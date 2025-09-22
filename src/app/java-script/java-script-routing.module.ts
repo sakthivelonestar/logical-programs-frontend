@@ -17,12 +17,13 @@ import { StringMethodsComponent } from './string-methods/string-methods.componen
 
 const routes: Routes = [
     {
-      path: 'javascript',
+      path: 'javascript',  
       component: JsComponent,
       children:[
-        {
-          path: '',
-          component:ControlFlowComponent 
+         {
+            path: '',
+            redirectTo: 'controleflow',
+            pathMatch: 'full'   
         },
         {
           path: 'controleflow',

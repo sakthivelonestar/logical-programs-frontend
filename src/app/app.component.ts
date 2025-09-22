@@ -16,7 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private routerSubscription: Subscription = new Subscription();
 
   constructor(private router: Router) {
-    this.navigateTo("javascript");
+    this.navigateTo("d3js");
   }
 
   ngOnInit() {

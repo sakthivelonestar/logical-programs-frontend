@@ -20,10 +20,11 @@ const routes: Routes = [
     path: '',
     component: NgComponent,
       children:[
-      {
-        path: '',
-        component: AngularArchitectureComponent,
-      },
+       {
+            path: '',
+            redirectTo: 'angular-architecture',
+            pathMatch: 'full'   
+        },
        {
         path: 'angular-architecture',
         component: AngularArchitectureComponent,

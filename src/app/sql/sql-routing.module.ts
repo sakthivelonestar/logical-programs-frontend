@@ -19,8 +19,9 @@ const routes: Routes = [
       component: SqlhomeComponent,
       children:[
         {
-          path: '',
-          component:DataTypeComponent 
+            path: '',
+            redirectTo: 'data-types',
+            pathMatch: 'full'   
         },
          {
           path: 'data-types',

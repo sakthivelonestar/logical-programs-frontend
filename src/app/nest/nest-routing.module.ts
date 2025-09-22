@@ -19,9 +19,10 @@ const routes: Routes = [
       path: '',
       component: NesthomeComponent,
       children:[
-         {
-          path: '',
-          component:NestjsSetupComponent 
+        {
+            path: '',
+            redirectTo: 'nestjs-setup',
+            pathMatch: 'full'   
         },
         {
           path: 'nestjs-setup',

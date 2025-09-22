@@ -6,6 +6,7 @@ export const routes: Routes = [
    {
     path:"",
     loadChildren: () => import('./java-script/java-script.module').then(m => m.JavaScriptModule)
+    
    },
    {
     path: "javascript",
