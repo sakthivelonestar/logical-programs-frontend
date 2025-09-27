@@ -1,0 +1,6 @@
+[
+  { "name": "Apple", "color": "red", "quantity": 10 },
+  { "name": "Banana", "color": "yellow", "quantity": 15 },
+  { "name": "Cherry", "color": "red", "quantity": 8 },
+  { "name": "Orange", "color": "orange", "quantity": 12 }
+]

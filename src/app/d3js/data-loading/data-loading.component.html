@@ -1,0 +1,101 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        In D3.js, <strong>Data Loading</strong> functions like 
+        <code>d3.csv()</code> and <code>d3.json()</code> are used to fetch external 
+        datasets. These methods return promises that resolve with parsed data, 
+        making it easy to integrate structured datasets into visualizations.
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        Most real-world projects rely on external data sources (CSV, JSON, APIs).  
+        Data loading enables <strong>dynamic charts</strong> that update whenever 
+        the source data changes, which is critical for dashboards, reports, and analytics.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Use data loading when you need to bring in <strong>external files</strong> 
+        or <strong>API responses</strong> to drive your D3 visualizations — e.g., 
+        population datasets, financial data, or logs from a web service.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>Data Loading Examples in D3.js</h3>
+
+    <!-- Example 1: Load CSV -->
+    <div class="step">
+      <h2>Loading CSV Data</h2>
+
+      <pre><code class="language-js">
+<span class="comment">// Example: Load data from a CSV file</span>
+d3.<span class="function">csv</span>(<span class="string">"data/fruits.csv"</span>)
+  .<span class="function">then</span>(data =&gt; &#123;
+    console.<span class="function">log</span>(<span class="string">"CSV Data:"</span>, data);
+  &#125;)
+  .<span class="function">catch</span>(error =&gt; &#123;
+    console.<span class="function">error</span>(<span class="string">"Error loading CSV:"</span>, error);
+  &#125;);
+      </code></pre>
+
+      <p><strong>Output:</strong></p>
+      <div class="note" id="C">
+        Opens <code>fruits.csv</code> and logs the parsed data to the console.
+      </div>
+    </div>
+
+    <!-- Example 2: Load JSON -->
+    <div class="step">
+      <h2>Loading JSON Data</h2>
+
+      <pre><code class="language-js">
+<span class="comment">// Example: Load data from a JSON file</span>
+d3.<span class="function">json</span>(<span class="string">"data/fruits.json"</span>)
+  .<span class="function">then</span>(data =&gt; &#123;
+    console.<span class="function">log</span>(<span class="string">"JSON Data:"</span>, data);
+  &#125;)
+  .<span class="function">catch</span>(error =&gt; &#123;
+    console.<span class="function">error</span>(<span class="string">"Error loading JSON:"</span>, error);
+  &#125;);
+      </code></pre>
+
+      <p><strong>Output:</strong></p>
+      <div class="note" id="J">
+        Opens <code>fruits.json</code> and logs the parsed JSON object to the console.
+      </div>
+    </div>
+
+    <!-- Example 3: Using Loaded Data in a Chart -->
+    <div class="step">
+      <h2>Binding Loaded Data to SVG</h2>
+
+      <pre><code class="language-js">
+<span class="comment">// Example: Load CSV and draw circles</span>
+d3.<span class="function">csv</span>(<span class="string">"data/points.csv"</span>)
+  .<span class="function">then</span>(data =&gt; &#123;
+    d3.<span class="function">select</span>(<span class="string">"#circle-chart"</span>)
+      .<span class="function">selectAll</span>(<span class="string">"circle"</span>)
+      .<span class="function">data</span>(data)
+      .<span class="function">enter</span>()
+      .<span class="function">append</span>(<span class="string">"circle"</span>)
+      .<span class="function">attr</span>(<span class="string">"cx"</span>, (d, i) =&gt; (i * 70) + 50)
+      .<span class="function">attr</span>(<span class="string">"cy"</span>, 100)
+      .<span class="function">attr</span>(<span class="string">"r"</span>, d =&gt; +d['size'])
+      .<span class="function">attr</span>(<span class="string">"fill"</span>, "lightgreen")
+      .<span class="function">attr</span>(<span class="string">"stroke"</span>, "black");
+  &#125;);
+      </code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="circle-chart" width="300" height="200" style="border:1px solid black;"></svg>
+    </div>
+  </div>
+</div>

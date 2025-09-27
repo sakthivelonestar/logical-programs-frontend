@@ -1,0 +1,158 @@
+ <div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+    <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        <div class="header">
+            <p>
+                <span class="question">What:</span>
+                In D3.js, <strong>Transitions</strong> allow you to animate changes to DOM elements smoothly over time.
+            </p>
+            <p>
+                <span class="question">Why:</span>
+                Transitions make visualizations dynamic, engaging, and help users understand data changes.
+            </p>
+            <p>
+                <span class="question">Where:</span>
+                Use transitions for bars, circles, paths, colors, opacity, transforms, and any visual property changes.
+            </p>
+        </div>
+    </div>
+    <div class="examples">
+        <h3>Basic D3.js Transitions Examples</h3>
+
+        <!-- 1. Simple Bar Animation -->
+        <div class="step">
+            <h2>1. Simple Bar Height Animation</h2>
+            <pre><code>
+<span class="comment">// Basic bar height animation</span>
+<span class="keyword">function</span> <span class="function-name">simpleBarAnimation</span>() &#123;
+    <span class="keyword">const</span> data: number[] = [<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">15</span>, <span class="number">25</span>];
+    
+    <span class="keyword">const</span> container = d3.select(<span class="string">'#simple-bar-transition'</span>);
+    container.selectAll('*').remove();
+
+    <span class="comment">// Create bars</span>
+    container.selectAll('div.bar')
+        .data(data)
+        .enter()
+        .append('div')
+        .style('display', <span class="string">'inline-block'</span>)
+        .style('width', <span class="string">'30px'</span>)
+        .style('margin', <span class="string">'2px'</span>)
+        .style('background-color', <span class="string">'steelblue'</span>)
+        .style('height', <span class="string">'0px'</span>)
+        .style('vertical-align', <span class="string">'bottom'</span>)
+        <span class="comment">// Add transition</span>
+        .transition()
+        .duration(<span class="number">1000</span>)
+        .style('height', d =&gt; d * <span class="number">10</span> + <span class="string">'px'</span>);
+&#125;
+            </code></pre>
+            <button (click)="simpleBarAnimation()">Run Simple Bar Animation</button>
+            <div id="simple-bar-transition" style="height: 320px; border: 1px solid #ddd; padding: 20px; margin: 10px 0;"></div>
+        </div>
+
+        <!-- 2. Color Change Animation -->
+        <div class="step">
+            <h2>2. Color Change Animation</h2>
+            <pre><code>
+<span class="comment">// Simple color transition</span>
+<span class="keyword">function</span> <span class="function-name">colorChangeAnimation</span>() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#color-transition'</span>);
+    svg.selectAll('*').remove();
+
+    <span class="keyword">const</span> circle = svg.append('circle')
+        .attr('cx', <span class="number">100</span>)
+        .attr('cy', <span class="number">75</span>)
+        .attr('r', <span class="number">40</span>)
+        .attr('fill', <span class="string">'blue'</span>);
+
+    <span class="comment">// Change color smoothly</span>
+    circle.transition()
+        .duration(<span class="number">2000</span>)
+        .attr('fill', <span class="string">'red'</span>);
+&#125;
+            </code></pre>
+            <button (click)="colorChangeAnimation()">Change Color</button>
+            <svg id="color-transition" width="200" height="150" style="border: 1px solid #ddd; margin: 10px 0;"></svg>
+        </div>
+
+        <!-- 3. Position Movement -->
+        <div class="step">
+            <h2>3. Position Movement Animation</h2>
+            <pre><code>
+<span class="comment">// Move circle from left to right</span>
+<span class="keyword">function</span> <span class="function-name">moveAnimation</span>() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#move-transition'</span>);
+    svg.selectAll('*').remove();
+
+    <span class="keyword">const</span> circle = svg.append('circle')
+        .attr('cx', <span class="number">30</span>)
+        .attr('cy', <span class="number">75</span>)
+        .attr('r', <span class="number">20</span>)
+        .attr('fill', <span class="string">'green'</span>);
+
+    <span class="comment">// Move to new position</span>
+    circle.transition()
+        .duration(<span class="number">1500</span>)
+        .attr('cx', <span class="number">270</span>);
+&#125;
+            </code></pre>
+            <button (click)="moveAnimation()">Move Circle</button>
+            <svg id="move-transition" width="300" height="150" style="border: 1px solid #ddd; margin: 10px 0;"></svg>
+        </div>
+
+        <!-- 4. Size Change Animation -->
+        <div class="step">
+            <h2>4. Size Change Animation</h2>
+            <pre><code>
+<span class="comment">// Change circle size</span>
+<span class="keyword">function</span> <span class="function-name">sizeAnimation</span>() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#size-transition'</span>);
+    svg.selectAll('*').remove();
+
+    <span class="keyword">const</span> circle = svg.append('circle')
+        .attr('cx', <span class="number">100</span>)
+        .attr('cy', <span class="number">75</span>)
+        .attr('r', <span class="number">10</span>)
+        .attr('fill', <span class="string">'purple'</span>);
+
+    <span class="comment">// Grow the circle</span>
+    circle.transition()
+        .duration(<span class="number">1000</span>)
+        .attr('r', <span class="number">50</span>);
+&#125;
+            </code></pre>
+            <button (click)="sizeAnimation()">Change Size</button>
+            <svg id="size-transition" width="200" height="150" style="border: 1px solid #ddd; margin: 10px 0;"></svg>
+        </div>
+
+        <!-- 5. Fade Effect -->
+        <div class="step">
+            <h2>5. Fade In/Out Animation</h2>
+            <pre><code>
+<span class="comment">// Fade animation</span>
+<span class="keyword">function</span> <span class="function-name">fadeAnimation</span>() &#123;
+    <span class="keyword">const</span> container = d3.select(<span class="string">'#fade-transition'</span>);
+    container.selectAll('*').remove();
+
+    <span class="keyword">const</span> box = container.append('div')
+        .style('width', <span class="string">'100px'</span>)
+        .style('height', <span class="string">'100px'</span>)
+        .style('background-color', <span class="string">'orange'</span>)
+        .style('margin', <span class="string">'20px auto'</span>)
+        .style('opacity', <span class="number">0</span>);
+
+    <span class="comment">// Fade in</span>
+    box.transition()
+        .duration(<span class="number">1000</span>)
+        .style('opacity', <span class="number">1</span>);
+&#125;
+            </code></pre>
+            <button (click)="fadeAnimation()">Fade In</button>
+            <div id="fade-transition" style="width: 140px; height: 140px; border: 1px solid #ddd; padding: 20px; margin: 10px 0;"></div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,237 @@
+ <div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+    <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">            
+            <div class="header">
+                <p>
+                    <span class="question">What:</span>
+                    In D3.js, <strong>Advanced Scales</strong> transform data values into visual properties like position, size, color, and more with sophisticated mapping functions.
+                </p>
+                <p>
+                    <span class="question">Why:</span>
+                    Advanced scales handle complex data transformations, non-linear mappings, categorical data, time series, and custom interpolations for rich visualizations.
+                </p>
+                <p>
+                    <span class="question">Where:</span>
+                    Use advanced scales for logarithmic charts, color gradients, ordinal data, time axes, custom interpolations, and complex data mappings.
+                </p>
+            </div>
+    </div>
+        
+    <div class="examples">
+            <h3>Advanced D3.js Scales Examples</h3>
+
+            <!-- 1. Logarithmic Scale -->
+            <div class="step">
+                <h2>1. Logarithmic Scale</h2>
+                <pre><code>
+<span class="comment">// Logarithmic scale for exponential data</span>
+<span class="keyword">function</span> <span class="function-name">logarithmicScaleDemo</span>() &#123;
+    <span class="keyword">const</span> data = [<span class="number">1</span>, <span class="number">10</span>, <span class="number">100</span>, <span class="number">1000</span>, <span class="number">10000</span>, <span class="number">100000</span>];
+    
+    <span class="comment">// Create log scale</span>
+    <span class="keyword">const</span> logScale = d3.scaleLog()
+        .domain([<span class="number">1</span>, <span class="number">100000</span>])
+        .range([<span class="number">20</span>, <span class="number">400</span>]);
+    
+    <span class="keyword">const</span> container = d3.select(<span class="string">'#log-scale-demo'</span>);
+    container.selectAll('*').remove();
+    
+    container.selectAll('.bar')
+        .data(data)
+        .enter()
+        .append('div')
+        .attr('class', 'bar')
+        .style('width', d => logScale(d) + <span class="string">'px'</span>)
+        .style('height', <span class="string">'25px'</span>)
+        .style('background-color', <span class="string">'#e74c3c'</span>)
+        .style('margin-bottom', <span class="string">'5px'</span>)
+        .style('display', <span class="string">'block'</span>)
+        .text(d => d);
+&#125;
+                </code></pre>
+                <p><strong>Output:</strong></p>
+                <div id="log-scale-demo" class="viz-container"></div>
+            </div>
+
+            <!-- 2. Ordinal Scale with Colors -->
+            <div class="step">
+                <h2>2. Ordinal Scale with Color Scheme</h2>
+                <pre><code>
+<span class="comment">// Ordinal scale with categorical colors</span>
+<span class="keyword">function</span> <span class="function-name">ordinalColorScale</span>() &#123;
+    <span class="keyword">const</span> categories = [<span class="string">'Tech'</span>, <span class="string">'Finance'</span>, <span class="string">'Healthcare'</span>, <span class="string">'Education'</span>, <span class="string">'Retail'</span>];
+    
+    <span class="comment">// Create ordinal color scale</span>
+    <span class="keyword">const</span> colorScale = d3.scaleOrdinal(d3.schemeCategory10)
+        .domain(categories);
+    
+    <span class="keyword">const</span> container = d3.select(<span class="string">'#ordinal-color-demo'</span>);
+    container.selectAll('*').remove();
+    
+    <span class="keyword">const</span> div = container.append('div')
+        .style('display', 'flex')
+        .style('flex-wrap', 'wrap')
+        .style('gap', '10px');
+    
+    categories.forEach(category => &#123;
+        div.append('div')
+            .style('background-color', colorScale(category))
+            .style('width', <span class="string">'80px'</span>)
+            .style('height', <span class="string">'50px'</span>)
+            .style('border-radius', <span class="string">'5px'</span>)
+            .style('display', <span class="string">'flex'</span>)
+            .style('align-items', <span class="string">'center'</span>)
+            .style('justify-content', <span class="string">'center'</span>)
+            .style('color', <span class="string">'white'</span>)
+            .style('font-size', <span class="string">'12px'</span>)
+            .text(category);
+    &#125;);
+&#125;
+                </code></pre>
+                <p><strong>Output:</strong></p>
+                <div id="ordinal-color-demo" class="viz-container"></div>
+            </div>
+
+            <!-- 3. Sequential Color Scale -->
+            <div class="step">
+                <h2>3. Sequential Color Scale</h2>
+                <pre><code>
+<span class="comment">// Sequential color scale for continuous data</span>
+<span class="keyword">function</span> <span class="function-name">sequentialColorScale</span>() &#123;
+    <span class="keyword">const</span> data = [<span class="number">0</span>, <span class="number">10</span>, <span class="number">25</span>, <span class="number">50</span>, <span class="number">75</span>, <span class="number">90</span>, <span class="number">100</span>];
+    
+    <span class="comment">// Create sequential color scale</span>
+    <span class="keyword">const</span> colorScale = d3.scaleSequential(d3.interpolateBlues)
+        .domain([<span class="number">0</span>, <span class="number">100</span>]);
+    
+    <span class="keyword">const</span> container = d3.select(<span class="string">'#sequential-color-demo'</span>);
+    container.selectAll('*').remove();
+    
+    <span class="keyword">const</span> div = container.append('div')
+        .style('display', 'flex')
+        .style('align-items', 'center')
+        .style('gap', '5px');
+    
+    data.forEach(value => &#123;
+        div.append('div')
+            .style('background-color', colorScale(value))
+            .style('width', <span class="string">'50px'</span>)
+            .style('height', <span class="string">'50px'</span>)
+            .style('border-radius', <span class="string">'50%'</span>)
+            .style('display', <span class="string">'flex'</span>)
+            .style('align-items', <span class="string">'center'</span>)
+            .style('justify-content', <span class="string">'center'</span>)
+            .style('color', value > <span class="number">50</span> ? <span class="string">'white'</span> : <span class="string">'black'</span>)
+            .style('font-size', <span class="string">'12px'</span>)
+            .text(value);
+    &#125;);
+&#125;
+                </code></pre>
+                <p><strong>Output:</strong></p>
+                <div id="sequential-color-demo" class="viz-container"></div>
+            </div>
+
+            <!-- 4. Band Scale for Categorical Data -->
+    <div class="step">
+    <h2>4. Band Scale for Categorical Data</h2>
+
+    <pre><code>
+    <span class="comment">// Band scale for evenly spaced categories</span>
+    <span class="keyword">bandScaleDemo()</span> &#123;
+        <span class="keyword">const</span> data = [
+            &#123; name: <span class="string">'A'</span>, value: <span class="number">30</span> &#125;,
+            &#123; name: <span class="string">'B'</span>, value: <span class="number">80</span> &#125;,
+            &#123; name: <span class="string">'C'</span>, value: <span class="number">45</span> &#125;,
+            &#123; name: <span class="string">'D'</span>, value: <span class="number">60</span> &#125;,
+            &#123; name: <span class="string">'E'</span>, value: <span class="number">20</span> &#125;
+        ];
+
+        <span class="comment">// X band scale</span>
+        <span class="keyword">const</span> xScale = d3.scaleBand&lt;string&gt;()
+            .domain(data.map(d =&gt; d.name))
+            .range([<span class="number">0</span>, <span class="number">300</span>])
+            .padding(<span class="number">0.1</span>);
+
+        <span class="comment">// Y linear scale</span>
+        <span class="keyword">const</span> yScale = d3.scaleLinear()
+            .domain([<span class="number">0</span>, d3.max(data, d =&gt; d.value)!])
+            .range([<span class="number">0</span>, <span class="number">120</span>]);
+
+        <span class="keyword">const</span> svg = d3.select(<span class="string">'#band-scale-demo'</span>);
+        svg.selectAll('*').remove();
+
+        <span class="comment">// Bars</span>
+        svg.selectAll(<span class="string">'rect'</span>)
+            .data(data)
+            .enter()
+            .append(<span class="string">'rect'</span>)
+            .attr(<span class="string">'x'</span>, d =&gt; xScale(d.name)! + <span class="number">50</span>)
+            .attr(<span class="string">'y'</span>, d =&gt; <span class="number">140</span> - yScale(d.value))
+            .attr(<span class="string">'width'</span>, xScale.bandwidth())
+            .attr(<span class="string">'height'</span>, d =&gt; yScale(d.value))
+            .attr(<span class="string">'fill'</span>, <span class="string">'#2ecc71'</span>);
+
+        <span class="comment">// Labels</span>
+        svg.selectAll(<span class="string">'text'</span>)
+            .data(data)
+            .enter()
+            .append(<span class="string">'text'</span>)
+            .attr(<span class="string">'x'</span>, d =&gt; xScale(d.name)! + xScale.bandwidth() / <span class="number">2</span> + <span class="number">50</span>)
+            .attr(<span class="string">'y'</span>, <span class="number">155</span>)
+            .attr(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+            .attr(<span class="string">'font-size'</span>, <span class="string">'14px'</span>)
+            .text(d =&gt; d.name);
+    &#125;
+    </code></pre>
+
+    <!-- SVG container -->
+    <p><strong>Output:</strong></p>
+    <svg id="band-scale-demo" width="400" height="180" class="viz-container"></svg>
+    </div>
+
+
+            <!-- 5. Power Scale -->
+            <div class="step">
+                <h2>5. Power Scale with Custom Exponent</h2>
+                <pre><code>
+<span class="comment">// Power scale with custom exponent</span>
+<span class="keyword">function</span> <span class="function-name">powerScaleDemo</span>() &#123;
+    <span class="keyword">const</span> data = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>];
+    
+    <span class="comment">// Create power scale with exponent 2 (quadratic)</span>
+    <span class="keyword">const</span> powerScale = d3.scalePow()
+        .exponent(<span class="number">2</span>)
+        .domain([<span class="number">1</span>, <span class="number">8</span>])
+        .range([<span class="number">20</span>, <span class="number">300</span>]);
+    
+    <span class="keyword">const</span> container = d3.select(<span class="string">'#power-scale-demo'</span>);
+    container.selectAll('*').remove();
+    
+    <span class="keyword">const</span> div = container.append('div')
+        .style('display', 'flex')
+        .style('align-items', 'end')
+        .style('gap', '5px');
+    
+    data.forEach(value => &#123;
+        div.append('div')
+            .style('background-color', <span class="string">'#9b59b6'</span>)
+            .style('width', <span class="string">'30px'</span>)
+            .style('height', powerScale(value) / <span class="number">5</span> + <span class="string">'px'</span>)
+            .style('display', <span class="string">'flex'</span>)
+            .style('align-items', <span class="string">'end'</span>)
+            .style('justify-content', <span class="string">'center'</span>)
+            .style('color', <span class="string">'white'</span>)
+            .style('font-size', <span class="string">'12px'</span>)
+            .style('padding-bottom', <span class="string">'5px'</span>)
+            .text(value);
+    &#125;);
+&#125;
+                </code></pre>
+                <p><strong>Output:</strong></p>
+                <div id="power-scale-demo" class="viz-container"></div>
+            </div>
+    </div>
+    </div>

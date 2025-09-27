@@ -2,31 +2,28 @@
   <div class="wrapper">
     <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
     <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
-
-   <div class="header">
-        <p>
-            <span class="question">What:</span> 
-            In D3.js, <strong>SVG (Scalable Vector Graphics)</strong> is the core technology used 
-            to draw shapes like <code>circle</code>, <code>rect</code>, <code>line</code>, and 
-            <code>path</code> in the browser. D3 manipulates these SVG elements dynamically.
-        </p>
-        <p>
-            <span class="question">Why:</span> 
-            SVG is resolution-independent, interactive, and integrates seamlessly with D3 for 
-            data-driven visualizations. It allows precise control of shapes, colors, and positions.
-        </p>
-        <p>
-            <span class="question">Where:</span> 
-            Use SVG in D3.js whenever you need to create <strong>charts, graphs, maps, or custom visualizations</strong> 
-            that require scalable, high-quality rendering directly in the DOM.
-        </p>
-   </div>
-
+    <div class="header">
+          <p>
+              <span class="question">What:</span> 
+              In D3.js, <strong>SVG (Scalable Vector Graphics)</strong> is the core technology used 
+              to draw shapes like <code>circle</code>, <code>rect</code>, <code>line</code>, and 
+              <code>path</code> in the browser. D3 manipulates these SVG elements dynamically.
+          </p>
+          <p>
+              <span class="question">Why:</span> 
+              SVG is resolution-independent, interactive, and integrates seamlessly with D3 for 
+              data-driven visualizations. It allows precise control of shapes, colors, and positions.
+          </p>
+          <p>
+              <span class="question">Where:</span> 
+              Use SVG in D3.js whenever you need to create <strong>charts, graphs, maps, or custom visualizations</strong> 
+              that require scalable, high-quality rendering directly in the DOM.
+          </p>
+    </div>
   </div>
   <div class="examples">
-                <h3>Drawing Shapes with SVG in D3.js</h3>
-
-      <div class="step">
+     <h3>Drawing Shapes with SVG in D3.js</h3>
+     <div class="step">
   <pre><code class="language-html">
 <span class="comment">&lt;!-- ================= Circle ================= --&gt;</span>
 &lt;<span class="keyword">svg</span> <span class="keyword">width</span>=<span class="string">"300"</span> <span class="keyword">height</span>=<span class="string">"200"</span> <span class="keyword">style</span>=<span class="string">"border:1px solid black;"</span>&gt;
@@ -38,8 +35,19 @@
   --&gt;</span>
   &lt;<span class="keyword">circle</span> <span class="keyword">cx</span>=<span class="number">"80"</span> <span class="keyword">cy</span>=<span class="number">"100"</span> <span class="keyword">r</span>=<span class="number">"50"</span><span class="keyword">fill</span>=<span class="string">"lightblue"</span> <span class="keyword">stroke</span>=<span class="string">"black"</span> <span class="keyword">stroke-width</span>=<span class="number">"2"</span>&gt;&lt;/<span class="keyword">circle</span>&gt;
 &lt;/<span class="keyword">svg</span>&gt;
+</code></pre>
+ <p><strong>Output:</strong></p>
+<svg width="300" height="200" style="border:1px solid black;">
+  <!-- Circle Example -->
+  <!-- 
+    cx = center x-axis
+    cy = center y-axis
+    r  = radius
+  -->
+  <circle cx="80" cy="100" r="50"fill="lightblue" stroke="black" stroke-width="2"></circle>
+</svg>
 
-
+  <pre><code class="language-html">
 <span class="comment">&lt;!-- ================= Rectangle ================= --&gt;</span>
 &lt;<span class="keyword">svg</span> <span class="keyword">width</span>=<span class="string">"300"</span> <span class="keyword">height</span>=<span class="string">"200"</span> <span class="keyword">style</span>=<span class="string">"border:1px solid black;"</span>&gt;
   <span class="comment">&lt;!-- Rectangle Example --&gt;</span>
@@ -52,6 +60,22 @@
   &lt;<span class="keyword">rect</span> <span class="keyword">x</span>=<span class="number">"150"</span> <span class="keyword">y</span>=<span class="number">"50"</span> <span class="keyword">width</span>=<span class="number">"100"</span> <span class="keyword">height</span>=<span class="number">"80"</span><span class="keyword">fill</span>=<span class="string">"orange"</span> <span class="keyword">stroke</span>=<span class="string">"black"</span>&gt;&lt;/<span class="keyword">rect</span>&gt;
 &lt;/<span class="keyword">svg</span>&gt;
 
+</code></pre>
+
+ <p><strong>Output:</strong></p>
+<svg width="300" height="200" style="border:1px solid black;">
+  <!-- Rectangle Example -->
+  <!-- 
+    x = start position (x-axis)
+    y = start position (y-axis)
+    width = rectangle width
+    height = rectangle height
+  -->
+  <rect x="150" y="50" width="100" height="80"fill="orange" stroke="black"></rect>
+</svg>
+
+
+  <pre><code class="language-html">
 <span class="comment">&lt;!-- ================= Line ================= --&gt;</span>
 &lt;<span class="keyword">svg</span> <span class="keyword">width</span>=<span class="string">"300"</span> <span class="keyword">height</span>=<span class="string">"200"</span> <span class="keyword">style</span>=<span class="string">"border:1px solid black;"</span>&gt;
   <span class="comment">&lt;!-- Line Example --&gt;</span>
@@ -61,6 +85,19 @@
   --&gt;</span>
   &lt;<span class="keyword">line</span> <span class="keyword">x1</span>=<span class="number">"20"</span> <span class="keyword">y1</span>=<span class="number">"180"</span> <span class="keyword">x2</span>=<span class="number">"280"</span> <span class="keyword">y2</span>=<span class="number">"180"</span> <span class="keyword">stroke</span>=<span class="string">"green"</span> <span class="keyword">stroke-width</span>=<span class="number">"3"</span>&gt;&lt;/<span class="keyword">line</span>&gt;
 &lt;/<span class="keyword">svg</span>&gt;
+
+</code></pre>
+ <p><strong>Output:</strong></p>
+<svg width="300" height="200" style="border:1px solid black;">
+  <!-- Line Example -->
+  <!-- 
+    x1,y1 = starting point
+    x2,y2 = ending point
+  -->
+  <line x1="20" y1="180" x2="280" y2="180" stroke="green" stroke-width="3"></line>
+</svg>
+
+  <pre><code class="language-html">
 
 <span class="comment">&lt;!-- ================= Ellipse ================= --&gt;</span>
 &lt;<span class="keyword">svg</span> <span class="keyword">width</span>=<span class="string">"300"</span> <span class="keyword">height</span>=<span class="string">"200"</span> <span class="keyword">style</span>=<span class="string">"border:1px solid black;"</span>&gt;
@@ -74,6 +111,14 @@
   &lt;<span class="keyword">ellipse</span> <span class="keyword">cx</span>=<span class="number">"100"</span> <span class="keyword">cy</span>=<span class="number">"80"</span> <span class="keyword">rx</span>=<span class="number">"50"</span> <span class="keyword">ry</span>=<span class="number">"30"</span> <span class="keyword">fill</span>=<span class="string">"lightgreen"</span> <span class="keyword">stroke</span>=<span class="string">"black"</span>&gt;&lt;/<span class="keyword">ellipse</span>&gt;
 &lt;/<span class="keyword">svg</span>&gt;
 
+</code></pre>
+ <p><strong>Output:</strong></p>
+  <svg width="300" height="200" style="border:1px solid black;">
+            <ellipse cx="100" cy="80" rx="50" ry="30" fill="green" /> <polyline points="0,40 40,40 40,80 80,80" fill="none" stroke="purple" />
+        </svg>       
+
+  <pre><code class="language-html">
+
 <span class="comment">&lt;!-- ================= Polygon (Triangle) ================= --&gt;</span>
 &lt;<span class="keyword">svg</span> <span class="keyword">width</span>=<span class="string">"300"</span> <span class="keyword">height</span>=<span class="string">"200"</span> <span class="keyword">style</span>=<span class="string">"border:1px solid black;"</span>&gt;
   <span class="comment">&lt;!-- Triangle Example (Polygon) --&gt;</span>
@@ -86,6 +131,14 @@
   &lt;<span class="keyword">polygon</span> <span class="keyword">points</span>=<span class="string">"150,20 50,180 250,180"</span> <span class="keyword">fill</span>=<span class="string">"yellow"</span> <span class="keyword">stroke</span>=<span class="string">"black"</span> <span class="keyword">stroke-width</span>=<span class="number">"2"</span>/&gt;
 &lt;/<span class="keyword">svg</span>&gt;
 
+</code></pre>
+ <p><strong>Output:</strong></p>
+ <svg width="300" height="200" style="border:1px solid black;">
+            <polygon points="150,20 50,180 250,180" fill="yellow" stroke="black" stroke-width="2"/>
+        </svg>
+
+
+<pre><code class="language-html">
 <span class="comment">&lt;!-- ================= Path (Diagonal Line) ================= --&gt;</span>
 &lt;<span class="keyword">svg</span> <span class="keyword">width</span>=<span class="string">"300"</span> <span class="keyword">height</span>=<span class="string">"200"</span> <span class="keyword">style</span>=<span class="string">"border:1px solid black;"</span>&gt;  
  &lt;<span class="keyword">path</span> <span class="keyword">d</span>=<span class="string">"M20 180 L280 20"</span> <span class="keyword">stroke</span>=<span class="string">"blue"</span> <span class="keyword">stroke-width</span>=<span class="number">"2"</span> <span class="keyword">fill</span>=<span class="string">"none"</span> /&gt;
@@ -110,52 +163,8 @@
 
 &lt;/<span class="keyword">svg</span>&gt;
 </code></pre>
-
-
-  <p><strong>Output:</strong></p>
+ <p><strong>Output:</strong></p>
     <div class="practices">
-           <!-- ================= Circle ================= -->
-<svg width="300" height="200" style="border:1px solid black;">
-  <!-- Circle Example -->
-  <!-- 
-    cx = center x-axis
-    cy = center y-axis
-    r  = radius
-  -->
-  <circle cx="80" cy="100" r="50"fill="lightblue" stroke="black" stroke-width="2"></circle>
-</svg>
-
-
-<!-- ================= Rectangle ================= -->
-<svg width="300" height="200" style="border:1px solid black;">
-  <!-- Rectangle Example -->
-  <!-- 
-    x = start position (x-axis)
-    y = start position (y-axis)
-    width = rectangle width
-    height = rectangle height
-  -->
-  <rect x="150" y="50" width="100" height="80"fill="orange" stroke="black"></rect>
-</svg>
-
-<!-- ================= Line ================= -->
-<svg width="300" height="200" style="border:1px solid black;">
-  <!-- Line Example -->
-  <!-- 
-    x1,y1 = starting point
-    x2,y2 = ending point
-  -->
-  <line x1="20" y1="180" x2="280" y2="180" stroke="green" stroke-width="3"></line>
-</svg>
-
-        <svg width="300" height="200" style="border:1px solid black;">
-            <polygon points="150,20 50,180 250,180" fill="lightgreen" stroke="black" stroke-width="2"/>
-        </svg>
-
-        <svg width="300" height="200" style="border:1px solid black;">
-            <ellipse cx="100" cy="80" rx="50" ry="30" fill="green" /> <polyline points="0,40 40,40 40,80 80,80" fill="none" stroke="purple" />
-        </svg>
-
         <svg width="300" height="200" style="border:1px solid black;">
             <path d="M20 180 L280 20 " stroke="blue" stroke-width="2" fill="none" />
         </svg>
@@ -175,7 +184,8 @@
             <path d="M20 120 Q150 0 280 120" stroke="black" fill="transparent" stroke-width="2"/>
         </svg>
       </div>
-</div>
 
-   </div>
+ 
+     </div>
+  </div>
 </div>

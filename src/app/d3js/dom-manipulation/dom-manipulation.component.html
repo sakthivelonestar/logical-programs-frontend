@@ -1,0 +1,88 @@
+<div class="overall-wrapper" appMaximize #d3DomManipulation="maximize" id="d3DomManipulation">
+  <div class="wrapper">
+    <img class="swap" *ngIf="d3DomManipulation.checkfullscreen() == 'hide'" 
+         (click)="d3DomManipulation.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="d3DomManipulation.checkfullscreen() != 'hide'" 
+         (click)="d3DomManipulation.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        In D3.js, <strong>DOM Manipulation</strong> means selecting HTML or SVG elements 
+        and modifying them dynamically (add, remove, style, or update content).
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        It lets you <strong>bind data to elements</strong> and update your visualization 
+        whenever the data changes—without manually writing lots of DOM code.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Use DOM manipulation whenever you need to <strong>create or update visuals dynamically</strong>,
+        like adding bars in a chart, labeling axes, or changing colors based on user interaction.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>DOM Manipulation with D3.js</h3>
+
+    <!-- Example 1: Select and Style -->
+    <div class="step">
+      <h2>1. Selecting and Styling Elements</h2>
+<pre><code class="language-js">
+<span class="comment">// Select a paragraph and change its text + style</span>
+d3.<span class="function">select</span>(<span class="string">"#dom-example"</span>)
+  .<span class="function">append</span>(<span class="string">"p"</span>)
+  .<span class="function">text</span>(<span class="string">"Hello, D3.js!"</span>)
+  .<span class="function">style</span>(<span class="string">"color"</span>, <span class="string">"steelblue"</span>)
+  .<span class="function">style</span>(<span class="string">"font-weight"</span>, <span class="string">"bold"</span>);
+</code></pre>
+      <p><strong>Output:</strong></p>
+      <div id="dom-example" class="practices"></div>
+    </div>
+
+    <!-- Example 2: Data Binding -->
+    <div class="step">
+      <h2>2. Binding Data to Elements</h2>
+<pre><code class="language-js">
+<span class="comment">// Data array</span>
+<span class="keyword">const</span> fruits = [<span class="string">"Apple"</span>, <span class="string">"Banana"</span>, <span class="string">"Cherry"</span>];
+
+<span class="comment">// Bind data and create list items</span>
+d3.<span class="function">select</span>(<span class="string">"#data-binding"</span>)
+  .<span class="function">selectAll</span>(<span class="string">"li"</span>)
+  .<span class="function">data</span>(fruits)
+  .<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">"li"</span>)
+  .<span class="function">text</span>(d =&gt; d);
+</code></pre>
+      <p><strong>Output:</strong></p>
+      <ul id="data-binding" class="practices"></ul>
+    </div>
+
+    <!-- Example 3: Update + Exit -->
+    <div class="step">
+      <h2>3. Update and Remove Elements</h2>
+<pre><code class="language-js">
+<span class="comment">// New dataset with fewer items</span>
+<span class="keyword">const</span> newFruits = [<span class="string">"Apple"</span>, <span class="string">"Cherry"</span>];
+
+<span class="comment">// Update text and remove extra items</span>
+<span class="keyword">const</span> items = d3.<span class="function">select</span>(<span class="string">"#update-example"</span>)
+  .<span class="function">selectAll</span>(<span class="string">"div"</span>)
+  .<span class="function">data</span>(newFruits);
+
+items.<span class="function">enter</span>()
+  .<span class="function">append</span>(<span class="string">"div"</span>)
+  .<span class="function">merge</span>(items <span class="keyword">as</span> <span class="string">any</span> )  
+  .<span class="function">text</span>(d =&gt; d)
+  .<span class="function">style</span>(<span class="string">"color"</span>, <span class="string">"green"</span>);
+
+items.<span class="function">exit</span>().<span class="function">remove</span>();
+</code></pre>
+      <p><strong>Output:</strong></p>
+      <div id="update-example" class="practices"></div>
+    </div>
+  </div>
+</div>

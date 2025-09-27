@@ -89,69 +89,69 @@ export class ScalesComponent implements AfterViewInit {
 
   private createTimeScaleExample(): void {
    // Time Scale Example - exactly matching the code shown
-const dates = [
-  new Date("2025-01-01"), 
-  new Date("2025-04-01"), 
-  new Date("2025-07-01"), 
-  new Date("2025-10-01")
-];
+    const dates = [
+      new Date("2025-01-01"), 
+      new Date("2025-04-01"), 
+      new Date("2025-07-01"), 
+      new Date("2025-10-01")
+    ];
 
-const timeScale = d3.scaleTime()
-  .domain([new Date("2025-01-01"), new Date("2025-12-31")])
-  .range([20, 380]);
+    const timeScale = d3.scaleTime()
+      .domain([new Date("2025-01-01"), new Date("2025-12-31")])
+      .range([20, 380]);
 
-const svg = d3.select('#time-chart');
+    const svg = d3.select('#time-chart');
 
-// Clear existing content
-svg.selectAll('*').remove();
+    // Clear existing content
+    svg.selectAll('*').remove();
 
-// Add timeline line
-svg.append('line')
-  .attr('x1', 20)
-  .attr('y1', 50)
-  .attr('x2', 380)
-  .attr('y2', 50)
-  .attr('stroke', '#333')
-  .attr('stroke-width', 2);
+    // Add timeline line
+    svg.append('line')
+      .attr('x1', 20)
+      .attr('y1', 50)
+      .attr('x2', 380)
+      .attr('y2', 50)
+      .attr('stroke', '#333')
+      .attr('stroke-width', 2);
 
-// Create circles for dates - exactly as shown in code
-svg.selectAll('circle')
-  .data(dates)
-  .enter()
-  .append('circle')
-  .attr('cx', d => timeScale(d))
-  .attr('cy', 50)
-  .attr('r', 8)
-  .attr('fill', 'steelblue')
-  .attr('stroke', 'white')
-  .attr('stroke-width', 2);
+    // Create circles for dates - exactly as shown in code
+    svg.selectAll('circle')
+      .data(dates)
+      .enter()
+      .append('circle')
+      .attr('cx', d => timeScale(d))
+      .attr('cy', 50)
+      .attr('r', 8)
+      .attr('fill', 'steelblue')
+      .attr('stroke', 'white')
+      .attr('stroke-width', 2);
 
-// Add date labels
-const monthNames = ['Jan', 'Apr', 'Jul', 'Oct'];
-svg.selectAll('text')
-  .data(dates)
-  .enter()
-  .append('text')
-  .attr('x', d => timeScale(d))
-  .attr('y', 35)
-  .attr('text-anchor', 'middle')
-  .attr('font-size', '12px')
-  .attr('fill', '#333')
-  .text((d, i) => monthNames[i]);
+    // Add date labels
+    const monthNames = ['Jan', 'Apr', 'Jul', 'Oct'];
+    svg.selectAll('text')
+      .data(dates)
+      .enter()
+      .append('text')
+      .attr('x', d => timeScale(d))
+      .attr('y', 35)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '12px')
+      .attr('fill', '#333')
+      .text((d, i) => monthNames[i]);
 
-// Add pixel position indicators
-svg.selectAll('text.position')
-  .data(dates)
-  .enter()
-  .append('text')
-  .attr('class', 'position')
-  .attr('x', d => timeScale(d))
-  .attr('y', 70)
-  .attr('text-anchor', 'middle')
-  .attr('font-size', '10px')
-  .attr('fill', '#666')
-  .text(d => `${Math.round(timeScale(d))}px`)
-  }
+    // Add pixel position indicators
+    svg.selectAll('text.position')
+      .data(dates)
+      .enter()
+      .append('text')
+      .attr('class', 'position')
+      .attr('x', d => timeScale(d))
+      .attr('y', 70)
+      .attr('text-anchor', 'middle')
+      .attr('font-size', '10px')
+      .attr('fill', '#666')
+      .text(d => `${Math.round(timeScale(d))}px`)
+      }
 
 
 }
