@@ -91,8 +91,8 @@ demonstrateScaleTypes() {
     const categories = ['Apple', 'Banana', 'Orange', 'Grape'];
     const xOrdinal = d3.scaleBand()
         .domain(categories)
-        .range([50, 350])
-        .padding(0.); // 10% padding between bands
+        .range([10, 350])
+        .padding(0.1); // 10% padding between bands
 
     // 2. Time scale for dates
     const timeData = [
@@ -102,21 +102,21 @@ demonstrateScaleTypes() {
     ];
     const xTime = d3.scaleTime()
         .domain([new Date("2023-01-01"), new Date("2024-01-01")]) // Finds min and max automatically
-        .range([50, 350]);
+        .range([10, 350]);
 
     // Create different axis types
     const ordinalAxis = d3.axisBottom(xOrdinal);
     const timeAxis = d3.axisBottom(xTime)
-      .tickFormat(d => d3.timeFormat('%b %Y')(d as Date)); // Fix: cast to Date
+      .tickFormat(d => d3.timeFormat('%b %Y')(d as Date)); 
 
     // Draw ordinal axis
     svg.append('g')
-        .attr('transform', 'translate(0,100)')
+        .attr('transform', 'translate(0,50)')
         .call(ordinalAxis);
 
     // Draw time axis
     svg.append('g')
-        .attr('transform', 'translate(0,200)')
+        .attr('transform', 'translate(0,150)')
         .call(timeAxis as any)
         .selectAll('text')
         .attr('transform', 'rotate(-90)')  // rotate text
@@ -125,8 +125,8 @@ demonstrateScaleTypes() {
         .attr('dy', '-0.5em');
 
     // Add labels
-    svg.append('text').attr('x', 10).attr('y', 95).text('Ordinal Scale:');
-    svg.append('text').attr('x', 10).attr('y', 195).text('Time Scale:');
+    svg.append('text').attr('x', 0).attr('y', 20).text('Ordinal Scale:');
+    svg.append('text').attr('x', 0).attr('y', 130).text('Time Scale:');
 }
 
 createCategoricalLegend() {

@@ -1,0 +1,331 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        <strong>D3 Force Layouts</strong> use physics simulations to position nodes and links in network visualizations. They apply forces like gravity, repulsion, and attraction to create natural-looking layouts.
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        Force layouts automatically handle complex positioning calculations, create organic-looking networks, support real-time interactions, and can adapt to dynamic data changes without manual coordinate management.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Perfect for network diagrams, social graphs, organizational charts, dependency trees, clustering visualizations, and any data with relationships that benefit from physics-based positioning.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>D3 Force Layouts — Complete tutorial & examples</h3>
+
+    <!-- Quick notes -->
+    <div class="note">
+      <p><strong>Quick setup:</strong> Force layouts require D3 v4+ with <code>d3.forceSimulation()</code>. Import with <code>import <span class="keyword">* as d3</span> from 'd3'</code> and create simulations that run over time.</p>
+    </div>
+
+    <!-- 1. Basic Force Simulation -->
+    <div class="step">
+      <h2>1. Basic Force Simulation — Simple Network</h2>
+      <p>Start with a basic force simulation using the three essential forces: centering, many-body (repulsion), and links.</p>
+
+      <pre><code><span class="comment">// Basic network data</span>
+<span class="keyword">const</span> nodes = [
+  &#123;id: <span class="string">'A'</span>, group: <span class="number">1</span>&#125;,
+  &#123;id: <span class="string">'B'</span>, group: <span class="number">1</span>&#125;,
+  &#123;id: <span class="string">'C'</span>, group: <span class="number">2</span>&#125;,
+  &#123;id: <span class="string">'D'</span>, group: <span class="number">2</span>&#125;,
+  &#123;id: <span class="string">'E'</span>, group: <span class="number">3</span>&#125;
+];
+
+<span class="keyword">const</span> links = [
+  &#123;source: <span class="string">'A'</span>, target: <span class="string">'B'</span>&#125;,
+  &#123;source: <span class="string">'B'</span>, target: <span class="string">'C'</span>&#125;,
+  &#123;source: <span class="string">'C'</span>, target: <span class="string">'D'</span>&#125;,
+  &#123;source: <span class="string">'A'</span>, target: <span class="string">'D'</span>&#125;,
+  &#123;source: <span class="string">'D'</span>, target: <span class="string">'E'</span>&#125;
+];
+
+<span class="comment">// Create force simulation</span>
+<span class="keyword">const</span> simulation = d3.forceSimulation(nodes)
+  .force(<span class="string">'link'</span>, d3.forceLink(links)
+    .id(d => d.id)
+    .distance(<span class="number">60</span>))
+  .force(<span class="string">'charge'</span>, d3.forceManyBody()
+    .strength(<span class="number">-300</span>))
+  .force(<span class="string">'center'</span>, d3.forceCenter(<span class="number">200</span>, <span class="number">100</span>));
+
+<span class="comment">// SVG setup</span>
+<span class="keyword">const</span> svg = d3.select(<span class="string">'#basic-force'</span>);
+svg.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="comment">// Create links</span>
+<span class="keyword">const</span> link = svg.append(<span class="string">'g'</span>)
+  .attr(<span class="string">'class'</span>, <span class="string">'links'</span>)
+  .selectAll(<span class="string">'line'</span>)
+  .data(links)
+  .enter().append(<span class="string">'line'</span>)
+  .attr(<span class="string">'stroke'</span>, <span class="string">'#999'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Create nodes</span>
+<span class="keyword">const</span> node = svg.append(<span class="string">'g'</span>)
+  .attr(<span class="string">'class'</span>, <span class="string">'nodes'</span>)
+  .selectAll(<span class="string">'circle'</span>)
+  .data(nodes)
+  .enter().append(<span class="string">'circle'</span>)
+  .attr(<span class="string">'r'</span>, <span class="number">15</span>)
+  .attr(<span class="string">'fill'</span>, d => d3.schemeCategory10[d.group])
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Add labels</span>
+<span class="keyword">const</span> label = svg.append(<span class="string">'g'</span>)
+  .attr(<span class="string">'class'</span>, <span class="string">'labels'</span>)
+  .selectAll(<span class="string">'text'</span>)
+  .data(nodes)
+  .enter().append(<span class="string">'text'</span>)
+  .attr(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+  .attr(<span class="string">'dy'</span>, <span class="number">4</span>)
+  .attr(<span class="string">'font-size'</span>, <span class="string">'12px'</span>)
+  .attr(<span class="string">'fill'</span>, <span class="string">'white'</span>)
+  .text(d => d.id);
+
+<span class="comment">// Update positions on simulation tick</span>
+simulation.on(<span class="string">'tick'</span>, () => &#123;
+  link
+    .attr(<span class="string">'x1'</span>, d => d.source.x)
+    .attr(<span class="string">'y1'</span>, d => d.source.y)
+    .attr(<span class="string">'x2'</span>, d => d.target.x)
+    .attr(<span class="string">'y2'</span>, d => d.target.y);
+
+  node
+    .attr(<span class="string">'cx'</span>, d => d.x)
+    .attr(<span class="string">'cy'</span>, d => d.y);
+
+  label
+    .attr(<span class="string">'x'</span>, d => d.x)
+    .attr(<span class="string">'y'</span>, d => d.y);
+&#125;);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="basic-force" width="400" height="200" class="viz-container"></svg>
+    </div>
+
+    <!-- 2. Interactive Drag & Drop -->
+    <div class="step">
+      <h2>2. Interactive Drag & Drop — User Control</h2>
+      <p>Add drag functionality to let users manually position nodes while forces continue to apply.</p>
+
+      <pre><code><span class="comment">// Drag behavior functions</span>
+<span class="keyword">function</span> dragstarted(event, d) &#123;
+  <span class="keyword">if</span> (!event.active) simulation2.alphaTarget(<span class="number">0.3</span>).restart();
+  d.fx = d.x;
+  d.fy = d.y;
+&#125;
+
+<span class="keyword">function</span> dragged(event, d) &#123;
+  d.fx = event.x;
+  d.fy = event.y;
+&#125;
+
+<span class="keyword">function</span> dragended(event, d) &#123;
+  <span class="keyword">if</span> (!event.active) simulation2.alphaTarget(<span class="number">0</span>);
+  d.fx = <span class="keyword">null</span>;
+  d.fy = <span class="keyword">null</span>;
+&#125;
+
+<span class="comment">// Enhanced network data</span>
+<span class="keyword">const</span> nodes2 = [
+  &#123;id: <span class="string">'Central'</span>, group: <span class="number">1</span>, size: <span class="number">20</span>&#125;,
+  &#123;id: <span class="string">'Node1'</span>, group: <span class="number">2</span>, size: <span class="number">15</span>&#125;,
+  &#123;id: <span class="string">'Node2'</span>, group: <span class="number">2</span>, size: <span class="number">15</span>&#125;,
+  &#123;id: <span class="string">'Node3'</span>, group: <span class="number">3</span>, size: <span class="number">12</span>&#125;,
+  &#123;id: <span class="string">'Node4'</span>, group: <span class="number">3</span>, size: <span class="number">12</span>&#125;,
+  &#123;id: <span class="string">'Node5'</span>, group: <span class="number">3</span>, size: <span class="number">10</span>&#125;
+];
+
+<span class="keyword">const</span> links2 = [
+  &#123;source: <span class="string">'Central'</span>, target: <span class="string">'Node1'</span>, strength: <span class="number">1</span>&#125;,
+  &#123;source: <span class="string">'Central'</span>, target: <span class="string">'Node2'</span>, strength: <span class="number">1</span>&#125;,
+  &#123;source: <span class="string">'Node1'</span>, target: <span class="string">'Node3'</span>, strength: <span class="number">0.5</span>&#125;,
+  &#123;source: <span class="string">'Node2'</span>, target: <span class="string">'Node4'</span>, strength: <span class="number">0.5</span>&#125;,
+  &#123;source: <span class="string">'Node3'</span>, target: <span class="string">'Node5'</span>, strength: <span class="number">0.3</span>&#125;
+];
+
+<span class="comment">// Create simulation with variable forces</span>
+<span class="keyword">const</span> simulation2 = d3.forceSimulation(nodes2)
+  .force(<span class="string">'link'</span>, d3.forceLink(links2)
+    .id(d => d.id)
+    .distance(d => <span class="number">50</span> / d.strength)
+    .strength(d => d.strength))
+  .force(<span class="string">'charge'</span>, d3.forceManyBody()
+    .strength(d => -<span class="number">10</span> * d.size))
+  .force(<span class="string">'center'</span>, d3.forceCenter(<span class="number">200</span>, <span class="number">120</span>))
+  .force(<span class="string">'collision'</span>, d3.forceCollide()
+    .radius(d => d.size + <span class="number">2</span>));
+
+<span class="keyword">const</span> svg2 = d3.select(<span class="string">'#drag-force'</span>);
+svg2.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="comment">// Create elements with enhanced styling</span>
+<span class="keyword">const</span> link2 = svg2.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'line'</span>)
+  .data(links2)
+  .enter().append(<span class="string">'line'</span>)
+  .attr(<span class="string">'stroke'</span>, <span class="string">'#999'</span>)
+  .attr(<span class="string">'stroke-width'</span>, d => Math.sqrt(d.strength * <span class="number">5</span>))
+  .attr(<span class="string">'opacity'</span>, <span class="number">0.6</span>);
+
+<span class="keyword">const</span> node2 = svg2.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'circle'</span>)
+  .data(nodes2)
+  .enter().append(<span class="string">'circle'</span>)
+  .attr(<span class="string">'r'</span>, d => d.size)
+  .attr(<span class="string">'fill'</span>, d => d3.schemeCategory10[d.group])
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>)
+  .attr(<span class="string">'cursor'</span>, <span class="string">'pointer'</span>)
+  .call(d3.drag()
+    .on(<span class="string">'start'</span>, dragstarted)
+    .on(<span class="string">'drag'</span>, dragged)
+    .on(<span class="string">'end'</span>, dragended));
+
+<span class="keyword">const</span> label2 = svg2.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'text'</span>)
+  .data(nodes2)
+  .enter().append(<span class="string">'text'</span>)
+  .attr(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+  .attr(<span class="string">'dy'</span>, <span class="number">4</span>)
+  .attr(<span class="string">'font-size'</span>, <span class="string">'10px'</span>)
+  .attr(<span class="string">'fill'</span>, <span class="string">'white'</span>)
+  .attr(<span class="string">'pointer-events'</span>, <span class="string">'none'</span>)
+  .text(d => d.id);
+
+simulation2.on(<span class="string">'tick'</span>, () => &#123;
+  link2
+    .attr(<span class="string">'x1'</span>, d => d.source.x)
+    .attr(<span class="string">'y1'</span>, d => d.source.y)
+    .attr(<span class="string">'x2'</span>, d => d.target.x)
+    .attr(<span class="string">'y2'</span>, d => d.target.y);
+
+  node2
+    .attr(<span class="string">'cx'</span>, d => d.x)
+    .attr(<span class="string">'cy'</span>, d => d.y);
+
+  label2
+    .attr(<span class="string">'x'</span>, d => d.x)
+    .attr(<span class="string">'y'</span>, d => d.y);
+&#125;);</code></pre>
+
+      <p><strong>Output:</strong> <em>Try dragging the nodes!</em></p>
+      <svg id="drag-force" width="400" height="240" class="viz-container"></svg>
+    </div>
+
+    <!-- 3. Force Types & Configuration -->
+    <div class="step">
+      <h2>3. Force Types & Configuration — Fine-tuning</h2>
+      <p>Explore different force types and their parameters to control network behavior.</p>
+
+      <pre><code><span class="comment">// Force types demonstration</span>
+<span class="keyword">const</span> forceTypes = &#123;
+  <span class="comment">// 1. Centering Force - pulls nodes toward center</span>
+  center: d3.forceCenter(<span class="number">200</span>, <span class="number">100</span>),
+  
+  <span class="comment">// 2. Many-body Force - repulsion/attraction between all nodes</span>
+  charge: d3.forceManyBody()
+    .strength(<span class="number">-200</span>) <span class="comment">// negative = repulsion, positive = attraction</span>
+    .distanceMin(<span class="number">10</span>) <span class="comment">// minimum distance for force calculation</span>
+    .distanceMax(<span class="number">200</span>), <span class="comment">// maximum distance for force calculation</span>
+  
+  <span class="comment">// 3. Link Force - springs connecting linked nodes</span>
+  link: d3.forceLink()
+    .distance(<span class="number">50</span>) <span class="comment">// target distance between linked nodes</span>
+    .strength(<span class="number">1</span>) <span class="comment">// spring strength (0-1)</span>
+    .iterations(<span class="number">1</span>), <span class="comment">// iterations per tick</span>
+  
+  <span class="comment">// 4. Collision Force - prevents node overlap</span>
+  collision: d3.forceCollide()
+    .radius(<span class="number">20</span>) <span class="comment">// collision radius</span>
+    .strength(<span class="number">1</span>) <span class="comment">// collision strength</span>
+    .iterations(<span class="number">1</span>), <span class="comment">// iterations per tick</span>
+  
+  <span class="comment">// 5. Position Forces - pull nodes toward specific x/y positions</span>
+  x: d3.forceX(<span class="number">200</span>).strength(<span class="number">0.1</span>), <span class="comment">// pull toward x=200</span>
+  y: d3.forceY(<span class="number">100</span>).strength(<span class="number">0.1</span>)  <span class="comment">// pull toward y=100</span>
+&#125;;
+
+<span class="comment">// Clustered network example</span>
+<span class="keyword">const</span> clusterNodes = [];
+<span class="keyword">const</span> clusterLinks = [];
+<span class="keyword">const</span> numClusters = <span class="number">3</span>;
+<span class="keyword">const</span> numNodesPerCluster = <span class="number">5</span>;
+
+<span class="comment">// Generate clustered data</span>
+<span class="keyword">for</span> (<span class="keyword">let</span> cluster = <span class="number">0</span>; cluster < numClusters; cluster++) &#123;
+  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i < numNodesPerCluster; i++) &#123;
+    clusterNodes.push(&#123;
+      id: `C$&#123;cluster&#125;-N$&#123;i&#125;`,
+      cluster: cluster,
+      radius: Math.random() * <span class="number">8</span> + <span class="number">5</span>
+    &#125;);
+  &#125;
+&#125;
+
+<span class="comment">// Create intra-cluster links</span>
+clusterNodes.forEach((node, i) => &#123;
+  <span class="keyword">if</span> (i % numNodesPerCluster !== <span class="number">0</span>) &#123;
+    clusterLinks.push(&#123;
+      source: node.id,
+      target: clusterNodes[Math.floor(i / numNodesPerCluster) * numNodesPerCluster].id
+    &#125;);
+  &#125;
+&#125;);
+
+<span class="keyword">const</span> simulation3 = d3.forceSimulation(clusterNodes)
+  .force(<span class="string">'link'</span>, d3.forceLink(clusterLinks).id(d => d.id).distance(<span class="number">30</span>))
+  .force(<span class="string">'charge'</span>, d3.forceManyBody().strength(<span class="number">-50</span>))
+  .force(<span class="string">'center'</span>, d3.forceCenter(<span class="number">200</span>, <span class="number">120</span>))
+  .force(<span class="string">'collision'</span>, d3.forceCollide().radius(d => d.radius))
+  .force(<span class="string">'x'</span>, d3.forceX().strength(<span class="number">0.1</span>))
+  .force(<span class="string">'y'</span>, d3.forceY().strength(<span class="number">0.1</span>));
+
+<span class="keyword">const</span> svg3 = d3.select(<span class="string">'#cluster-force'</span>);
+svg3.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="keyword">const</span> link3 = svg3.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'line'</span>)
+  .data(clusterLinks)
+  .enter().append(<span class="string">'line'</span>)
+  .attr(<span class="string">'stroke'</span>, <span class="string">'#999'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">1</span>);
+
+<span class="keyword">const</span> node3 = svg3.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'circle'</span>)
+  .data(clusterNodes)
+  .enter().append(<span class="string">'circle'</span>)
+  .attr(<span class="string">'r'</span>, d => d.radius)
+  .attr(<span class="string">'fill'</span>, d => d3.schemeCategory10[d.cluster])
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">1</span>);
+
+simulation3.on(<span class="string">'tick'</span>, () => &#123;
+  link3
+    .attr(<span class="string">'x1'</span>, d => d.source.x)
+    .attr(<span class="string">'y1'</span>, d => d.source.y)
+    .attr(<span class="string">'x2'</span>, d => d.target.x)
+    .attr(<span class="string">'y2'</span>, d => d.target.y);
+
+  node3
+    .attr(<span class="string">'cx'</span>, d => d.x)
+    .attr(<span class="string">'cy'</span>, d => d.y);
+&#125;);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="cluster-force" width="400" height="240" class="viz-container"></svg>
+    </div>
+</div>
+</div>

@@ -1,0 +1,210 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        <strong>Path Generators</strong> in D3 create SVG path data (the "d" attribute) from data — e.g. lines, areas, arcs, and links.
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        Path generators let you declaratively convert arrays and geometry into smooth, parameterized shapes. They reduce manual path math and make transitions, curves, and shapes easier to build.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Use path generators for line charts, area charts, pies/donuts, node-link diagrams, radial charts, icons (symbols), and any custom SVG shape driven by data.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>D3 Path Generators — Step-by-step tutorial & examples</h3>
+
+    <!-- Quick notes -->
+    <div class="note">
+      <p><strong>Quick setup:</strong> include D3 (v6/7) in your page or import it into Angular/TypeScript: <code>import <span class="keyword">* as d3</span></code> (or <code><span class="keyword">import</span> <span class="string">* as d3</span></code> in TS).</p>
+    </div>
+
+    <!-- 1. Line generator -->
+    <div class="step">
+      <h2>1. Line generator (d3.line)</h2>
+      <p>Use <code>d3.line()</code> to map data points to an SVG <code>path</code>. You can set x/y accessors and curve interpolations.</p>
+
+      <pre><code><span class="comment">// Data (x,y pairs)</span>
+<span class="keyword">const</span> data = [
+  &#123;x: <span class="number">0</span>, y: <span class="number">30</span>&#125;,
+  &#123;x: <span class="number">50</span>, y: <span class="number">80</span>&#125;,
+  &#123;x: <span class="number">100</span>, y: <span class="number">45</span>&#125;,
+  &#123;x: <span class="number">150</span>, y: <span class="number">120</span>&#125;,
+  &#123;x: <span class="number">200</span>, y: <span class="number">70</span>&#125;
+];
+
+<span class="comment">// scales</span>
+<span class="keyword">const</span> x = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">200</span>]).range([<span class="number">10</span>, <span class="number">390</span>]);
+<span class="keyword">const</span> y = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">140</span>]).range([<span class="number">140</span>, <span class="number">10</span>]);
+
+<span class="comment">// line generator</span>
+<span class="keyword">const</span> lineGen = d3.line &lt;&#123; x: number; y: number &#125;&gt;()
+  .x(d => x(d.x))
+  .y(d => y(d.y))
+  .curve(d3.curveMonotoneX); <span class="comment">// try curveBasis, curveLinear, curveCatmullRom</span>
+
+<span class="keyword">const</span> svg = d3.select(<span class="string">'#line-demo'</span>);
+svg.selectAll('*').remove();
+
+svg.append(<span class="string">'path'</span>)
+  .datum(data)
+  .attr(<span class="string">'d'</span>, lineGen as any)
+  .attr(<span class="string">'fill'</span>, <span class="string">'none'</span>)
+  .attr(<span class="string">'stroke'</span>, <span class="string">'#2b8cbe'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">3</span>);
+
+<span class="comment">// Add points</span>
+svg.selectAll('circle')
+  .data(data)
+  .enter()
+  .append('circle')
+  .attr('cx', d => x(d.x))
+  .attr('cy', d => y(d.y))
+  .attr('r', <span class="number">3</span>)
+  .attr('fill', <span class="string">'#2b8cbe'</span>);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="line-demo" width="420" height="160" class="viz-container"></svg>
+    </div>
+
+    <!-- 2. Area generator -->
+    <div class="step">
+      <h2>2. Area generator (d3.area)</h2>
+      <p>Create filled shapes between two y-values. Useful for highlighting volume or stacked areas.</p>
+
+      <pre><code>
+<span class="comment">// area generator example</span>
+<span class="keyword">const</span> data: <span class="type">Point[]</span> = [
+&nbsp;&nbsp;&#123; <span class="property">x</span>: <span class="number">0</span>, <span class="property">y</span>: <span class="number">30</span> &#125;,
+&nbsp;&nbsp;&#123; <span class="property">x</span>: <span class="number">50</span>, <span class="property">y</span>: <span class="number">80</span> &#125;,
+&nbsp;&nbsp;&#123; <span class="property">x</span>: <span class="number">100</span>, <span class="property">y</span>: <span class="number">45</span> &#125;,
+&nbsp;&nbsp;&#123; <span class="property">x</span>: <span class="number">150</span>, <span class="property">y</span>: <span class="number">120</span> &#125;,
+&nbsp;&nbsp;&#123; <span class="property">x</span>: <span class="number">200</span>, <span class="property">y</span>: <span class="number">70</span> &#125;
+];
+
+<span class="comment">// scales</span>
+<span class="keyword">const</span> x = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">200</span>]).range([<span class="number">10</span>, <span class="number">390</span>]);
+<span class="keyword">const</span> y = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">140</span>]).range([<span class="number">140</span>, <span class="number">10</span>]);
+
+<span class="comment">// area generator</span>
+<span class="keyword">const</span> areaGen = d3.area&lt;<span class="type">Point</span>&gt;()
+&nbsp;&nbsp;.x(d =&gt; x(d.x))
+&nbsp;&nbsp;.y0(y(<span class="number">0</span>)) <span class="comment">// baseline</span>
+&nbsp;&nbsp;.y1(d =&gt; y(d.y))
+&nbsp;&nbsp;.curve(d3.curveCardinal);
+
+<span class="keyword">const</span> svg2 = d3.select(<span class="string">'#area-demo'</span>);
+svg2.selectAll(<span class="string">'*'</span>).remove();
+
+svg2.append(<span class="string">'path'</span>)
+&nbsp;&nbsp;.datum(data)
+&nbsp;&nbsp;.attr(<span class="string">'d'</span>, areaGen)
+&nbsp;&nbsp;.attr(<span class="string">'fill'</span>, <span class="string">'#a6bddb'</span>)
+&nbsp;&nbsp;.attr(<span class="string">'stroke'</span>, <span class="string">'#3690c0'</span>);
+</code></pre>
+
+
+      <p><strong>Output:</strong></p>
+      <svg id="area-demo" width="420" height="160" class="viz-container"></svg>
+    </div>
+
+    <!-- 3. Arc generator -->
+    <div class="step">
+      <h2>3. Arc generator (d3.arc) — pie / donut slices</h2>
+      <p>Use the arc generator to build pie and donut slices; combine with <code>d3.pie()</code> to compute angles from data.</p>
+
+      <pre><code><span class="keyword">const</span> pieData = [<span class="number">10</span>, <span class="number">25</span>, <span class="number">40</span>, <span class="number">15</span>];
+<span class="keyword">const</span> pie = d3.pie();
+<span class="keyword">const</span> arcs = pie(pieData);
+
+<span class="keyword">const</span> arcGen = d3.arc()
+  .innerRadius(<span class="number">30</span>)   <span class="comment">// donut hole</span>
+  .outerRadius(<span class="number">70</span>);
+
+<span class="keyword">const</span> svg3 = d3.select(<span class="string">'#arc-demo'</span>);
+svg3.selectAll('*').remove();
+
+<span class="keyword">const</span> g = svg3.append(<span class="string">'g'</span>).attr('transform', <span class="string">'translate(90,90)'</span>);
+
+g.selectAll(<span class="string">'path'</span>)
+  .data(arcs)
+  .enter()
+  .append(<span class="string">'path'</span>)
+  .attr('d', arcGen as any)
+  .attr('fill', (d,i) => d3.schemeCategory10[i])
+  .attr('stroke', <span class="string">'white'</span>);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="arc-demo" width="180" height="180" class="viz-container"></svg>
+    </div>
+
+    <!-- 4. Symbol generator -->
+    <div class="step">
+      <h2>4. Symbol generator (d3.symbol) — icons & markers</h2>
+      <p>Generate marker paths (circle, cross, triangle, star) useful for scatterplots and legends.</p>
+
+      <pre><code><span class="keyword">const</span> symbols = [d3.symbolCircle, d3.symbolCross, d3.symbolTriangle, d3.symbolStar];
+<span class="keyword">const</span> svg4 = d3.select(<span class="string">'#symbol-demo'</span>);
+svg4.selectAll('*').remove();
+
+<span class="keyword">const</span> g4 = svg4.append(<span class="string">'g'</span>).attr('transform', <span class="string">'translate(60,40)'</span>);
+
+symbols.forEach((s, i) => &#123;
+  g4.append(<span class="string">'path'</span>)
+    .attr('d', d3.symbol().type(s).size(<span class="number">200</span>)())
+    .attr('transform', `translate($&#123;i*<span class="number">40</span>&#125;,<span class="number">0</span>)`)
+    .attr('fill', d3.schemeTableau10[i]);
+&#125;);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="symbol-demo" width="300" height="80" class="viz-container"></svg>
+    </div>
+
+    <!-- 5. Link generator -->
+    <div class="step">
+      <h2>5. Link generators (d3.linkHorizontal / linkVertical / linkRadial)</h2>
+      <p>Great for drawing edges in trees or node-link diagrams. You supply source/target coordinates and the generator returns a path.</p>
+
+      <pre><code><span class="keyword">const</span> linkData = [&#123;
+  source: &#123;x: <span class="number">10</span>, y: <span class="number">20</span>&#125;,
+  target: &#123;x: <span class="number">150</span>, y: <span class="number">100</span>&#125;
+&#125;];
+
+<span class="keyword">const</span> linkGen = d3.linkHorizontal&lt; any, any &gt; ()
+  .x(d => d.x)
+  .y(d => d.y);
+
+<span class="keyword">const</span> svg5 = d3.select(<span class="string">'#link-demo'</span>);
+svg5.selectAll('*').remove();
+
+svg5.append(<span class="string">'path'</span>)
+  .datum(linkData[<span class="number">0</span>])
+  .attr(<span class="string">'d'</span>, linkGen)
+  .attr(<span class="string">'stroke'</span>, <span class="string">'#666'</span>)
+  .attr(<span class="string">'fill'</span>, <span class="string">'none'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// source/target markers</span>
+svg5.selectAll('circle')
+  .data([linkData[<span class="number">0</span>].source, linkData[<span class="number">0</span>].target])
+  .enter()
+  .append('circle')
+  .attr('cx', d => d.x)
+  .attr('cy', d => d.y)
+  .attr('r', <span class="number">3</span>)
+  .attr('fill', <span class="string">'#666'</span>);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="link-demo" width="220" height="140" class="viz-container"></svg>
+    </div>
+
+  </div>
+</div>

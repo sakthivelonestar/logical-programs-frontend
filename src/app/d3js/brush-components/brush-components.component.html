@@ -1,0 +1,153 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        <strong>D3 Brush Component</strong> lets users select regions in a chart interactively.
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        Useful for filtering, highlighting, or zooming into specific data regions dynamically.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Scatterplots, line charts, area charts, or any interactive chart requiring selection.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>D3 Brush Examples — Step-by-step</h3>
+
+    <!-- Example 1: Scatter plot with brush -->
+    <div class="step">
+      <h2>1. Scatter Plot + Brush</h2>
+      <p>Highlight points inside the selection rectangle.</p>
+
+      <pre><code><span class="comment">// sample data</span>
+<span class="keyword">const</span> data1 = Array.from(&#123;length: 20&#125;, (_, i) =&gt; (&#123;x: i*20, y: Math.random()*100&#125;));
+
+<span class="comment">// scales</span>
+<span class="keyword">const</span> x1 = d3.scaleLinear().domain([0,400]).range([10,390]);
+<span class="keyword">const</span> y1 = d3.scaleLinear().domain([0,100]).range([140,10]);
+
+<span class="keyword">const</span> svg1 = d3.select('#brush-scatter');
+svg1.selectAll('*').remove();
+
+<span class="comment">// draw points</span>
+svg1.selectAll('circle')
+  .data(data1)
+  .enter()
+  .append('circle')
+  .attr('cx', d =&gt; x1(d.x))
+  .attr('cy', d =&gt; y1(d.y))
+  .attr('r', 5)
+  .attr('fill', '#2b8cbe');
+
+<span class="comment">// brush setup</span>
+const brush1 = d3.brush()
+  .extent([[0,0],[400,150]])
+  .on('brush end', (event) =&gt; &#123;
+    const [[x0,y0],[x1,y1]] = event.selection || [[0,0],[0,0]];
+    svg1.selectAll('circle')
+        .attr('fill', d =&gt; (x1(d.x) &gt;= x0 &amp;&amp; x1(d.x) &lt;= x1 &amp;&amp; y1(d.y) &gt;= y0 &amp;&amp; y1(d.y) &lt;= y1) ? '#f03b20' : '#2b8cbe');
+  &#125;);
+
+svg1.append('g').call(brush1);</code></pre>
+      <p><strong>Output:</strong></p>
+      <svg id="brush-scatter" width="420" height="160" class="viz-container"></svg>
+    </div>
+
+    <!-- Example 2: Line chart + brush -->
+    <div class="step">
+      <h2>2. Line Chart + Brush</h2>
+      <p>Highlight points on a line chart.</p>
+
+      <pre><code><span class="comment">// data</span>
+const data2 = [&#123;x:0,y:30&#125;,&#123;x:50,y:80&#125;,&#123;x:100,y:45&#125;,&#123;x:150,y:120&#125;,&#123;x:200,y:70&#125;,&#123;x:250,y:100&#125;];
+
+const x2 = d3.scaleLinear().domain([0,250]).range([10,390]);
+const y2 = d3.scaleLinear().domain([0,140]).range([140,10]);
+
+const lineGen2 = d3.line()
+  .x(d =&gt; x2(d.x))
+  .y(d =&gt; y2(d.y))
+  .curve(d3.curveMonotoneX);
+
+const svg2 = d3.select('#brush-line');
+svg2.selectAll('*').remove();
+
+svg2.append('path')
+  .datum(data2)
+  .attr('d', lineGen2)
+  .attr('fill','none')
+  .attr('stroke','#2b8cbe')
+  .attr('stroke-width',3);
+
+svg2.selectAll('circle')
+  .data(data2)
+  .enter()
+  .append('circle')
+  .attr('cx', d =&gt; x2(d.x))
+  .attr('cy', d =&gt; y2(d.y))
+  .attr('r', 5)
+  .attr('fill','#2b8cbe');
+
+const brush2 = d3.brush()
+  .extent([[0,0],[400,150]])
+  .on('brush end', (event) =&gt; &#123;
+    const [[x0,y0],[x1,y1]] = event.selection || [[0,0],[0,0]];
+    svg2.selectAll('circle')
+        .attr('fill', d =&gt; (x2(d.x) &gt;= x0 &amp;&amp; x2(d.x) &lt;= x1 &amp;&amp; y2(d.y) &gt;= y0 &amp;&amp; y2(d.y) &lt;= y1) ? '#f03b20' : '#2b8cbe');
+  &#125;);
+
+svg2.append('g').call(brush2);</code></pre>
+      <p><strong>Output:</strong></p>
+      <svg id="brush-line" width="420" height="160" class="viz-container"></svg>
+    </div>
+
+    <!-- Example 3: Area chart + brush -->
+    <div class="step">
+      <h2>3. Area Chart + Brush</h2>
+      <p>Select a region and highlight the area.</p>
+
+      <pre><code>// data
+const data3 = [&#123;x:0,y:20&#125;,&#123;x:50,y:60&#125;,&#123;x:100,y:40&#125;,&#123;x:150,y:80&#125;,&#123;x:200,y:50&#125;];
+
+const x3 = d3.scaleLinear().domain([0,200]).range([10,390]);
+const y3 = d3.scaleLinear().domain([0,100]).range([140,10]);
+
+const areaGen3 = d3.area()
+  .x(d =&gt; x3(d.x))
+  .y0(y3(0))
+  .y1(d =&gt; y3(d.y))
+  .curve(d3.curveCardinal);
+
+const svg3 = d3.select('#brush-area');
+svg3.selectAll('*').remove();
+
+svg3.append('path')
+  .datum(data3)
+  .attr('d', areaGen3)
+  .attr('fill','#a6bddb')
+  .attr('stroke','#3690c0');
+
+const brush3 = d3.brush()
+  .extent([[0,0],[400,150]])
+  .on('brush end', (event) =&gt; &#123;
+    const [[x0,y0],[x1,y1]] = event.selection || [[0,0],[0,0]];
+    svg3.selectAll('circle').attr('fill', d =&gt; (x3(d.x) &gt;= x0 &amp;&amp; x3(d.x) &lt;= x1 &amp;&amp; y3(d.y) &gt;= y0 &amp;&amp; y3(d.y) &lt;= y1) ? '#f03b20' : '#3690c0');
+  &#125;);
+
+svg3.append('g').call(brush3);</code></pre>
+      <p><strong>Output:</strong></p>
+      <svg id="brush-area" width="420" height="160" class="viz-container"></svg>
+    </div>
+
+  </div>
+</div>

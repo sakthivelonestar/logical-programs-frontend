@@ -9,6 +9,12 @@ import { DataLoadingComponent } from './data-loading/data-loading.component';
 import { BasicTransitionsComponent } from './basic-transitions/basic-transitions.component';
 import { AdvancedScalesComponent } from './advanced-scales/advanced-scales.component';
 import { AxesLegendsComponent } from './axes-legends/axes-legends.component';
+import { PathGeneratorsComponent } from './path-generators/path-generators.component';
+import { LayoutsComponent } from './layouts/layouts.component';
+import { ForceLayoutsComponent } from './force-layouts/force-layouts.component';
+import { ZoomPanComponent } from './zoom-pan/zoom-pan.component';
+import { BrushComponentsComponent } from './brush-components/brush-components.component';
+import { EventHandlingComponent } from './event-handling/event-handling.component';
 
 const routes: Routes = [
       
@@ -52,6 +58,30 @@ const routes: Routes = [
                   {
                     path: 'axes-legends',
                     component: AxesLegendsComponent
+                  },
+                  {
+                    path: 'path-generators',
+                    component: PathGeneratorsComponent
+                  },
+                  {
+                    path: 'layouts',
+                    component: LayoutsComponent
+                  },
+                  {
+                    path: 'force-layouts',
+                    component: ForceLayoutsComponent
+                  },
+                   {
+                    path: 'zoom-pan',
+                    component: ZoomPanComponent
+                  },
+                   {
+                    path: 'brush-components',
+                    component: BrushComponentsComponent
+                  },
+                   {
+                    path: 'event-handling',
+                    component: EventHandlingComponent
                   }
 
                 ]

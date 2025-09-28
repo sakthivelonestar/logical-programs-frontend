@@ -1,0 +1,370 @@
+
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+
+    <div class="header">
+      <p>
+        <span class="question">What:</span>
+        <strong>D3 Layouts</strong> transform data into visual arrangements — calculating positions, angles, and hierarchies for complex visualizations like stacked charts, pie charts, treemaps, and force networks.
+      </p>
+      <p>
+        <span class="question">Why:</span>
+        Layouts handle the complex math of positioning elements in space, converting raw data into coordinate systems that make sense visually. They separate data transformation from rendering logic.
+      </p>
+      <p>
+        <span class="question">Where:</span>
+        Use layouts for stacked bar/area charts, pie/donut charts, treemaps, pack diagrams, force-directed networks, hierarchical trees, and any visualization requiring calculated positioning.
+      </p>
+    </div>
+  </div>
+
+  <div class="examples">
+    <h3>D3 Layouts — Step-by-step tutorial & examples</h3>
+
+    <!-- Quick notes -->
+    <div class="note">
+      <p><strong>Quick setup:</strong> include D3 (v6/7) in your page or import it into Angular/TypeScript: <code>import <span class="keyword">* as d3</span></code> for all layout functions.</p>
+    </div>
+
+    <!-- 1. Stack Layout -->
+    <div class="step">
+      <h2>1. Stack Layout (d3.stack) — Stacked Bar/Area Charts</h2>
+      <p>Transform data into stacked layers where each series builds upon the previous one. Perfect for showing part-to-whole relationships over categories.</p>
+
+      <pre><code><span class="comment">// Sample data - sales by quarter and product</span>
+<span class="keyword">const</span> data = [
+  &#123;quarter: <span class="string">'Q1'</span>, productA: <span class="number">20</span>, productB: <span class="number">35</span>, productC: <span class="number">15</span>&#125;,
+  &#123;quarter: <span class="string">'Q2'</span>, productA: <span class="number">25</span>, productB: <span class="number">28</span>, productC: <span class="number">22</span>&#125;,
+  &#123;quarter: <span class="string">'Q3'</span>, productA: <span class="number">30</span>, productB: <span class="number">42</span>, productC: <span class="number">18</span>&#125;,
+  &#123;quarter: <span class="string">'Q4'</span>, productA: <span class="number">22</span>, productB: <span class="number">38</span>, productC: <span class="number">25</span>&#125;
+];
+
+<span class="comment">// Create stack layout</span>
+<span class="keyword">const</span> stack = d3.stack()
+  .keys([<span class="string">'productA'</span>, <span class="string">'productB'</span>, <span class="string">'productC'</span>])
+  .order(d3.stackOrderNone)
+  .offset(d3.stackOffsetNone);
+
+<span class="keyword">const</span> stackedData = stack(data);
+
+<span class="comment">// Set up scales</span>
+<span class="keyword">const</span> xScale = d3.scaleBand()
+  .domain(data.map(d => d.quarter))
+  .range([<span class="number">50</span>, <span class="number">350</span>])
+  .padding(<span class="number">0.1</span>);
+
+<span class="keyword">const</span> yScale = d3.scaleLinear()
+  .domain([<span class="number">0</span>, d3.max(stackedData, layer => d3.max(layer, d => d[<span class="number">1</span>]))])
+  .range([<span class="number">200</span>, <span class="number">20</span>]);
+
+<span class="keyword">const</span> colorScale = d3.scaleOrdinal()
+  .domain([<span class="string">'productA'</span>, <span class="string">'productB'</span>, <span class="string">'productC'</span>])
+  .range([<span class="string">'#1f77b4'</span>, <span class="string">'#ff7f0e'</span>, <span class="string">'#2ca02c'</span>]);
+
+<span class="comment">// Create SVG and draw stacked bars</span>
+<span class="keyword">const</span> svg = d3.select(<span class="string">'#stack-demo'</span>);
+svg.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="keyword">const</span> groups = svg.selectAll(<span class="string">'g'</span>)
+  .data(stackedData)
+  .enter()
+  .append(<span class="string">'g'</span>)
+  .attr(<span class="string">'fill'</span>, d => colorScale(d.key));
+
+groups.selectAll(<span class="string">'rect'</span>)
+  .data(d => d)
+  .enter()
+  .append(<span class="string">'rect'</span>)
+  .attr(<span class="string">'x'</span>, d => xScale(d.data.quarter))
+  .attr(<span class="string">'y'</span>, d => yScale(d[<span class="number">1</span>]))
+  .attr(<span class="string">'height'</span>, d => yScale(d[<span class="number">0</span>]) - yScale(d[<span class="number">1</span>]))
+  .attr(<span class="string">'width'</span>, xScale.bandwidth());</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="stack-demo" width="420" height="240" class="viz-container"></svg>
+    </div>
+
+    <!-- 2. Pie Layout -->
+    <div class="step">
+      <h2>2. Pie Layout (d3.pie) — Pie & Donut Charts</h2>
+      <p>Convert data values into angles for circular charts. Calculates start and end angles for each slice.</p>
+
+      <pre><code><span class="comment">// Data for pie chart</span>
+<span class="keyword">const</span> pieData = [
+  &#123;category: <span class="string">'Desktop'</span>, value: <span class="number">45</span>&#125;,
+  &#123;category: <span class="string">'Mobile'</span>, value: <span class="number">35</span>&#125;,
+  &#123;category: <span class="string">'Tablet'</span>, value: <span class="number">15</span>&#125;,
+  &#123;category: <span class="string">'Other'</span>, value: <span class="number">5</span>&#125;
+];
+
+<span class="comment">// Create pie layout</span>
+<span class="keyword">const</span> pie = d3.pie()
+  .value(d => d.value)
+  .sort(<span class="keyword">null</span>) <span class="comment">// preserve data order</span>
+  .padAngle(<span class="number">0.02</span>); <span class="comment">// small gap between slices</span>
+
+<span class="keyword">const</span> arcs = pie(pieData);
+
+<span class="comment">// Arc generator for rendering</span>
+<span class="keyword">const</span> arcGen = d3.arc()
+  .innerRadius(<span class="number">40</span>) <span class="comment">// donut hole (0 for full pie)</span>
+  .outerRadius(<span class="number">80</span>)
+  .cornerRadius(<span class="number">3</span>); <span class="comment">// rounded corners</span>
+
+<span class="keyword">const</span> svg2 = d3.select(<span class="string">'#pie-demo'</span>);
+svg2.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="keyword">const</span> g = svg2.append(<span class="string">'g'</span>)
+  .attr(<span class="string">'transform'</span>, <span class="string">'translate(110,110)'</span>);
+
+<span class="comment">// Draw pie slices</span>
+g.selectAll(<span class="string">'path'</span>)
+  .data(arcs)
+  .enter()
+  .append(<span class="string">'path'</span>)
+  .attr(<span class="string">'d'</span>, arcGen)
+  .attr(<span class="string">'fill'</span>, (d,i) => d3.schemeCategory10[i])
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Add labels</span>
+g.selectAll(<span class="string">'text'</span>)
+  .data(arcs)
+  .enter()
+  .append(<span class="string">'text'</span>)
+  .attr(<span class="string">'transform'</span>, d => `translate($&#123;arcGen.centroid(d)&#125;)`)
+  .attr(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+  .attr(<span class="string">'font-size'</span>, <span class="string">'12px'</span>)
+  .attr(<span class="string">'fill'</span>, <span class="string">'white'</span>)
+  .text(d => d.data.category);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="pie-demo" width="220" height="220" class="viz-container"></svg>
+    </div>
+
+    <!-- 3. Hierarchy Layout -->
+    <div class="step">
+      <h2>3. Hierarchy Layouts — Tree, Treemap, Pack</h2>
+      <p>Transform nested data into spatial hierarchies. Great for organizational charts, file systems, or nested categories.</p>
+
+      <pre><code><span class="comment">// Hierarchical data structure</span>
+<span class="keyword">const</span> hierarchyData = &#123;
+  name: <span class="string">'Root'</span>,
+  children: [
+    &#123;
+      name: <span class="string">'Branch A'</span>,
+      children: [
+        &#123;name: <span class="string">'Leaf A1'</span>, value: <span class="number">25</span>&#125;,
+        &#123;name: <span class="string">'Leaf A2'</span>, value: <span class="number">15</span>&#125;
+      ]
+    &#125;,
+    &#123;
+      name: <span class="string">'Branch B'</span>,
+      children: [
+        &#123;name: <span class="string">'Leaf B1'</span>, value: <span class="number">30</span>&#125;,
+        &#123;name: <span class="string">'Leaf B2'</span>, value: <span class="number">20</span>&#125;,
+        &#123;name: <span class="string">'Leaf B3'</span>, value: <span class="number">10</span>&#125;
+      ]
+    &#125;
+  ]
+&#125;;
+
+<span class="comment">// Create hierarchy</span>
+<span class="keyword">const</span> root = d3.hierarchy(hierarchyData)
+  .sum(d => d.value || <span class="number">0</span>)
+  .sort((a, b) => b.value - a.value);
+
+<span class="comment">// Treemap layout</span>
+<span class="keyword">const</span> treemap = d3.treemap()
+  .size([<span class="number">300</span>, <span class="number">200</span>])
+  .padding(<span class="number">2</span>)
+  .round(<span class="keyword">true</span>);
+
+treemap(root);
+
+<span class="keyword">const</span> svg3 = d3.select(<span class="string">'#treemap-demo'</span>);
+svg3.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="comment">// Draw rectangles</span>
+<span class="keyword">const</span> leaf = svg3.selectAll(<span class="string">'g'</span>)
+  .data(root.leaves())
+  .enter()
+  .append(<span class="string">'g'</span>)
+  .attr(<span class="string">'transform'</span>, d => `translate($&#123;d.x0 + <span class="number">10</span>&#125;,$&#123;d.y0 + <span class="number">10</span>&#125;)`);
+
+leaf.append(<span class="string">'rect'</span>)
+  .attr(<span class="string">'width'</span>, d => d.x1 - d.x0)
+  .attr(<span class="string">'height'</span>, d => d.y1 - d.y0)
+  .attr(<span class="string">'fill'</span>, d => d3.interpolateBlues(d.value / <span class="number">30</span>))
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>);
+
+leaf.append(<span class="string">'text'</span>)
+  .attr(<span class="string">'x'</span>, <span class="number">4</span>)
+  .attr(<span class="string">'y'</span>, <span class="number">14</span>)
+  .attr(<span class="string">'font-size'</span>, <span class="string">'10px'</span>)
+  .text(d => d.data.name);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="treemap-demo" width="320" height="220" class="viz-container"></svg>
+    </div>
+
+    <!-- 4. Force Layout -->
+    <div class="step">
+      <h2>4. Force Layout (d3.forceSimulation) — Network Diagrams</h2>
+      <p>Simulate physical forces to position nodes and links in network visualizations.</p>
+
+      <pre><code><span class="comment">// Network data</span>
+<span class="keyword">const</span> nodes = [
+  &#123;id: <span class="string">'A'</span>, group: <span class="number">1</span>&#125;, &#123;id: <span class="string">'B'</span>, group: <span class="number">1</span>&#125;, &#123;id: <span class="string">'C'</span>, group: <span class="number">2</span>&#125;,
+  &#123;id: <span class="string">'D'</span>, group: <span class="number">2</span>&#125;, &#123;id: <span class="string">'E'</span>, group: <span class="number">3</span>&#125;
+];
+
+<span class="keyword">const</span> links = [
+  &#123;source: <span class="string">'A'</span>, target: <span class="string">'B'</span>&#125;, &#123;source: <span class="string">'B'</span>, target: <span class="string">'C'</span>&#125;,
+  &#123;source: <span class="string">'C'</span>, target: <span class="string">'D'</span>&#125;, &#123;source: <span class="string">'D'</span>, target: <span class="string">'E'</span>&#125;,
+  &#123;source: <span class="string">'A'</span>, target: <span class="string">'E'</span>&#125;
+];
+
+<span class="comment">// Create force simulation</span>
+<span class="keyword">const</span> simulation = d3.forceSimulation(nodes)
+  .force(<span class="string">'link'</span>, d3.forceLink(links).id(d => d.id).distance(<span class="number">50</span>))
+  .force(<span class="string">'charge'</span>, d3.forceManyBody().strength(<span class="number">-200</span>))
+  .force(<span class="string">'center'</span>, d3.forceCenter(<span class="number">150</span>, <span class="number">100</span>));
+
+<span class="keyword">const</span> svg4 = d3.select(<span class="string">'#force-demo'</span>);
+svg4.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="comment">// Draw links</span>
+<span class="keyword">const</span> link = svg4.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'line'</span>)
+  .data(links)
+  .enter()
+  .append(<span class="string">'line'</span>)
+  .attr(<span class="string">'stroke'</span>, <span class="string">'#999'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Draw nodes</span>
+<span class="keyword">const</span> node = svg4.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'circle'</span>)
+  .data(nodes)
+  .enter()
+  .append(<span class="string">'circle'</span>)
+  .attr(<span class="string">'r'</span>, <span class="number">12</span>)
+  .attr(<span class="string">'fill'</span>, d => d3.schemeCategory10[d.group])
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>)
+  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+
+<span class="comment">// Update positions on each tick</span>
+simulation.on(<span class="string">'tick'</span>, () => &#123;
+  link
+    .attr(<span class="string">'x1'</span>, d => d.source.x)
+    .attr(<span class="string">'y1'</span>, d => d.source.y)
+    .attr(<span class="string">'x2'</span>, d => d.target.x)
+    .attr(<span class="string">'y2'</span>, d => d.target.y);
+
+  node
+    .attr(<span class="string">'cx'</span>, d => d.x)
+    .attr(<span class="string">'cy'</span>, d => d.y);
+&#125;);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="force-demo" width="300" height="200" class="viz-container"></svg>
+    </div>
+
+    <!-- 5. Chord Layout -->
+    <div class="step">
+      <h2>5. Chord Layout (d3.chord) — Flow Relationships</h2>
+      <p>Visualize flows or relationships between entities in a circular layout.</p>
+
+      <pre><code><span class="comment">// Matrix representing flows between entities</span>
+<span class="keyword">const</span> matrix = [
+  [<span class="number">0</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">4</span>],
+  [<span class="number">7</span>, <span class="number">0</span>, <span class="number">4</span>, <span class="number">3</span>],
+  [<span class="number">8</span>, <span class="number">4</span>, <span class="number">0</span>, <span class="number">6</span>],
+  [<span class="number">6</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">0</span>]
+];
+
+<span class="keyword">const</span> chord = d3.chord()
+  .padAngle(<span class="number">0.05</span>)
+  .sortSubgroups(d3.descending);
+
+<span class="keyword">const</span> chords = chord(matrix);
+
+<span class="keyword">const</span> svg5 = d3.select(<span class="string">'#chord-demo'</span>);
+svg5.selectAll(<span class="string">'*'</span>).remove();
+
+<span class="keyword">const</span> g5 = svg5.append(<span class="string">'g'</span>)
+  .attr(<span class="string">'transform'</span>, <span class="string">'translate(110,110)'</span>);
+
+<span class="keyword">const</span> arc = d3.arc()
+  .innerRadius(<span class="number">80</span>)
+  .outerRadius(<span class="number">90</span>);
+
+<span class="keyword">const</span> ribbon = d3.ribbon()
+  .radius(<span class="number">80</span>);
+
+<span class="comment">// Draw groups (outer arcs)</span>
+g5.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'path'</span>)
+  .data(chords.groups)
+  .enter()
+  .append(<span class="string">'path'</span>)
+  .attr(<span class="string">'d'</span>, arc)
+  .attr(<span class="string">'fill'</span>, (d,i) => d3.schemeCategory10[i])
+  .attr(<span class="string">'stroke'</span>, <span class="string">'white'</span>);
+
+<span class="comment">// Draw chords (ribbons)</span>
+g5.append(<span class="string">'g'</span>)
+  .selectAll(<span class="string">'path'</span>)
+  .data(chords)
+  .enter()
+  .append(<span class="string">'path'</span>)
+  .attr(<span class="string">'d'</span>, ribbon)
+  .attr(<span class="string">'fill'</span>, d => d3.schemeCategory10[d.source.index])
+  .attr(<span class="string">'opacity'</span>, <span class="number">0.7</span>);</code></pre>
+
+      <p><strong>Output:</strong></p>
+      <svg id="chord-demo" width="220" height="220" class="viz-container"></svg>
+    </div>
+
+    <!-- 6. Layout Tips -->
+    <div class="step">
+      <h2>6. Layout Best Practices & Tips</h2>
+      <ul>
+        <li><strong>Stack Layout:</strong> Use <code>d3.stackOrderNone</code> for data order, <code>d3.stackOrderDescending</code> for largest first.</li>
+        <li><strong>Pie Layout:</strong> Set <code>.padAngle()</code> for gaps, <code>.sort(null)</code> to preserve data order.</li>
+        <li><strong>Hierarchy:</strong> Use <code>.sum()</code> to aggregate values, <code>.sort()</code> to order nodes.</li>
+        <li><strong>Force:</strong> Adjust <code>strength()</code> and <code>distance()</code> for different clustering effects.</li>
+        <li><strong>Performance:</strong> For large datasets, consider using <code>simulation.stop()</code> and manual ticks.</li>
+      </ul>
+    </div>
+
+    <!-- 7. Complete runnable example -->
+    <div class="step">
+      <p><strong>Notes for Angular/TypeScript integration:</strong></p>
+      <ol>
+        <li>Import layouts: <code>import * as d3 from 'd3';</code></li>
+        <li>Initialize in <code>ngAfterViewInit()</code> or component methods</li>
+        <li>Use <code>ViewChild</code> or <code>d3.select()</code> to target SVG elements</li>
+        <li>Consider component lifecycle for force simulations (stop on destroy)</li>
+        <li>Use TypeScript interfaces for data structure validation</li>
+      </ol>
+    </div>
+
+    <!-- Reference -->
+    <div class="step">
+      <h2>Layout Reference</h2>
+      <ul>
+        <li><code>d3.stack()</code> — Stack data for layered charts</li>
+        <li><code>d3.pie()</code> — Calculate angles for pie charts</li>
+        <li><code>d3.hierarchy()</code> + <code>d3.treemap()</code>/<code>d3.tree()</code> — Hierarchical layouts</li>
+        <li><code>d3.forceSimulation()</code> — Physics-based node positioning</li>
+        <li><code>d3.chord()</code> — Circular relationship diagrams</li>
+        <li><code>d3.pack()</code> — Circle packing for hierarchies</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
