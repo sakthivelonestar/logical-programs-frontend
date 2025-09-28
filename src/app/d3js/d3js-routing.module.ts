@@ -8,6 +8,7 @@ import { DomManipulationComponent } from './dom-manipulation/dom-manipulation.co
 import { DataLoadingComponent } from './data-loading/data-loading.component';
 import { BasicTransitionsComponent } from './basic-transitions/basic-transitions.component';
 import { AdvancedScalesComponent } from './advanced-scales/advanced-scales.component';
+import { AxesLegendsComponent } from './axes-legends/axes-legends.component';
 
 const routes: Routes = [
       
@@ -47,6 +48,10 @@ const routes: Routes = [
                   {
                     path: 'advanced-scales',
                     component: AdvancedScalesComponent
+                  },
+                  {
+                    path: 'axes-legends',
+                    component: AxesLegendsComponent
                   }
 
                 ]

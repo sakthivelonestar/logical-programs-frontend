@@ -1,0 +1,564 @@
+ <div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+
+         <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" 
+         (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">            
+            <div class="header">
+                <p>
+                <strong class="question">What:</strong>
+                In D3.js, <strong>Axes & Legends</strong> are essential components that provide contextual guides, mapping data values to positions, ticks, labels, and colors. They transform raw data into readable, interpretable visualizations.
+            </p>
+            <p>
+                <strong class="question">Why:</strong>
+                Axes and legends bridge the gap between abstract data and human understanding. They provide reference points, scales, and visual keys that make complex datasets accessible and meaningful to viewers.
+            </p>
+            <p>
+                <strong class="question">Where:</strong>
+                Use axes for time series, categorical, and numeric charts. Use legends for categorical color mapping, sequential gradients, or when displaying multiple datasets that need visual distinction.
+            </p>
+            </div>
+    </div>
+        
+     <div class="examples">
+            <h3>Complete D3.js Axes & Legends Tutorial</h3>
+
+            <!-- Understanding Scales and Axes -->
+            <div class="step">
+                <h2>Understanding Scales and Axes Fundamentals</h2>
+                
+                <div>
+                    <h4>What are Scales in D3?</h4>
+                    <p>Scales are functions that map data values (domain) to visual values (range). Think of them as translators between your data world and the pixel world of SVG.</p>
+                    <ul>
+                        <li><strong>Domain:</strong> The extent of your input data (e.g., 0 to 100)</li>
+                        <li><strong>Range:</strong> The extent of your output pixels (e.g., 50 to 350 pixels)</li>
+                        <li><strong>Scale Function:</strong> Maps any domain value to its corresponding range value</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <h4>Key Axis Components:</h4>
+                    <p><strong>Ticks:</strong> Small marks that indicate specific values<br>
+                    <strong>Labels:</strong> Text showing the actual values<br>
+                    <strong>Axis Line:</strong> The main line of the axis<br>
+                    <strong>Grid Lines:</strong> Optional lines extending across the chart</p>
+                </div>
+
+                <pre><code>
+<span class="comment">// Step 1: Create scales - the foundation of any axis</span>
+<span class="keyword">const</span> createBasicScales = <span class="keyword">()</span> =&gt; &#123;
+    <span class="comment">// Linear scale for continuous numeric data</span>
+    <span class="keyword">const</span> xScale = d3.scaleLinear()
+        .domain([<span class="number">0</span>, <span class="number">10</span>])        <span class="comment">// Input range: 0 to 10</span>
+        .range([<span class="number">50</span>, <span class="number">350</span>]);     <span class="comment">// Output range: 50 to 350 pixels</span>
+    
+    <span class="keyword">const</span> yScale = d3.scaleLinear()
+        .domain([<span class="number">0</span>, <span class="number">100</span>])      <span class="comment">// Input range: 0 to 100</span>
+        .range([<span class="number">250</span>, <span class="number">50</span>]);     <span class="comment">// Note: SVG Y coordinates are inverted!</span>
+    
+    <span class="keyword">return</span> &#123; xScale, yScale &#125;;
+&#125;;
+</code></pre>
+
+            </div>
+
+            <!-- 1. Basic X and Y Axis -->
+            <div class="step" style="padding: 2px;">
+          
+                <div>
+                    <h4>Step-by-Step Axis Creation:</h4>
+                    <p>Creating axes in D3 follows a predictable pattern. We'll build this step by step so you understand each component.</p>
+                </div>
+                                
+ <div class="step-1">             
+<pre style="padding: 2px;"><code>
+<h2>1. Creating Your First Axes</h2>
+<span class="comment">// Complete step-by-step axis creation</span>
+<span class="keyword">function</span> createBasicAxes() &#123;
+    <span class="comment">// Step 1: Select SVG and clear previous content</span>
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#axes-demo'</span>);
+    svg.selectAll(<span class="string">'*'</span>).remove(); <span class="comment">// Clean slate</span>
+
+    <span class="comment">// Step 2: Define dimensions and margins</span>
+    <span class="keyword">const</span> margin = &#123; top: <span class="number">20</span>, right: <span class="number">30</span>, bottom: <span class="number">40</span>, left: <span class="number">50</span> &#125;;
+    <span class="keyword">const</span> width = <span class="number">400</span> - margin.left - margin.right;
+    <span class="keyword">const</span> height = <span class="number">300</span> - margin.top - margin.bottom;
+
+    <span class="comment">// Step 3: Create scales</span>
+    <span class="keyword">const</span> xScale = d3.scaleLinear()
+        .domain([<span class="number">0</span>, <span class="number">10</span>])
+        .range([<span class="number">0</span>, width]);
+
+    <span class="keyword">const</span> yScale = d3.scaleLinear()
+        .domain([<span class="number">0</span>, <span class="number">100</span>])
+        .range([height, <span class="number">0</span>]); <span class="comment">// Inverted for SVG coordinates</span>
+
+    <span class="comment">// Step 4: Create axis generators</span>
+    <span class="keyword">const</span> xAxis = d3.axisBottom(xScale)
+        .ticks(<span class="number">5</span>)                    <span class="comment">// Roughly 5 tick marks</span>
+        .tickFormat(d =&gt; <span class="string">`$&#123;d&#125;x`</span>);   <span class="comment">// Custom formatting</span>
+
+    <span class="keyword">const</span> yAxis = d3.axisLeft(yScale)
+        .ticks(<span class="number">5</span>)
+        .tickFormat(d =&gt; <span class="string">`$&#123;d&#125;%`</span>);
+
+    <span class="comment">// Step 5: Create container group with margins</span>
+    <span class="keyword">const</span> g = svg.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">`translate($&#123;margin.left&#125;,$&#123;margin.top&#125;)`</span>);
+
+    <span class="comment">// Step 6: Add axes to the SVG</span>
+    <span class="comment">// X-axis goes at the bottom</span>
+    g.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'x-axis'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">`translate(0,$&#123;height&#125;)`</span>)
+        .call(xAxis);
+
+    <span class="comment">// Y-axis goes on the left</span>
+    g.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'y-axis'</span>)
+        .call(yAxis);
+
+    <span class="comment">// Step 7: Add axis labels for clarity</span>
+    g.append(<span class="string">'text'</span>)
+        .attr(<span class="string">'x'</span>, width / <span class="number">2</span>)
+        .attr(<span class="string">'y'</span>, height + <span class="number">35</span>)
+        .style(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+        .style(<span class="string">'font-size'</span>, <span class="string">'14px'</span>)
+        .text(<span class="string">'Multiplier'</span>);
+
+    g.append(<span class="string">'text'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">'rotate(-90)'</span>)
+        .attr(<span class="string">'x'</span>, -height / <span class="number">2</span>)
+        .attr(<span class="string">'y'</span>, -<span class="number">35</span>)
+        .style(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+        .style(<span class="string">'font-size'</span>, <span class="string">'14px'</span>)
+        .text(<span class="string">'Percentage'</span>);
+&#125;
+</code></pre>
+<br>
+<pre style="padding: 2px;"><code>
+<h2>1.1 Grid Lines and Advanced Styling</h2>
+<span class="comment">// Adding grid lines for better readability</span>
+<span class="keyword">function</span> addGridLines() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#axes-demo'</span>);
+    <span class="keyword">const</span> margin = &#123; top: <span class="number">20</span>, right: <span class="number">30</span>, bottom: <span class="number">40</span>, left: <span class="number">50</span> &#125;;
+    <span class="keyword">const</span> width = <span class="number">400</span> - margin.left - margin.right;
+    <span class="keyword">const</span> height = <span class="number">300</span> - margin.top - margin.bottom;
+
+    <span class="keyword">const</span> xScale = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">10</span>]).range([<span class="number">0</span>, width]);
+    <span class="keyword">const</span> yScale = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">100</span>]).range([height, <span class="number">0</span>]);
+
+    <span class="keyword">const</span> g = svg.select(<span class="string">'g'</span>);
+
+    <span class="comment">// Add horizontal grid lines</span>
+    g.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'grid'</span>)
+        .call(d3.axisLeft(yScale)
+            .tickSize(-width)
+            .tickFormat(null)
+        )
+        .style(<span class="string">'stroke-dasharray'</span>, <span class="string">'3,3'</span>)
+        .style(<span class="string">'opacity'</span>, <span class="number">0.3</span>);
+
+    <span class="comment">// Add vertical grid lines</span>
+    g.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'grid'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">`translate(0,$&#123;height&#125;)`</span>)
+        .call(d3.axisBottom(xScale)
+            .tickSize(-height)
+            .tickFormat(null)
+        )
+        .style(<span class="string">'stroke-dasharray'</span>, <span class="string">'3,3'</span>)
+        .style(<span class="string">'opacity'</span>, <span class="number">0.3</span>);
+&#125;
+
+<span class="comment">// Customize axis styling</span>
+<span class="keyword">function</span> customizeAxes() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#axes-demo'</span>);
+    
+    <span class="comment">// Style the axes</span>
+    svg.selectAll(<span class="string">'.x-axis path, .y-axis path'</span>)
+        .style(<span class="string">'stroke'</span>, <span class="string">'#333'</span>)
+        .style(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+    
+    svg.selectAll(<span class="string">'.x-axis text, .y-axis text'</span>)
+        .style(<span class="string">'font-size'</span>, <span class="string">'12px'</span>)
+        .style(<span class="string">'font-family'</span>, <span class="string">'Arial, sans-serif'</span>);
+    
+    svg.selectAll(<span class="string">'.x-axis .tick line, .y-axis .tick line'</span>)
+        .style(<span class="string">'stroke'</span>, <span class="string">'#666'</span>);
+&#125;
+</code></pre>
+</div>  
+
+                <div class="tutorial-tip">
+                    <h4>💡 Pro Tip:</h4>
+                    <p>Always use margins! They provide space for your axes and labels. The margin convention is a D3 best practice that makes your charts professional and readable.</p>
+                </div>
+
+                <p><strong>Output:</strong></p>
+                <svg id="axes-demo" width="400" height="300"></svg>
+            </div>
+
+            <!-- 2. Understanding Different Scale Types -->
+            <div class="step">
+                <h2>2. Mastering Different Scale Types</h2>
+                
+                <div class="explanation">
+                    <h4>When to Use Different Scales:</h4>
+                    <ul>
+                        <li><strong>Linear:</strong> Continuous numeric data with even spacing</li>
+                        <li><strong>Ordinal:</strong> Categorical data (names, categories)</li>
+                        <li><strong>Time:</strong> Date and time data</li>
+                        <li><strong>Band:</strong> Categorical data with spacing (great for bar charts)</li>
+                    </ul>
+                </div>
+
+               <pre><code>
+<span class="comment">// Different scale types for different data</span>
+<span class="keyword">function</span> demonstrateScaleTypes() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#scale-types-demo'</span>);
+    svg.selectAll(<span class="string">'*'</span>).remove();
+
+    <span class="comment">// 1. Ordinal scale for categories</span>
+    <span class="keyword">const</span> categories = [<span class="string">'Apple'</span>, <span class="string">'Banana'</span>, <span class="string">'Orange'</span>, <span class="string">'Grape'</span>];
+    <span class="keyword">const</span> xOrdinal = d3.scaleBand()
+        .domain(categories)
+        .range([<span class="number">50</span>, <span class="number">350</span>])
+        .padding(<span class="number">0.1</span>); <span class="comment">// 10% padding between bands</span>
+
+    <span class="comment">// 2. Time scale for dates</span>
+    <span class="keyword">const</span> timeData = [
+        <span class="keyword">new</span> Date(<span class="number">2023</span>, <span class="number">0</span>, <span class="number">1</span>), <span class="comment">// Jan 1, 2023</span>
+        <span class="keyword">new</span> Date(<span class="number">2023</span>, <span class="number">6</span>, <span class="number">1</span>), <span class="comment">// Jul 1, 2023</span>
+        <span class="keyword">new</span> Date(<span class="number">2024</span>, <span class="number">0</span>, <span class="number">1</span>)  <span class="comment">// Jan 1, 2024</span>
+    ];
+    <span class="keyword">const</span> xTime = d3.scaleTime()
+        .domain([new Date("2023-01-01"), new Date("2024-01-01")]) <span class="comment">// Finds min and max automatically</span>
+        .range([<span class="number">50</span>, <span class="number">350</span>]);
+
+    <span class="comment">// Create different axis types</span>
+    <span class="keyword">const</span> ordinalAxis = d3.axisBottom(xOrdinal);
+    <span class="keyword">const</span> timeAxis = d3.axisBottom(xTime)
+        .tickFormat(d => d3.timeFormat(<span class="string">'%b %Y'</span>)(d as Date)); <span class="comment">// Format: "Jan 2023"</span>
+
+    <span class="comment">// Draw ordinal axis</span>
+    svg.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">'translate(0,100)'</span>)
+        .call(ordinalAxis);
+
+    <span class="comment">// Draw time axis</span>
+    svg.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">'translate(0,200)'</span>)
+        .call(timeAxis as any);
+
+    <span class="comment">// Add labels</span>
+    svg.append(<span class="string">'text'</span>).attr(<span class="string">'x'</span>, <span class="number">10</span>).attr(<span class="string">'y'</span>, <span class="number">95</span>).text(<span class="string">'Ordinal Scale:'</span>);
+    svg.append(<span class="string">'text'</span>).attr(<span class="string">'x'</span>, <span class="number">10</span>).attr(<span class="string">'y'</span>, <span class="number">195</span>).text(<span class="string">'Time Scale:'</span>);
+&#125;
+</code></pre>
+                
+                <p><strong>Output:</strong></p>
+                <svg id="scale-types-demo" width="400" height="250"></svg>
+            </div>
+
+            <!-- 3. Creating Legends -->
+            <div class="step">
+                <h2>3. Building Effective Legends</h2>
+                
+                <div class="explanation">
+                    <h4>Legend Design Principles:</h4>
+                    <p>A good legend should be immediately understandable and not distract from the main visualization. It should clearly map visual encodings (colors, shapes, sizes) to data categories.</p>
+                </div>
+
+                <div class="key-concepts">
+                    <h4>Types of Legends:</h4>
+                    <p><strong>Categorical:</strong> Different colors for different categories<br>
+                    <strong>Sequential:</strong> Color gradients for continuous values<br>
+                    <strong>Diverging:</strong> Two-color gradients with a meaningful center point</p>
+                </div>
+
+                <pre><code>
+<span class="comment">// Building a comprehensive categorical legend</span>
+<span class="keyword">function</span> createCategoricalLegend() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#legend-demo'</span>);
+    svg.selectAll(<span class="string">'*'</span>).remove();
+
+    <span class="comment">// Data and color scale</span>
+    <span class="keyword">const</span> data = [
+        &#123; category: <span class="string">'Technology'</span>, value: <span class="number">45</span>, description: <span class="string">'Software & Hardware'</span> &#125;,
+        &#123; category: <span class="string">'Healthcare'</span>, value: <span class="number">30</span>, description: <span class="string">'Medical Services'</span> &#125;,
+        &#123; category: <span class="string">'Finance'</span>, value: <span class="number">25</span>, description: <span class="string">'Banking & Investment'</span> &#125;,
+        &#123; category: <span class="string">'Education'</span>, value: <span class="number">20</span>, description: <span class="string">'Learning & Training'</span> &#125;
+    ];
+
+    <span class="keyword">const</span> colorScale = d3.scaleOrdinal()
+        .domain(data.map(d => d.category))
+        .range([<span class="string">'#ff6b6b'</span>, <span class="string">'#4ecdc4'</span>, <span class="string">'#45b7d1'</span>, <span class="string">'#96ceb4'</span>]);
+
+    <span class="comment">// Create legend container</span>
+    <span class="keyword">const</span> legend = svg.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'legend'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">'translate(30,30)'</span>);
+
+    <span class="comment">// Create legend items</span>
+    <span class="keyword">const</span> legendItems = legend.selectAll(<span class="string">'.legend-item'</span>)
+        .data(data)
+        .enter()
+        .append(<span class="string">'g'</span>)
+        .attr(<span class="string">'class'</span>, <span class="string">'legend-item'</span>)
+        .attr(<span class="string">'transform'</span>, (d, i) => <span class="string">`translate(0, $&#123;i * 35&#125;)`</span>);
+
+    <span class="comment">// Add colored rectangles</span>
+    legendItems.append(<span class="string">'rect'</span>)
+        .attr(<span class="string">'width'</span>, <span class="number">20</span>)
+        .attr(<span class="string">'height'</span>, <span class="number">20</span>)
+        .attr(<span class="string">'fill'</span>, d => colorScale(d.category) as string)
+        .attr(<span class="string">'rx'</span>, <span class="number">3</span>); <span class="comment">// Rounded corners</span>
+
+    <span class="comment">// Add category labels</span>
+    legendItems.append(<span class="string">'text'</span>)
+        .attr(<span class="string">'x'</span>, <span class="number">30</span>)
+        .attr(<span class="string">'y'</span>, <span class="number">10</span>)
+        .attr(<span class="string">'dy'</span>, <span class="string">'0.35em'</span>) <span class="comment">// Center vertically</span>
+        .style(<span class="string">'font-weight'</span>, <span class="string">'bold'</span>)
+        .style(<span class="string">'font-size'</span>, <span class="string">'14px'</span>)
+        .text(d => d.category);
+
+    <span class="comment">// Add descriptions</span>
+    legendItems.append(<span class="string">'text'</span>)
+        .attr(<span class="string">'x'</span>, <span class="number">30</span>)
+        .attr(<span class="string">'y'</span>, <span class="number">25</span>)
+        .style(<span class="string">'font-size'</span>, <span class="string">'12px'</span>)
+        .style(<span class="string">'fill'</span>, <span class="string">'#666'</span>)
+        .text(d => d.description);
+
+    <span class="comment">// Add interactivity</span>
+    legendItems
+        .on(<span class="string">'mouseover'</span>, <span class="keyword">function</span>(event, d) &#123;
+            d3.select(<span class="keyword">this</span>).select(<span class="string">'rect'</span>)
+                .attr(<span class="string">'stroke'</span>, <span class="string">'#333'</span>)
+                .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
+        &#125;)
+        .on(<span class="string">'mouseout'</span>, <span class="keyword">function</span>(event, d) &#123;
+            d3.select(<span class="keyword">this</span>).select(<span class="string">'rect'</span>)
+                .attr(<span class="string">'stroke'</span>, <span class="string">'none'</span>);
+        &#125;);
+&#125;
+</code></pre>
+
+
+                <div class="tutorial-tip">
+                    <h4>💡 Legend Best Practices:</h4>
+                    <p>• Keep legends close to the chart but not overlapping<br>
+                    • Use consistent sizing and spacing<br>
+                    • Add hover effects for interactivity<br>
+                    • Consider horizontal legends for fewer categories</p>
+                </div>
+
+                <p><strong>Output:</strong></p>
+                <svg id="legend-demo" width="400" height="200"></svg>
+            </div>
+
+            <!-- 4. Advanced Legend: Color Gradient -->
+            <div class="step">
+                <h2>4. Advanced: Continuous Color Legends</h2>
+                
+                <div class="explanation">
+                    <h4>When to Use Gradient Legends:</h4>
+                    <p>Gradient legends are perfect for showing continuous data like temperature, population density, or any metric where the value smoothly transitions between extremes.</p>
+                </div>
+
+               <pre><code>
+<span class="comment">// Creating a beautiful gradient legend</span>
+<span class="keyword">function</span> createColorGradientLegend() &#123;
+    <span class="keyword">const</span> svg = d3.select(<span class="string">'#gradient-legend-demo'</span>);
+    svg.selectAll(<span class="string">'*'</span>).remove();
+
+    <span class="comment">// Define gradient scale</span>
+    <span class="keyword">const</span> colorScale = d3.scaleSequential(d3.interpolateViridis)
+        .domain([<span class="number">0</span>, <span class="number">100</span>]);
+
+    <span class="comment">// Create gradient definition</span>
+    <span class="keyword">const</span> defs = svg.append(<span class="string">'defs'</span>);
+    <span class="keyword">const</span> gradient = defs.append(<span class="string">'linearGradient'</span>)
+        .attr(<span class="string">'id'</span>, <span class="string">'temperature-gradient'</span>)
+        .attr(<span class="string">'x1'</span>, <span class="string">'0%'</span>)
+        .attr(<span class="string">'x2'</span>, <span class="string">'100%'</span>)
+        .attr(<span class="string">'y1'</span>, <span class="string">'0%'</span>)
+        .attr(<span class="string">'y2'</span>, <span class="string">'0%'</span>);
+
+    <span class="comment">// Add color stops</span>
+    <span class="keyword">const</span> numStops = <span class="number">20</span>;
+    <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt;= numStops; i++) &#123;
+        <span class="keyword">const</span> offset = (i / numStops) * <span class="number">100</span>;
+        <span class="keyword">const</span> value = (i / numStops) * <span class="number">100</span>;
+        gradient.append(<span class="string">'stop'</span>)
+            .attr(<span class="string">'offset'</span>, <span class="string">`$&#123;offset&#125;%`</span>)
+            .attr(<span class="string">'stop-color'</span>, colorScale(value));
+    &#125;
+
+    <span class="comment">// Create legend bar</span>
+    svg.append(<span class="string">'rect'</span>)
+        .attr(<span class="string">'x'</span>, <span class="number">50</span>)
+        .attr(<span class="string">'y'</span>, <span class="number">50</span>)
+        .attr(<span class="string">'width'</span>, <span class="number">300</span>)
+        .attr(<span class="string">'height'</span>, <span class="number">20</span>)
+        .style(<span class="string">'fill'</span>, <span class="string">'url(#temperature-gradient)'</span>)
+        .style(<span class="string">'stroke'</span>, <span class="string">'#333'</span>)
+        .style(<span class="string">'stroke-width'</span>, <span class="number">1</span>);
+
+    <span class="comment">// Add scale</span>
+    <span class="keyword">const</span> legendScale = d3.scaleLinear()
+        .domain([<span class="number">0</span>, <span class="number">100</span>])
+        .range([<span class="number">50</span>, <span class="number">350</span>]);
+
+    <span class="keyword">const</span> legendAxis = d3.axisBottom(legendScale)
+        .ticks(<span class="number">5</span>)
+        .tickFormat(d =&gt; <span class="string">`$&#123;d&#125;°C`</span>);
+
+    svg.append(<span class="string">'g'</span>)
+        .attr(<span class="string">'transform'</span>, <span class="string">'translate(0,70)'</span>)
+        .call(legendAxis);
+
+    <span class="comment">// Add title</span>
+    svg.append(<span class="string">'text'</span>)
+        .attr(<span class="string">'x'</span>, <span class="number">200</span>)
+        .attr(<span class="string">'y'</span>, <span class="number">40</span>)
+        .style(<span class="string">'text-anchor'</span>, <span class="string">'middle'</span>)
+        .style(<span class="string">'font-weight'</span>, <span class="string">'bold'</span>)
+        .text(<span class="string">'Temperature Scale'</span>);
+&#125;
+</code></pre>
+
+
+                <p><strong>Output:</strong></p>
+                <svg id="gradient-legend-demo" width="400" height="150"></svg>
+            </div>
+
+            <!-- 5. Grid Lines and Advanced Styling -->
+            <div class="step">
+             
+            </div>
+
+            <!-- 6. Complete Chart Example -->
+            <div class="step">
+                <h2>6. Complete Chart with Axes and Legend</h2>
+
+<pre><code>
+<span class="comment">// Creating a complete scatter plot with axes and legend</span>
+<span class="keyword">function</span> <span class="function-name">createCompleteChart</span>() &#123;
+  <span class="keyword">const</span> svg = d3.select&lt;<span class="keyword">SVGSVGElement</span>, unknown&gt;('#complete-chart');
+  svg.selectAll('*').remove();
+
+  <span class="comment">// Sample data</span>
+  <span class="keyword">interface</span> <span class="function-name">DataPoint</span> &#123;
+    x: <span class="keyword">number</span>;
+    y: <span class="keyword">number</span>;
+    category: <span class="string">'A' | 'B' | 'C'</span>;
+    size: <span class="keyword">number</span>;
+  &#125;
+
+  <span class="keyword">const</span> data: DataPoint[] = [
+    &#123; x: <span class="number">2</span>, y: <span class="number">30</span>, category: <span class="string">'A'</span>, size: <span class="number">10</span> &#125;,
+    &#123; x: <span class="number">4</span>, y: <span class="number">60</span>, category: <span class="string">'B'</span>, size: <span class="number">15</span> &#125;,
+    &#123; x: <span class="number">6</span>, y: <span class="number">45</span>, category: <span class="string">'A'</span>, size: <span class="number">20</span> &#125;,
+    &#123; x: <span class="number">8</span>, y: <span class="number">80</span>, category: <span class="string">'C'</span>, size: <span class="number">12</span> &#125;,
+    &#123; x: <span class="number">3</span>, y: <span class="number">25</span>, category: <span class="string">'B'</span>, size: <span class="number">18</span> &#125;,
+    &#123; x: <span class="number">7</span>, y: <span class="number">70</span>, category: <span class="string">'C'</span>, size: <span class="number">14</span> &#125;,
+    &#123; x: <span class="number">5</span>, y: <span class="number">55</span>, category: <span class="string">'A'</span>, size: <span class="number">16</span> &#125;
+  ];
+
+  <span class="keyword">const</span> margin = &#123; top: <span class="number">20</span>, right: <span class="number">120</span>, bottom: <span class="number">60</span>, left: <span class="number">60</span> &#125;;
+  <span class="keyword">const</span> width = <span class="number">500</span> - margin.left - margin.right;
+  <span class="keyword">const</span> height = <span class="number">300</span> - margin.top - margin.bottom;
+
+  <span class="comment">// Scales</span>
+  <span class="keyword">const</span> xScale = d3.scaleLinear()
+    .domain(d3.extent(data, d =&gt; d.x) as [<span class="keyword">number</span>, <span class="keyword">number</span>])
+    .range([<span class="number">0</span>, width]);
+
+  <span class="keyword">const</span> yScale = d3.scaleLinear()
+    .domain(d3.extent(data, d =&gt; d.y) as [<span class="keyword">number</span>, <span class="keyword">number</span>])
+    .range([height, <span class="number">0</span>]);
+
+  <span class="keyword">const</span> colorScale = d3.scaleOrdinal&lt;'A' | 'B' | 'C', <span class="keyword">string</span>&gt;()
+    .domain([<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>])
+    .range([<span class="string">'#ff6b6b'</span>, <span class="string">'#4ecdc4'</span>, <span class="string">'#45b7d1'</span>]);
+
+  <span class="keyword">const</span> sizeScale = d3.scaleLinear()
+    .domain(d3.extent(data, d =&gt; d.size) as [<span class="keyword">number</span>, <span class="keyword">number</span>])
+    .range([<span class="number">5</span>, <span class="number">15</span>]);
+
+  <span class="comment">// Create main group</span>
+  <span class="keyword">const</span> g = svg.append('g')
+    .attr('transform', `translate($&#123;margin.left&#125;,$&#123;margin.top&#125;)`);
+
+  <span class="comment">// Add axes</span>
+  g.append('g')
+    .attr('transform', `translate(0,$&#123;height&#125;)`)
+    .call(d3.axisBottom(xScale));
+
+  g.append('g')
+    .call(d3.axisLeft(yScale));
+
+  <span class="comment">// Add axis labels</span>
+  g.append('text')
+    .attr('x', width / <span class="number">2</span>)
+    .attr('y', height + <span class="number">40</span>)
+    .style('text-anchor', 'middle')
+    .text(<span class="string">'X Value'</span>);
+
+  g.append('text')
+    .attr('transform', <span class="string">'rotate(-90)'</span>)
+    .attr('x', -height / <span class="number">2</span>)
+    .attr('y', -<span class="number">40</span>)
+    .style('text-anchor', 'middle')
+    .text(<span class="string">'Y Value'</span>);
+
+  <span class="comment">// Add data points</span>
+  g.selectAll&lt;SVGCircleElement, DataPoint&gt;('.point')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('class', 'point')
+    .attr('cx', d =&gt; xScale(d.x))
+    .attr('cy', d =&gt; yScale(d.y))
+    .attr('r', d =&gt; sizeScale(d.size))
+    .attr('fill', d =&gt; colorScale(d.category))
+    .attr('stroke', <span class="string">'#333'</span>)
+    .attr('stroke-width', <span class="number">1</span>)
+    .style('opacity', <span class="number">0.7</span>);
+
+  <span class="comment">// Add legend</span>
+  <span class="keyword">const</span> legend = svg.append('g')
+    .attr('transform', `translate($&#123;width + margin.left + <span class="number">20</span>&#125;,$&#123;margin.top&#125;)`);
+
+  <span class="keyword">const</span> categories: ('A' | 'B' | 'C')[] = [<span class="string">'A'</span>, <span class="string">'B'</span>, <span class="string">'C'</span>];
+  <span class="keyword">const</span> legendItems = legend.selectAll&lt;SVGGElement, string&gt;('.legend-item')
+    .data(categories)
+    .enter()
+    .append('g')
+    .attr('transform', (d, i) =&gt; `translate(0, $&#123;i * <span class="number">25</span>&#125;)`);
+
+  legendItems.append('circle')
+    .attr('r', <span class="number">8</span>)
+    .attr('fill', d =&gt; colorScale(d))
+    .attr('stroke', <span class="string">'#333'</span>);
+
+  legendItems.append('text')
+    .attr('x', <span class="number">15</span>)
+    .attr('dy', <span class="string">'0.35em'</span>)
+    .text(d =&gt; `Category $&#123;d&#125;`);
+&#125;
+</code></pre>
+
+
+
+                <p><strong>Output:</strong></p>
+                <svg id="complete-chart" width="500" height="300"></svg>
+            </div>
+        </div>
+    </div>
