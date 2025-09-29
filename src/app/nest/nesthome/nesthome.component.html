@@ -1,17 +1,72 @@
 <div class="wraper">
     <div class="list">
         <!-- NestJS Core - Better Learning Flow -->
-        <button class="styled" routerLink="nestjs-setup">NestJS Setup & Project Structure</button>
-        <button class="styled" routerLink="first-controller">Your First Controller & Routes</button>
-        <button class="styled" routerLink="services-di">Services & Dependency Injection</button>
-        <button class="styled" routerLink="modules-organization">Modules & Code Organization</button>
-        <button class="styled" routerLink="database-integration">Database Integration (TypeORM)</button>
-        <button class="styled" routerLink="dto-validation">DTOs & Input Validation</button>
-        <button class="styled" routerLink="error-handling-nestjs">Error Handling & Exception Filters</button>
-        <button class="styled" routerLink="auth-guards">Authentication & Guards</button>
-        <button class="styled" routerLink="interceptors-pipes">Interceptors & Custom Pipes</button>
-        <button class="styled" routerLink="middleware-nestjs">Middleware in NestJS</button>
-        <button class="styled" routerLink="custom-decorators">Custom Decorators</button>
+        <button 
+            class="styled" 
+            [routerLink]="['nestjs-setup']" 
+            routerLinkActive="active">
+            NestJS Setup & Project Structure
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['first-controller']" 
+            routerLinkActive="active">
+            Your First Controller & Routes
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['services-di']" 
+            routerLinkActive="active">
+            Services & Dependency Injection
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['modules-organization']" 
+            routerLinkActive="active">
+            Modules & Code Organization
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['database-integration']" 
+            routerLinkActive="active">
+            Database Integration (TypeORM)
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['dto-validation']" 
+            routerLinkActive="active">
+            DTOs & Input Validation
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['error-handling-nestjs']" 
+            routerLinkActive="active">
+            Error Handling & Exception Filters
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['auth-guards']" 
+            routerLinkActive="active">
+            Authentication & Guards
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['interceptors-pipes']" 
+            routerLinkActive="active">
+            Interceptors & Custom Pipes
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['middleware-nestjs']" 
+            routerLinkActive="active">
+            Middleware in NestJS
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['custom-decorators']" 
+            routerLinkActive="active">
+            Custom Decorators
+        </button>
     </div>
 
     <div class="sub-components-wraper">

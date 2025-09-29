@@ -1,21 +1,86 @@
 <div class="wraper">
     <div class="list">
             <!-- Angular Fundamentals -->
-            <button class="styled" routerLink="angular-architecture">Angular Architecture & Project Setup</button>
-            <button class="styled" routerLink="data-binding">Data Binding (Interpolation, Property, Event, Two-Way)</button>
-            <button class="styled" routerLink="directives">Directives (Structural & Attribute)</button>
-            <button class="styled" routerLink="pipes">Pipes (Built-in & Custom)</button>
-            <button class="styled" routerLink="lifecycle-hooks">Lifecycle Hooks</button>
-            <button class="styled" routerLink="templates-forms">Templates & Template-Driven Forms</button>
-            <button class="styled" routerLink="reactive-forms">Reactive Forms</button>
+            <button 
+                class="styled" 
+                [routerLink]="['angular-architecture']" 
+                routerLinkActive="active">
+                Angular Architecture & Project Setup
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['data-binding']" 
+                routerLinkActive="active">
+                Data Binding (Interpolation, Property, Event, Two-Way)
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['directives']" 
+                routerLinkActive="active">
+                Directives (Structural & Attribute)
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['pipes']" 
+                routerLinkActive="active">
+                Pipes (Built-in & Custom)
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['lifecycle-hooks']" 
+                routerLinkActive="active">
+                Lifecycle Hooks
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['templates-forms']" 
+                routerLinkActive="active">
+                Templates & Template-Driven Forms
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['reactive-forms']" 
+                routerLinkActive="active">
+                Reactive Forms
+            </button>
 
             <!-- Intermediate Angular -->
-            <button class="styled" routerLink="routing-navigation">Routing & Navigation</button>
-            <button class="styled" routerLink="routing-guards">Route Guards & Resolvers</button>
-            <button class="styled" routerLink="observables-rxjs">Observables & RxJS</button>
-            <button class="styled" routerLink="http-client">HTTP Client & Interceptors</button>
-            <button class="styled" routerLink="state-management-basics">State Management Basics</button>
-            <button class="styled" routerLink="component-communication">Component Communication (Input, Output, Services)</button>
+            <button 
+                class="styled" 
+                [routerLink]="['routing-navigation']" 
+                routerLinkActive="active">
+                Routing & Navigation
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['routing-guards']" 
+                routerLinkActive="active">
+                Route Guards & Resolvers
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['observables-rxjs']" 
+                routerLinkActive="active">
+                Observables & RxJS
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['http-client']" 
+                routerLinkActive="active">
+                HTTP Client & Interceptors
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['state-management-basics']" 
+                routerLinkActive="active">
+                State Management Basics
+            </button>
+            <button 
+                class="styled" 
+                [routerLink]="['component-communication']" 
+                routerLinkActive="active">
+                Component Communication (Input, Output, Services)
+            </button>
     </div>
 
     <div class="sub-components-wraper">

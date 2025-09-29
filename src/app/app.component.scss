@@ -3,7 +3,6 @@ p,h1,h2,h3,h4,h5,h6{
     padding: 0px;
 }
 .wraper{
-    // width: 100vw;
     height: 100vh;
     overflow: hidden;
     display: flex;
@@ -58,7 +57,21 @@ p,h1,h2,h3,h4,h5,h6{
             height: 40px;
             border-radius: 10px;  
             padding: 10px;  
+            &:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+                background-color: #d0e8ff;
+           }
+  
+            &.active {
+                background-color: #007bff !important;
+                transform: translateY(-5px);
+                box-shadow: 0 8px 20px rgba(0, 123, 255, 0.4);
+            }
     }
+    
+  
+ 
    
 } 
 .modules{
@@ -68,6 +81,7 @@ p,h1,h2,h3,h4,h5,h6{
 }  
   
 }
+
 
 
 

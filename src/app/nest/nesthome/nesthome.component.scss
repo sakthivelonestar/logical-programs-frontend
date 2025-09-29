@@ -10,56 +10,6 @@ p,h1,h2,h3,h4,h5,h6{
     justify-content: center;
     align-self: center;
    
-    .list{
-        height: 80%;
-        width: 20%;
-        overflow-y: auto;
-        display:flex;
-        flex-direction: column;
-        gap: 10px;    
-        padding: 20px 20px 150px 20px;
-        border-right: 1px solid rgba(128, 128, 128, 0.195);
-        border-radius: 5px;
-
-        .styled {
-            // height: 40px;
-            margin-bottom: 10px;
-            border: 0;
-            padding: 10px 15px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            text-align: center;
-            color: #f2da656d;
-            text-shadow: 1px 1px 1px #000;
-            border-radius: 10px;
-            background-color: rgba(0, 220, 213, 0.504);
-            background-image: linear-gradient(
-                to top left,
-                rgba(0, 0, 0, 0.2),
-                rgba(0, 0, 0, 0.2) 30%,
-                rgba(0, 0, 0, 0)
-            );
-            box-shadow:
-                inset 2px 2px 3px rgba(255, 255, 255, 0.6),
-                inset -2px -2px 3px rgba(0, 0, 0, 0.6),
-                2px 2px 5px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s, transform 0.2s;
-            cursor: pointer;
-        }
-        
-        .styled:hover {
-            color: #fff;
-            background-color: rgb(35, 137, 220);
-            transform: scale(1.03);
-        }
-        
-        .styled:active {
-            box-shadow:
-                inset -2px -2px 3px rgba(255, 255, 255, 0.6),
-                inset 2px 2px 3px rgba(0, 0, 0, 0.6);
-            transform: scale(0.98);
-        }
-    }
     .sub-components-wraper{
         height: 100%;
         width: 80%;

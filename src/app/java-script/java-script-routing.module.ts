@@ -22,11 +22,11 @@ const routes: Routes = [
       children:[
          {
             path: '',
-            redirectTo: 'controleflow',
+            redirectTo: 'control-flow',
             pathMatch: 'full'   
         },
         {
-          path: 'controleflow',
+          path: 'control-flow',
           component:ControlFlowComponent 
         },
         {

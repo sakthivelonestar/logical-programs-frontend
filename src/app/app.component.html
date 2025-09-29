@@ -2,39 +2,57 @@
   <h1>Fullstack Technologies</h1>
 
   <div class="card-wraper">
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('javascript')">
+    <div 
+      class="card" 
+      [routerLink]="['javascript']" 
+      routerLinkActive="active">
       JavaScript
     </div>
-    <!-- <div class="card" routerLinkActive="active" (click)="navigateTo('typescript')">
-      TypeScript
-    </div> -->
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('angular')">
+    <div 
+      class="card" 
+      [routerLink]="['angular']" 
+      routerLinkActive="active">
       Angular
     </div>
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('d3js')">
+    <div 
+      class="card" 
+      [routerLink]="['d3js']" 
+      routerLinkActive="active">
       D3 Js
     </div>
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('nest')">
+    <div 
+      class="card" 
+      [routerLink]="['nest']" 
+      routerLinkActive="active">
       Nest Js
     </div>
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('sql')">
+    <div 
+      class="card" 
+      [routerLink]="['sql']" 
+      routerLinkActive="active">
       SQL
     </div>
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('gitHub')">
+    <div 
+      class="card" 
+      [routerLink]="['gitHub']" 
+      routerLinkActive="active">
       Git Hub
     </div>
-    <div class="card" routerLinkActive="active"  (click)="navigateTo('aws')">
+    <div 
+      class="card" 
+      [routerLink]="['aws']" 
+      routerLinkActive="active">
       Aws
     </div>
-     <div class="card" routerLinkActive="active"  (click)="navigateTo('store')">
-       Highlights  Store
+    <div 
+      class="card" 
+      [routerLink]="['store']" 
+      routerLinkActive="active">
+      Highlights Store
     </div>
   </div>
+  
   <div class="modules">
     <router-outlet></router-outlet>
   </div>
 </div>
-
-
-
-

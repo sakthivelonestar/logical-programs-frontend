@@ -1,14 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ArrayMethodsComponent } from '../array-methods/array-methods.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-js',
   standalone: true,
-  imports: [RouterModule,ArrayMethodsComponent],
+  imports: [CommonModule,RouterModule],
   templateUrl: './js.component.html',
   styleUrl: './js.component.scss'
 })
 export class JsComponent {
+
 
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { MaximizeDirective } from '../../directives/maximize.directive';
 
 @Component({
@@ -10,5 +10,7 @@ import { MaximizeDirective } from '../../directives/maximize.directive';
   styleUrl: './angular-architecture.component.scss'
 })
 export class AngularArchitectureComponent {
+
+
 
 }

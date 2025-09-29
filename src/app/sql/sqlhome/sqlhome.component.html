@@ -1,17 +1,72 @@
 <div class="wraper">
-        <div class="list">
-        <button class="styled" routerLink="data-types">Data Types & Tables</button>
-        <button class="styled" routerLink="basic-queries">Basic Queries</button>
-        <button class="styled" routerLink="filtering">Filtering & Sorting</button>
-        <button class="styled" routerLink="joins">Joins & Relationships</button>
+    <div class="list">
+        <button 
+            class="styled" 
+            [routerLink]="['data-types']" 
+            routerLinkActive="active">
+            Data Types & Tables
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['basic-queries']" 
+            routerLinkActive="active">
+            Basic Queries
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['filtering']" 
+            routerLinkActive="active">
+            Filtering & Sorting
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['joins']" 
+            routerLinkActive="active">
+            Joins & Relationships
+        </button>
         <!-- Intermediate -->
-        <button class="styled" routerLink="aggregations">Aggregation Functions</button>
-        <button class="styled" routerLink="window-functions">Window Functions</button>
-        <button class="styled" routerLink="subqueries">Subqueries & CTEs</button>
-        <button class="styled" routerLink="stored-procedures">Stored Procedures & Functions</button>
-        <button class="styled" routerLink="transactions">Transactions & ACID</button>
-        <button class="styled" routerLink="indexing">Indexing & Constraints</button>
-        <button class="styled" routerLink="advanced-sql">Interview-sql</button>
+        <button 
+            class="styled" 
+            [routerLink]="['aggregations']" 
+            routerLinkActive="active">
+            Aggregation Functions
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['window-functions']" 
+            routerLinkActive="active">
+            Window Functions
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['subqueries']" 
+            routerLinkActive="active">
+            Subqueries & CTEs
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['stored-procedures']" 
+            routerLinkActive="active">
+            Stored Procedures & Functions
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['transactions']" 
+            routerLinkActive="active">
+            Transactions & ACID
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['indexing']" 
+            routerLinkActive="active">
+            Indexing & Constraints
+        </button>
+        <button 
+            class="styled" 
+            [routerLink]="['advanced-sql']" 
+            routerLinkActive="active">
+            Interview-sql
+        </button>
     </div>
 
     <div class="sub-components-wraper">

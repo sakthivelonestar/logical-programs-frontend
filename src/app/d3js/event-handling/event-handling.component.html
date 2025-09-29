@@ -31,6 +31,8 @@
 
       <pre><code>
 <span class="comment">// sample data</span>
+ <span class="keyword">interface</span> <span class="type">Point</span> &#123; x: <span class="keyword">number</span>; y: <span class="keyword">number</span>; &#125;
+
 <span class="keyword">const</span> data1 = Array.from(&#123;length: <span class="number">15</span>&#125;, (_, i) =&gt; (&#123;x: i*<span class="number">20</span>, y: Math.random()*<span class="number">100</span>&#125;));
 
 <span class="keyword">const</span> x1 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">300</span>]).range([<span class="number">10</span>,<span class="number">390</span>]);
@@ -78,7 +80,7 @@ svg1.selectAll(<span class="string">'circle'</span>)
 <span class="keyword">const</span> svg2 = d3.select(<span class="string">'#event-line'</span>);
 svg2.selectAll(<span class="string">'*'</span>).remove();
 
-<span class="keyword">const</span> lineGen2 = d3.line()
+<span class="keyword">const</span> lineGen2 = d3.line &gt;Point>()
   .x(d =&gt; x2(d.x))
   .y(d =&gt; y2(d.y))
   .curve(d3.curveMonotoneX);
@@ -106,49 +108,62 @@ svg2.selectAll(<span class="string">'*'</span>).remove();
       <h2>3. Area Chart with Drag Event</h2>
       <p>Drag points on the area chart to update their position.</p>
 
-      <pre><code>
-<span class="comment">// sample data</span>
-<span class="keyword">let</span> data3 = [&#123;x:<span class="number">0</span>,y:<span class="number">20</span>&#125;,&#123;x:<span class="number">50</span>,y:<span class="number">60</span>&#125;,&#123;x:<span class="number">100</span>,y:<span class="number">40</span>&#125;,&#123;x:<span class="number">150</span>,y:<span class="number">80</span>&#125;,&#123;x:<span class="number">200</span>,y:<span class="number">50</span>&#125;];
+    <pre><code>
+<span class="comment">// inside Angular component</span>
+<span class="keyword">eventAreaExample</span>() &#123;
+  <span class="keyword">interface</span> <span class="type">Point</span> &#123; x: <span class="keyword">number</span>; y: <span class="keyword">number</span>; &#125;
 
-<span class="keyword">const</span> x3 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">200</span>]).range([<span class="number">10</span>,<span class="number">390</span>]);
-<span class="keyword">const</span> y3 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">100</span>]).range([<span class="number">140</span>,<span class="number">10</span>]);
+  <span class="comment">// sample data</span>
+  <span class="keyword">let</span> data3: <span class="type">Point[]</span> = [
+    &#123; x: <span class="number">0</span>, y: <span class="number">20</span> &#125;,
+    &#123; x: <span class="number">50</span>, y: <span class="number">60</span> &#125;,
+    &#123; x: <span class="number">100</span>, y: <span class="number">40</span> &#125;,
+    &#123; x: <span class="number">150</span>, y: <span class="number">80</span> &#125;,
+    &#123; x: <span class="number">200</span>, y: <span class="number">50</span> &#125;
+  ];
 
-<span class="keyword">const</span> svg3 = d3.select(<span class="string">'#event-area'</span>);
-svg3.selectAll(<span class="string">'*'</span>).remove();
+  <span class="keyword">const</span> x3 = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">200</span>]).range([<span class="number">10</span>, <span class="number">390</span>]);
+  <span class="keyword">const</span> y3 = d3.scaleLinear().domain([<span class="number">0</span>, <span class="number">100</span>]).range([<span class="number">140</span>, <span class="number">10</span>]);
 
-<span class="keyword">const</span> areaGen3 = d3.area()
-  .x(d =&gt; x3(d.x))
-  .y0(y3(0))
-  .y1(d =&gt; y3(d.y))
-  .curve(d3.curveCardinal);
+  <span class="keyword">const</span> svg3 = d3.select(<span class="string">'#event-area'</span>);
+  svg3.selectAll(<span class="string">'*'</span>).remove();
 
-<span class="keyword">const</span> content3 = svg3.append(<span class="string">'g'</span>);
+  <span class="keyword">const</span> areaGen3 = d3.area&lt;<span class="type">Point</span>&gt;()
+    .x(d =&gt; x3(d.x))
+    .y0(y3(<span class="number">0</span>))
+    .y1(d =&gt; y3(d.y))
+    .curve(d3.curveCardinal);
 
-<span class="comment">// draw area</span>
-content3.append(<span class="string">'path'</span>)
-  .datum(data3)
-  .attr(<span class="string">'d'</span>, areaGen3)
-  .attr(<span class="string">'fill'</span>, <span class="string">'#a6bddb'</span>)
-  .attr(<span class="string">'stroke'</span>, <span class="string">'#3690c0'</span>);
+  <span class="keyword">const</span> content3 = svg3.append(<span class="string">'g'</span>);
 
-<span class="comment">// draw draggable circles</span>
-<span class="keyword">const</span> drag = d3.drag()
-  .on(<span class="string">'drag'</span>, function(event, d) &#123;
+  <span class="comment">// draw area</span>
+  content3.append(<span class="string">'path'</span>)
+    .datum(data3)
+    .attr(<span class="string">'d'</span>, areaGen3 <span class="keyword">as any</span>)
+    .attr(<span class="string">'fill'</span>, <span class="string">'#a6bddb'</span>)
+    .attr(<span class="string">'stroke'</span>, <span class="string">'#3690c0'</span>);
+
+  <span class="comment">// drag behavior</span>
+  <span class="keyword">const</span> drag = d3.drag&lt;<span class="type">Element</span>, <span class="type">Point</span>&gt;()
+    .on(<span class="string">'drag'</span>, <span class="keyword">function</span>(event: <span class="keyword">any</span>, d: <span class="type">Point</span>) &#123;
       d.y = y3.invert(event.y);
-      d3.select(this).attr(<span class="string">'cy'</span>, y3(d.y));
-      content3.select(<span class="string">'path'</span>).attr(<span class="string">'d'</span>, areaGen3(data3));
-  &#125;);
+      d3.select(<span class="keyword">this</span>).attr(<span class="string">'cy'</span>, y3(d.y));
+      content3.select(<span class="string">'path'</span>).attr(<span class="string">'d'</span>, areaGen3(data3) <span class="keyword">as any</span>);
+    &#125;);
 
-content3.selectAll(<span class="string">'circle'</span>)
-  .data(data3)
-  .enter()
-  .append(<span class="string">'circle'</span>)
-  .attr(<span class="string">'cx'</span>, d =&gt; x3(d.x))
-  .attr(<span class="string">'cy'</span>, d =&gt; y3(d.y))
-  .attr(<span class="string">'r'</span>, <span class="number">6</span>)
-  .attr(<span class="string">'fill'</span>, <span class="string">'#2b8cbe'</span>)
-  .call(drag);
-      </code></pre>
+  <span class="comment">// draw draggable circles</span>
+  content3.selectAll&lt;SVGCircleElement, <span class="type">Point</span>&gt;(<span class="string">'circle'</span>)
+    .data(data3)
+    .enter()
+    .append(<span class="string">'circle'</span>)
+    .attr(<span class="string">'cx'</span>, d =&gt; x3(d.x))
+    .attr(<span class="string">'cy'</span>, d =&gt; y3(d.y))
+    .attr(<span class="string">'r'</span>, <span class="number">6</span>)
+    .attr(<span class="string">'fill'</span>, <span class="string">'#2b8cbe'</span>)
+    .call(drag);
+&#125;
+</code></pre>
+
 
       <p><strong>Output:</strong></p>
       <svg id="event-area" width="420" height="160" class="viz-container"></svg>

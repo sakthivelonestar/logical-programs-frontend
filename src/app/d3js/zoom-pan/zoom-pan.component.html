@@ -1,6 +1,7 @@
-  <div class="overall-wrapper" id="nestjsAuthGuards">
-        <div class="wrapper">
-            <div class="swap" onclick="toggleFullscreen()" title="Toggle view">⛶</div>
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <div class="wrapper">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'" (click)="nestjsAuthGuards.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
             
             <div class="header">
                 <p>
@@ -31,7 +32,7 @@
                 <p>Zoom in/out and pan the scatter points dynamically.</p>
 
                 <pre><code><span class="comment">// sample data</span>
-<span class="keyword">const</span> data1 = Array.from(&#125;length: <span class="number">20</span>&#125;, (_, i) => (&#125;x: i*<span class="number">20</span>, y: Math.random()*<span class="number">100</span>&#125;));
+<span class="keyword">const</span> data1 = Array.from(&#123;length: <span class="number">20</span>&#125;, (_, i) => (&#123;x: i*<span class="number">20</span>, y: Math.random()*<span class="number">100</span>&#125;));
 
 <span class="comment">// scales</span>
 <span class="keyword">const</span> x1 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">400</span>]).range([<span class="number">10</span>,<span class="number">390</span>]);
@@ -56,12 +57,12 @@ content1.selectAll(<span class="string">'circle'</span>)
 <span class="comment">// zoom behavior</span>
 <span class="keyword">const</span> zoom1 = d3.zoom()
   .scaleExtent([<span class="number">0.5</span>,<span class="number">5</span>])
-  .on(<span class="string">'zoom'</span>, (event) => &#125;
+  .on(<span class="string">'zoom'</span>, (event) => &#123;
     content1.attr(<span class="string">'transform'</span>, event.transform);
   &#125;);
 
 <span class="comment">// apply zoom to svg</span>
-svg1.call(zoom1);</code></pre>
+svg1.call(zoom1 AS any);</code></pre>
 
                 <div class="output-section">
                     <p><strong>Output:</strong></p>
@@ -76,9 +77,9 @@ svg1.call(zoom1);</code></pre>
 
                 <pre><code><span class="comment">// sample data</span>
 <span class="keyword">const</span> data2 = [
-  &#125;x:<span class="number">0</span>,y:<span class="number">30</span>&#125;,&#125;x:<span class="number">50</span>,y:<span class="number">80</span>&#125;,
-  &#125;x:<span class="number">100</span>,y:<span class="number">45</span>&#125;,&#125;x:<span class="number">150</span>,y:<span class="number">120</span>&#125;,
-  &#125;x:<span class="number">200</span>,y:<span class="number">70</span>&#125;,&#125;x:<span class="number">250</span>,y:<span class="number">100</span>&#125;
+  &#123;x:<span class="number">0</span>,y:<span class="number">30</span>&#125;,&#123;x:<span class="number">50</span>,y:<span class="number">80</span>&#125;,
+  &#123;x:<span class="number">100</span>,y:<span class="number">45</span>&#125;,&#123;x:<span class="number">150</span>,y:<span class="number">120</span>&#125;,
+  &#123;x:<span class="number">200</span>,y:<span class="number">70</span>&#125;,&#123;x:<span class="number">250</span>,y:<span class="number">100</span>&#125;
 ];
 
 <span class="keyword">const</span> x2 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">250</span>]).range([<span class="number">40</span>,<span class="number">380</span>]);
@@ -95,9 +96,12 @@ content2.append(<span class="string">'g'</span>)
 content2.append(<span class="string">'g'</span>)
   .attr(<span class="string">'transform'</span>, <span class="string">'translate(40,0)'</span>)
   .call(d3.axisLeft(y2));
+  .selectAll('text')
+  .attr('transform', 'rotate(360)')  // rotate text
+  .style('text-anchor', 'end')      // align properly
 
 <span class="comment">// line generator</span>
-<span class="keyword">const</span> lineGen2 = d3.line()
+<span class="keyword">const</span> lineGen2 = d3.line &lt;&#123;x: number, y: number&#123;&gt;()
   .x(d => x2(d.x))
   .y(d => y2(d.y))
   .curve(d3.curveMonotoneX);
@@ -105,7 +109,7 @@ content2.append(<span class="string">'g'</span>)
 <span class="comment">// draw line and points</span>
 content2.append(<span class="string">'path'</span>)
   .datum(data2)
-  .attr(<span class="string">'d'</span>, lineGen2)
+  .attr(<span class="string">'d'</span>, lineGen2 as any)
   .attr(<span class="string">'fill'</span>, <span class="string">'none'</span>)
   .attr(<span class="string">'stroke'</span>, <span class="string">'#2b8cbe'</span>)
   .attr(<span class="string">'stroke-width'</span>, <span class="number">3</span>);
@@ -121,121 +125,15 @@ content2.selectAll(<span class="string">'circle'</span>)
 
 <span class="keyword">const</span> zoom2 = d3.zoom()
   .scaleExtent([<span class="number">0.5</span>,<span class="number">5</span>])
-  .on(<span class="string">'zoom'</span>, (event) => &#125;
+  .on(<span class="string">'zoom'</span>, (event) => &#123;
     content2.attr(<span class="string">'transform'</span>, event.transform);
   &#125;);
 
-svg2.call(zoom2);</code></pre>
+svg2.call(zoom2 as any);</code></pre>
 
                 <div class="output-section">
                     <p><strong>Output:</strong></p>
                     <svg id="zoom-line" width="420" height="160" class="viz-container"></svg>
-                </div>
-            </div>
-
-            <!-- Example 3: Area Chart + Zoom/Pan -->
-            <div class="step">
-                <h2>3. Area Chart + Zoom/Pan</h2>
-                <p>Zoom or pan the area chart interactively.</p>
-
-                <pre><code><span class="comment">// sample data</span>
-<span class="keyword">const</span> data3 = [
-  &#125;x:<span class="number">0</span>,y:<span class="number">20</span>&#125;,&#125;x:<span class="number">50</span>,y:<span class="number">60</span>&#125;,
-  &#125;x:<span class="number">100</span>,y:<span class="number">40</span>&#125;,&#125;x:<span class="number">150</span>,y:<span class="number">80</span>&#125;,
-  &#125;x:<span class="number">200</span>,y:<span class="number">50</span>&#125;,&#125;x:<span class="number">250</span>,y:<span class="number">70</span>&#125;
-];
-
-<span class="keyword">const</span> x3 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">250</span>]).range([<span class="number">40</span>,<span class="number">380</span>]);
-<span class="keyword">const</span> y3 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">100</span>]).range([<span class="number">120</span>,<span class="number">20</span>]);
-
-<span class="keyword">const</span> svg3 = d3.select(<span class="string">'#zoom-area'</span>);
-<span class="keyword">const</span> content3 = svg3.append(<span class="string">'g'</span>);
-
-<span class="comment">// add axes</span>
-content3.append(<span class="string">'g'</span>)
-  .attr(<span class="string">'transform'</span>, <span class="string">'translate(0,120)'</span>)
-  .call(d3.axisBottom(x3));
-
-content3.append(<span class="string">'g'</span>)
-  .attr(<span class="string">'transform'</span>, <span class="string">'translate(40,0)'</span>)
-  .call(d3.axisLeft(y3));
-
-<span class="comment">// area generator</span>
-<span class="keyword">const</span> areaGen3 = d3.area()
-  .x(d => x3(d.x))
-  .y0(y3(<span class="number">0</span>))
-  .y1(d => y3(d.y))
-  .curve(d3.curveMonotoneX);
-
-<span class="comment">// draw area</span>
-content3.append(<span class="string">'path'</span>)
-  .datum(data3)
-  .attr(<span class="string">'d'</span>, areaGen3)
-  .attr(<span class="string">'fill'</span>, <span class="string">'rgba(43, 140, 190, 0.6)'</span>)
-  .attr(<span class="string">'stroke'</span>, <span class="string">'#2b8cbe'</span>)
-  .attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
-
-<span class="keyword">const</span> zoom3 = d3.zoom()
-  .scaleExtent([<span class="number">0.5</span>,<span class="number">5</span>])
-  .on(<span class="string">'zoom'</span>, (event) => &#125;
-    content3.attr(<span class="string">'transform'</span>, event.transform);
-  &#125;);
-
-svg3.call(zoom3);</code></pre>
-
-                <div class="output-section">
-                    <p><strong>Output:</strong></p>
-                    <svg id="zoom-area" width="420" height="160" class="viz-container"></svg>
-                </div>
-            </div>
-
-            <!-- Example 4: Advanced with Reset Button -->
-            <div class="step">
-                <h2>4. Advanced: Multi-Series with Reset Button</h2>
-                <p>Multiple data series with zoom controls and reset functionality.</p>
-
-                <pre><code><span class="comment">// multiple series data</span>
-<span class="keyword">const</span> series1 = Array.from(&#125;length: <span class="number">15</span>&#125;, (_, i) => (&#125;x: i*<span class="number">15</span>, y: <span class="number">30</span> + Math.sin(i*<span class="number">0.5</span>)*<span class="number">20</span>&#125;));
-<span class="keyword">const</span> series2 = Array.from(&#125;length: <span class="number">15</span>&#125;, (_, i) => (&#125;x: i*<span class="number">15</span>, y: <span class="number">60</span> + Math.cos(i*<span class="number">0.3</span>)*<span class="number">25</span>&#125;));
-
-<span class="keyword">const</span> x4 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">210</span>]).range([<span class="number">40</span>,<span class="number">380</span>]);
-<span class="keyword">const</span> y4 = d3.scaleLinear().domain([<span class="number">0</span>,<span class="number">100</span>]).range([<span class="number">120</span>,<span class="number">20</span>]);
-
-<span class="keyword">const</span> svg4 = d3.select(<span class="string">'#zoom-advanced'</span>);
-<span class="keyword">const</span> content4 = svg4.append(<span class="string">'g'</span>);
-
-<span class="comment">// add grid lines</span>
-content4.append(<span class="string">'g'</span>)
-  .attr(<span class="string">'class'</span>, <span class="string">'grid'</span>)
-  .attr(<span class="string">'transform'</span>, <span class="string">'translate(0,120)'</span>)
-  .call(d3.axisBottom(x4).tickSize(-<span class="number">100</span>).tickFormat(<span class="string">''</span>));
-
-<span class="comment">// draw both series</span>
-<span class="keyword">const</span> line4 = d3.line().x(d => x4(d.x)).y(d => y4(d.y)).curve(d3.curveMonotoneX);
-
-content4.append(<span class="string">'path'</span>).datum(series1).attr(<span class="string">'d'</span>, line4)
-  .attr(<span class="string">'fill'</span>, <span class="string">'none'</span>).attr(<span class="string">'stroke'</span>, <span class="string">'#e74c3c'</span>).attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
-
-content4.append(<span class="string">'path'</span>).datum(series2).attr(<span class="string">'d'</span>, line4)
-  .attr(<span class="string">'fill'</span>, <span class="string">'none'</span>).attr(<span class="string">'stroke'</span>, <span class="string">'#2b8cbe'</span>).attr(<span class="string">'stroke-width'</span>, <span class="number">2</span>);
-
-<span class="keyword">const</span> zoom4 = d3.zoom()
-  .scaleExtent([<span class="number">0.5</span>,<span class="number">10</span>])
-  .on(<span class="string">'zoom'</span>, (event) => &#125;
-    content4.attr(<span class="string">'transform'</span>, event.transform);
-  &#125;);
-
-svg4.call(zoom4);
-
-<span class="comment">// reset function</span>
-<span class="keyword">function</span> resetZoom() &#125;
-  svg4.transition().duration(<span class="number">750</span>).call(zoom4.transform, d3.zoomIdentity);
-&#125;</code></pre>
-
-                <div class="output-section">
-                    <p><strong>Output:</strong></p>
-                    <button onclick="resetAdvancedZoom()" style="margin: 0 20px 10px 20px; padding: 8px 16px; background: #2b8cbe; color: white; border: none; border-radius: 4px; cursor: pointer;">Reset Zoom</button>
-                    <svg id="zoom-advanced" width="420" height="160" class="viz-container"></svg>
                 </div>
             </div>
         </div>

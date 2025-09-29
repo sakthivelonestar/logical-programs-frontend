@@ -1,20 +1,97 @@
 <div class="wraper">
-    <div class="list">
-        <!-- Fundamentals -->
-        <button class="styled" routerLink="controleflow">Control Flow </button>
-        <button class="styled" routerLink="functions">Functions</button>
-        <button class="styled" routerLink="array-methods">Array Methods</button>
-        <!-- Intermediate -->
-        <button class="styled" routerLink="clousers">Closures</button>
-        <button class="styled" routerLink="prototypes">Prototypes & Inheritance</button>
-        <button class="styled" routerLink="promises">Promises & Async/Await</button>
-        <button class="styled" routerLink="dom">DOM Manipulation</button> 
-        <button class="styled" routerLink="math">Math</button>
-        <button class="styled" routerLink="date">Date & Time</button>
-        <button class="styled" routerLink="string-methods">String Methods</button>
-        <button class="styled" routerLink="interview-js">Interview-Js</button> 
-    </div>
-    <div class="sub-components-wraper">
-        <router-outlet></router-outlet>
-    </div>
+  <div class="list">
+    <!-- Fundamentals -->
+    <button 
+      class="styled" 
+      routerLink="control-flow" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Control Flow
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="functions" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Functions
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="array-methods" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Array Methods
+    </button>
+
+    <!-- Intermediate -->
+    <button 
+      class="styled" 
+      routerLink="clousers" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Closures
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="prototypes" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Prototypes & Inheritance
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="promises" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Promises & Async/Await
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="dom" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      DOM Manipulation
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="math" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Math
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="date" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Date & Time
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="string-methods" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      String Methods
+    </button>
+
+    <button 
+      class="styled" 
+      routerLink="interview-js" 
+      routerLinkActive="active" 
+      [routerLinkActiveOptions]="{ exact: true }">
+      Interview-Js
+    </button> 
+  </div>
+
+  <div class="sub-components-wraper">
+    <router-outlet></router-outlet>
+  </div>
 </div>
