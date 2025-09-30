@@ -26,20 +26,22 @@
         overflow-y: auto;
         display:flex;
         flex-direction: column;
+        justify-content: space-evenly;
         gap: 10px;
         padding: 20px 20px 150px 20px;
         border-right: 1px solid rgba(128, 128, 128, 0.195);
         border-radius: 5px;
 
         .styled {
-            // height: 40px;
+            width: 100%;
+            height: 20% !important;
             margin-bottom: 10px;
             border: 0;
             padding: 10px 15px;
             font-size: 0.9rem;
             font-weight: bold;
             text-align: center;
-            color: #f2da656d;
+            color: #65ddf26d;
             text-shadow: 1px 1px 1px #000;
             border-radius: 10px;
             background-color: rgba(0, 220, 213, 0.504);
@@ -70,9 +72,18 @@
             transform: scale(0.98);
         }
     }
-    
+
 .active {
   background-color: #e70c0cd7 !important;
   color: white !important;
   font-weight: bold;
+}
+
+
+.overall-wrapper {
+  // background-image: url("/assets/2151266291.jpg");
+  background-repeat: no-repeat; 
+  background-position: fixed;  
+  // height: 71.5%;
+  border-radius: 5px;
 }

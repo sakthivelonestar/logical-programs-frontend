@@ -3,7 +3,7 @@ p, h1, h2, h3, h4, h5, h6 {
     padding: 0px;
   }
  
-  .oveall-wraper {
+  .overall-wrapper {
     padding: 20px 20px 130px 20px;
     display: flex;
     flex-direction: column;
@@ -71,6 +71,7 @@ p, h1, h2, h3, h4, h5, h6 {
               border-bottom: 1px solid rgba(128, 128, 128, 0.2);
               width: 100%;
             }
+           
           
           @media (max-width: 992px) {
             width: 100%;
@@ -92,6 +93,7 @@ p, h1, h2, h3, h4, h5, h6 {
             justify-content: start;
             flex-wrap: wrap;
             gap: 20px;
+
           }
           
           .method {
@@ -99,6 +101,9 @@ p, h1, h2, h3, h4, h5, h6 {
             border-radius: 8px;
             padding: 12px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+                 &:hover {
+            background-color: rgba(0, 255, 21, 0.15);
+          }
             
             h4 {
               margin-bottom: 10px;
@@ -138,6 +143,8 @@ p, h1, h2, h3, h4, h5, h6 {
             gap: 15px;
           }
         }
+
+        
       }
   
       // problems

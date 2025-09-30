@@ -1,4 +1,4 @@
-<div class="oveall-wraper"  appMaximize #controlflow="maximize" id="controlflow">
+<div class="overall-wrapper"  appMaximize #controlflow="maximize" id="controlflow">
     <div class="wraper">
         <img class="swap" *ngIf="controlflow.checkfullscreen() ==  'hide'" (click)="controlflow.toggle()" width="20px" height="20px" src="../../../assets/expand.svg" alt="">
         <img class="swap" *ngIf="controlflow.checkfullscreen() !=  'hide'" (click)="controlflow.toggle()" width="20px" height="20px"  src="../../../assets/Minimize icon.svg" alt="">

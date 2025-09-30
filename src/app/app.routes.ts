@@ -6,15 +6,10 @@ export const routes: Routes = [
    {
     path:"",
     loadChildren: () => import('./java-script/java-script.module').then(m => m.JavaScriptModule)
-    
    },
    {
     path: "javascript",
     loadChildren: () => import('./java-script/java-script.module').then(m => m.JavaScriptModule)
-   },
-   {
-      path: "typescript",
-      loadChildren: () => import('./type-script/type-script.module').then(m => m.TypeScriptModule)
    },
    {
       path: "angular",
