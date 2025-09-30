@@ -15,6 +15,7 @@ import { ForceLayoutsComponent } from './force-layouts/force-layouts.component';
 import { ZoomPanComponent } from './zoom-pan/zoom-pan.component';
 import { BrushComponentsComponent } from './brush-components/brush-components.component';
 import { EventHandlingComponent } from './event-handling/event-handling.component';
+import { InterviewD3Component } from './interview-d3/interview-d3.component';
 
 const routes: Routes = [
       
@@ -82,6 +83,10 @@ const routes: Routes = [
                    {
                     path: 'event-handling',
                     component: EventHandlingComponent
+                  },
+                  {
+                    path: 'interview-d3',
+                    component: InterviewD3Component
                   }
 
                 ]

@@ -1,0 +1,977 @@
+<div class="overall-wrapper" appMaximize #arrayMethodsConcepts="maximize" id="arrayMethodsConcepts">
+    <div class="examples">
+  <div class="wrapper">
+             <h2>D3.js Interview Questions</h2>
+             <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() == 'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/expand.svg" alt="Expand">
+            <img class="swap" *ngIf="arrayMethodsConcepts.checkfullscreen() != 'hide'" (click)="arrayMethodsConcepts.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+        </div>
+
+  <div class="question-answer">
+    <h4>1) What is D3.js? Why is it used?</h4>
+    <p>
+      <strong>Answer:</strong> D3.js (Data-Driven Documents) is a JavaScript library for creating dynamic, interactive data visualizations in web browsers. It uses HTML, SVG, and CSS to bring data to life.<br>
+
+      <strong>Key Features:</strong><br>
+      • Data binding to DOM elements<br>
+      • Dynamic transformations and transitions<br>
+      • Works with existing web standards<br>
+      • Highly customizable and flexible<br>
+
+      <strong>Basic D3.js Setup:</strong><br>
+      <code>&lt;script src="https://d3js.org/d3.v7.min.js"&gt;&lt;/script&gt;</code><br>
+
+      <strong>Simple Example:</strong><br>
+      <code>d3.select("body").append("p").text("Hello D3!");</code><br>
+
+      <strong>🧠 Why Use D3.js?</strong><br>
+      ✔️ Create custom, unique visualizations<br>
+      ✔️ Full control over visual output<br>
+      ✔️ Works with large datasets<br>
+      ✔️ Smooth animations and transitions
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>2) What are Selections in D3.js? select() vs selectAll()</h4>
+    <p>
+      <strong>Answer:</strong>  
+      Selections are the core concept in D3.js. They allow you to select and manipulate DOM elements based on data.<br>
+
+      <strong>🔹 select():</strong><br>
+      • Selects the first matching element<br>
+      • Returns a single-element selection<br>
+      <code>d3.select("#myDiv"); // Select by ID</code><br>
+      <code>d3.select(".myClass"); // Select by class</code><br>
+      <code>d3.select("p"); // Select first &lt;p&gt; element</code><br>
+
+      <strong>🔹 selectAll():</strong><br>
+      • Selects all matching elements<br>
+      • Returns a multi-element selection<br>
+      <code>d3.selectAll("p"); // Select all &lt;p&gt; elements</code><br>
+      <code>d3.selectAll(".item"); // Select all elements with class 'item'</code><br>
+
+      <strong>Chaining Methods:</strong><br>
+      <code>d3.selectAll("p").style("color", "blue").attr("class", "highlight");</code><br>
+
+      <strong>🧠 Key Differences:</strong><br>
+      ✔️ select() → First match only<br>
+      ✔️ selectAll() → All matches<br>
+      ✔️ Both return selection objects that support method chaining
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>3) Explain Data Binding in D3.js - data() and enter()</h4>
+    <p>
+      <strong>Answer:</strong> Data binding is the process of joining data to DOM elements. D3 uses the data() method to bind data and enter() to create new elements for unbound data.<br>
+
+      <strong>🔹 The data() Method:</strong><br>
+      <code>var dataset = [10, 20, 30, 40, 50];</code><br>
+      <code>d3.selectAll("p").data(dataset);</code><br>
+
+      <strong>🔹 The enter() Method:</strong><br>
+      Creates placeholder references for missing elements<br>
+      <code>d3.select("body").selectAll("p")</code><br>
+      <code>&nbsp;&nbsp;.data(dataset)</code><br>
+      <code>&nbsp;&nbsp;.enter()</code><br>
+      <code>&nbsp;&nbsp;.append("p")</code><br>
+      <code>&nbsp;&nbsp;.text(d => "Value: " + d);</code><br>
+
+      <strong>🔹 Update Pattern (Enter, Update, Exit):</strong><br>
+      <code>var circles = svg.selectAll("circle").data(dataset);</code><br>
+      <code>// Enter: Create new elements</code><br>
+      <code>circles.enter().append("circle").attr("r", 5);</code><br>
+      <code>// Update: Modify existing elements</code><br>
+      <code>circles.attr("cx", (d, i) => i * 50);</code><br>
+      <code>// Exit: Remove old elements</code><br>
+      <code>circles.exit().remove();</code><br>
+
+      <strong>🧠 Key Concept:</strong><br>
+      ✔️ data() joins data to elements<br>
+      ✔️ enter() handles new data points<br>
+      ✔️ exit() handles removed data points
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>4) What are Scales in D3.js? Types of Scales</h4>
+    <p>
+      <strong>Answer:</strong> Scales are functions that map data values (domain) to visual values (range). They handle the mathematical transformation between data space and pixel space.<br>
+
+      <strong>🔹 Linear Scale:</strong><br>
+      <code>var scale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, 100]) // Input range</code><br>
+      <code>&nbsp;&nbsp;.range([0, 500]); // Output range</code><br>
+      <code>scale(50); // Returns 250</code><br>
+
+      <strong>🔹 Ordinal Scale:</strong><br>
+      <code>var colorScale = d3.scaleOrdinal()</code><br>
+      <code>&nbsp;&nbsp;.domain(["A", "B", "C"])</code><br>
+      <code>&nbsp;&nbsp;.range(["red", "blue", "green"]);</code><br>
+
+      <strong>🔹 Band Scale:</strong><br>
+      Used for bar charts<br>
+      <code>var xScale = d3.scaleBand()</code><br>
+      <code>&nbsp;&nbsp;.domain(["Mon", "Tue", "Wed"])</code><br>
+      <code>&nbsp;&nbsp;.range([0, 300])</code><br>
+      <code>&nbsp;&nbsp;.padding(0.1);</code><br>
+
+      <strong>🔹 Time Scale:</strong><br>
+      <code>var timeScale = d3.scaleTime()</code><br>
+      <code>&nbsp;&nbsp;.domain([new Date(2020, 0, 1), new Date(2025, 0, 1)])</code><br>
+      <code>&nbsp;&nbsp;.range([0, 600]);</code><br>
+
+      <strong>🔹 Other Scales:</strong><br>
+      • scaleLog() - Logarithmic scale<br>
+      • scaleSqrt() - Square root scale<br>
+      • scalePow() - Power scale<br>
+      • scaleQuantize() - Discrete output values<br>
+
+      <strong>🧠 Common Use:</strong><br>
+      ✔️ Convert data values to pixel positions<br>
+      ✔️ Map data to colors<br>
+      ✔️ Create axes
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>5) How to Create Axes in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> Axes in D3.js are generated using scale functions and axis generators. They automatically create tick marks, labels, and axis lines.<br>
+
+      <strong>🔹 Creating Axes:</strong><br>
+
+      <strong>X-Axis (Bottom):</strong><br>
+      <code>var xScale = d3.scaleLinear().domain([0, 100]).range([0, 500]);</code><br>
+      <code>var xAxis = d3.axisBottom(xScale);</code><br>
+      <code>svg.append("g")</code><br>
+      <code>&nbsp;&nbsp;.attr("transform", "translate(0, 400)")</code><br>
+      <code>&nbsp;&nbsp;.call(xAxis);</code><br>
+
+      <strong>Y-Axis (Left):</strong><br>
+      <code>var yScale = d3.scaleLinear().domain([0, 100]).range([400, 0]);</code><br>
+      <code>var yAxis = d3.axisLeft(yScale);</code><br>
+      <code>svg.append("g")</code><br>
+      <code>&nbsp;&nbsp;.attr("transform", "translate(50, 0)")</code><br>
+      <code>&nbsp;&nbsp;.call(yAxis);</code><br>
+
+      <strong>🔹 Axis Generators:</strong><br>
+      • <strong>axisBottom():</strong> X-axis at bottom<br>
+      • <strong>axisTop():</strong> X-axis at top<br>
+      • <strong>axisLeft():</strong> Y-axis at left<br>
+      • <strong>axisRight():</strong> Y-axis at right<br>
+
+      <strong>Customizing Axes:</strong><br>
+      <code>var xAxis = d3.axisBottom(xScale)</code><br>
+      <code>&nbsp;&nbsp;.ticks(10) // Number of ticks</code><br>
+      <code>&nbsp;&nbsp;.tickSize(5) // Tick length</code><br>
+      <code>&nbsp;&nbsp;.tickFormat(d3.format(".2f")); // Format numbers</code><br>
+
+      <strong>🧠 Tips:</strong><br>
+      ✔️ Always append axes to &lt;g&gt; elements<br>
+      ✔️ Use transform to position axes<br>
+      ✔️ Y-axis range is inverted (high to low)
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>6) What are Transitions in D3.js? How to implement them?</h4>
+    <p>
+      <strong>Answer:</strong> Transitions in D3.js provide smooth, animated changes between states. They interpolate values over time for visual elements.<br>
+
+      <strong>Basic Transition Syntax:</strong><br>
+      <code>d3.selectAll("circle")</code><br>
+      <code>&nbsp;&nbsp;.transition() // Start transition</code><br>
+      <code>&nbsp;&nbsp;.duration(1000) // 1 second</code><br>
+      <code>&nbsp;&nbsp;.attr("r", 20) // Animate to radius 20</code><br>
+      <code>&nbsp;&nbsp;.style("fill", "blue");</code><br>
+
+      <strong>🔹 Transition Methods:</strong><br>
+
+      <strong>duration():</strong> Set animation duration in milliseconds<br>
+      <code>.transition().duration(2000)</code><br>
+
+      <strong>delay():</strong> Delay before starting animation<br>
+      <code>.transition().delay(500).duration(1000)</code><br>
+
+      <strong>ease():</strong> Specify easing function<br>
+      <code>.transition().ease(d3.easeBounce).duration(1000)</code><br>
+
+      <strong>🔹 Common Easing Functions:</strong><br>
+      • d3.easeLinear - Constant speed<br>
+      • d3.easeQuad - Quadratic acceleration<br>
+      • d3.easeCubic - Cubic acceleration<br>
+      • d3.easeBounce - Bouncing effect<br>
+      • d3.easeElastic - Elastic snap effect<br>
+
+      <strong>Chained Transitions:</strong><br>
+      <code>d3.select("circle")</code><br>
+      <code>&nbsp;&nbsp;.transition().duration(1000).attr("cx", 100)</code><br>
+      <code>&nbsp;&nbsp;.transition().duration(1000).attr("cy", 100);</code><br>
+
+      <strong>🧠 Best Practices:</strong><br>
+      ✔️ Keep transitions short (200-1000ms)<br>
+      ✔️ Use appropriate easing functions<br>
+      ✔️ Avoid too many simultaneous transitions
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>7) What is the difference between append() and insert() in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> Both methods add new elements to the DOM, but they differ in where the new element is placed.<br>
+
+      <strong>🔹 append():</strong><br>
+      • Adds element as the last child<br>
+      • Most commonly used method<br>
+      <code>d3.select("body").append("div").text("Last child");</code><br>
+
+      <strong>🔹 insert():</strong><br>
+      • Adds element before a specified selector<br>
+      • Requires a second parameter (selector)<br>
+      <code>d3.select("body").insert("div", "p").text("Before first p");</code><br>
+
+      <strong>Example Comparison:</strong><br>
+      <code>// HTML: &lt;body&gt;&lt;p&gt;First&lt;/p&gt;&lt;/body&gt;</code><br>
+      <code>d3.select("body").append("p").text("Second");</code><br>
+      <code>// Result: &lt;body&gt;&lt;p&gt;First&lt;/p&gt;&lt;p&gt;Second&lt;/p&gt;&lt;/body&gt;</code><br>
+
+      <code>d3.select("body").insert("p", "p").text("Before First");</code><br>
+      <code>// Result: &lt;body&gt;&lt;p&gt;Before First&lt;/p&gt;&lt;p&gt;First&lt;/p&gt;&lt;/body&gt;</code><br>
+
+      <strong>🧠 When to Use:</strong><br>
+      ✔️ Use append() in most cases<br>
+      ✔️ Use insert() when order matters<br>
+      ✔️ insert() is useful for layering SVG elements
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>8) How to Load External Data in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> D3.js provides methods to load data from various file formats like CSV, JSON, TSV, and XML.<br>
+
+      <strong>🔹 Loading CSV Files:</strong><br>
+      <code>d3.csv("data.csv").then(function(data) &#123;</code><br>
+      <code>&nbsp;&nbsp;console.log(data);</code><br>
+      <code>&nbsp;&nbsp;// Process data here</code><br>
+      <code>&#125;);</code><br>
+
+      <strong>🔹 Loading JSON Files:</strong><br>
+      <code>d3.json("data.json").then(function(data) &#123;</code><br>
+      <code>&nbsp;&nbsp;console.log(data);</code><br>
+      <code>&#125;);</code><br>
+
+      <strong>🔹 Loading TSV Files:</strong><br>
+      <code>d3.tsv("data.tsv").then(function(data) &#123;</code><br>
+      <code>&nbsp;&nbsp;console.log(data);</code><br>
+      <code>&#125;);</code><br>
+
+      <strong>🔹 Loading XML Files:</strong><br>
+      <code>d3.xml("data.xml").then(function(data) &#123;</code><br>
+      <code>&nbsp;&nbsp;console.log(data);</code><br>
+      <code>&#125;);</code><br>
+
+      <strong>Data Type Conversion:</strong><br>
+      <code>d3.csv("data.csv", function(d) &#123;</code><br>
+      <code>&nbsp;&nbsp;return &#123;</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;year: +d.year, // Convert to number</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;value: +d.value</code><br>
+      <code>&nbsp;&nbsp;&#125;;</code><br>
+      <code>&#125;).then(function(data) &#123;</code><br>
+      <code>&nbsp;&nbsp;console.log(data);</code><br>
+      <code>&#125;);</code><br>
+
+      <strong>🧠 Important Notes:</strong><br>
+      ✔️ All data loading is asynchronous (uses Promises)<br>
+      ✔️ CSV data is automatically parsed into objects<br>
+      ✔️ Use type conversion for numeric values
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>9) What are SVG elements? How are they used in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> SVG (Scalable Vector Graphics) is the foundation for most D3.js visualizations. D3 manipulates SVG elements to create charts and graphics.<br>
+
+      <strong>🔹 Creating SVG Container:</strong><br>
+      <code>var svg = d3.select("body").append("svg")</code><br>
+      <code>&nbsp;&nbsp;.attr("width", 500)</code><br>
+      <code>&nbsp;&nbsp;.attr("height", 400);</code><br>
+
+      <strong>🔹 Common SVG Elements:</strong><br>
+
+      <strong>Circle:</strong><br>
+      <code>svg.append("circle")</code><br>
+      <code>&nbsp;&nbsp;.attr("cx", 50) // Center x</code><br>
+      <code>&nbsp;&nbsp;.attr("cy", 50) // Center y</code><br>
+      <code>&nbsp;&nbsp;.attr("r", 20) // Radius</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "blue");</code><br>
+
+      <strong>Rectangle:</strong><br>
+      <code>svg.append("rect")</code><br>
+      <code>&nbsp;&nbsp;.attr("x", 100)</code><br>
+      <code>&nbsp;&nbsp;.attr("y", 100)</code><br>
+      <code>&nbsp;&nbsp;.attr("width", 50)</code><br>
+      <code>&nbsp;&nbsp;.attr("height", 80)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "red");</code><br>
+
+      <strong>Line:</strong><br>
+      <code>svg.append("line")</code><br>
+      <code>&nbsp;&nbsp;.attr("x1", 0).attr("y1", 0)</code><br>
+      <code>&nbsp;&nbsp;.attr("x2", 100).attr("y2", 100)</code><br>
+      <code>&nbsp;&nbsp;.attr("stroke", "black");</code><br>
+
+      <strong>Text:</strong><br>
+      <code>svg.append("text")</code><br>
+      <code>&nbsp;&nbsp;.attr("x", 50).attr("y", 50)</code><br>
+      <code>&nbsp;&nbsp;.text("Hello SVG");</code><br>
+
+      <strong>Path:</strong><br>
+      <code>svg.append("path")</code><br>
+      <code>&nbsp;&nbsp;.attr("d", "M 0 0 L 100 100 L 200 50")</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "none")</code><br>
+      <code>&nbsp;&nbsp;.attr("stroke", "blue");</code><br>
+
+      <strong>🧠 Key Points:</strong><br>
+      ✔️ SVG uses coordinate system (0,0 at top-left)<br>
+      ✔️ All positions and sizes are in pixels<br>
+      ✔️ Group related elements with &lt;g&gt; tags
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>10) Explain the concept of Data Join in D3.js</h4>
+    <p>
+      <strong>Answer:</strong> Data join is the process of binding data to DOM elements and handling the enter, update, and exit selections.<br>
+
+      <strong>🔹 Three States of Data Join:</strong><br>
+
+      <strong>1. Enter Selection:</strong> New data without elements<br>
+      <strong>2. Update Selection:</strong> Existing data with elements<br>
+      <strong>3. Exit Selection:</strong> Old elements without data<br>
+
+      <strong>Complete Data Join Pattern:</strong><br>
+      <code>var data = [10, 20, 30, 40, 50];</code><br>
+      <code>var circles = svg.selectAll("circle").data(data);</code><br>
+
+      <code>// ENTER: Create new circles for new data</code><br>
+      <code>circles.enter().append("circle")</code><br>
+      <code>&nbsp;&nbsp;.attr("cx", (d, i) => i * 60 + 30)</code><br>
+      <code>&nbsp;&nbsp;.attr("cy", 100)</code><br>
+      <code>&nbsp;&nbsp;.attr("r", 0) // Start with radius 0</code><br>
+      <code>&nbsp;&nbsp;.merge(circles) // Merge with update selection</code><br>
+      <code>&nbsp;&nbsp;.transition().duration(500)</code><br>
+      <code>&nbsp;&nbsp;.attr("r", d => d);</code><br>
+
+      <code>// EXIT: Remove circles for removed data</code><br>
+      <code>circles.exit()</code><br>
+      <code>&nbsp;&nbsp;.transition().duration(500)</code><br>
+      <code>&nbsp;&nbsp;.attr("r", 0)</code><br>
+      <code>&nbsp;&nbsp;.remove();</code><br>
+
+      <strong>Modern Join Syntax (D3 v5+):</strong><br>
+      <code>svg.selectAll("circle")</code><br>
+      <code>&nbsp;&nbsp;.data(data)</code><br>
+      <code>&nbsp;&nbsp;.join(</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;enter => enter.append("circle").attr("r", 0),</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;update => update.attr("fill", "blue"),</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;exit => exit.remove()</code><br>
+      <code>&nbsp;&nbsp;)</code><br>
+      <code>&nbsp;&nbsp;.attr("cx", (d, i) => i * 60)</code><br>
+      <code>&nbsp;&nbsp;.attr("r", d => d);</code><br>
+
+      <strong>🧠 Key Concept:</strong><br>
+      ✔️ Data join synchronizes data with DOM<br>
+      ✔️ Enter adds new elements<br>
+      ✔️ Update modifies existing elements<br>
+      ✔️ Exit removes old elements
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>11) How to Handle Events in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> D3.js provides the on() method to attach event listeners to DOM elements for creating interactive visualizations.<br>
+
+      <strong>Basic Event Handling:</strong><br>
+      <code>d3.select("button").on("click", function() &#123;</code><br>
+      <code>&nbsp;&nbsp;console.log("Button clicked!");</code><br>
+      <code>&#125;);</code><br>
+
+      <strong>🔹 Common Events:</strong><br>
+
+      <strong>Mouse Events:</strong><br>
+      <code>svg.selectAll("circle")</code><br>
+      <code>&nbsp;&nbsp;.on("mouseover", function(event, d) &#123;</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;d3.select(this).attr("fill", "red");</code><br>
+      <code>&nbsp;&nbsp;&#125;)</code><br>
+      <code>&nbsp;&nbsp;.on("mouseout", function(event, d) &#123;</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;d3.select(this).attr("fill", "blue");</code><br>
+      <code>&nbsp;&nbsp;&#125;)</code><br>
+      <code>&nbsp;&nbsp;.on("click", function(event, d) &#123;</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;console.log("Clicked value:", d);</code><br>
+      <code>&nbsp;&nbsp;&#125;);</code><br>
+
+      <strong>Event Types:</strong><br>
+      • click, dblclick<br>
+      • mouseover, mouseout, mousemove<br>
+      • mouseenter, mouseleave<br>
+      • touchstart, touchmove, touchend<br>
+      • drag, dragstart, dragend<br>
+
+      <strong>Accessing Event and Data:</strong><br>
+      <code>.on("click", function(event, d) &#123;</code><br>
+      <code>&nbsp;&nbsp;// event: DOM event object</code><br>
+      <code>&nbsp;&nbsp;// d: bound data</code><br>
+      <code>&nbsp;&nbsp;// this: current DOM element</code><br>
+      <code>&nbsp;&nbsp;console.log(event.pageX, event.pageY);</code><br>
+      <code>&#125;)</code><br>
+
+      <strong>Using Arrow Functions:</strong><br>
+      <code>.on("click", (event, d) => &#123;</code><br>
+      <code>&nbsp;&nbsp;// Note: 'this' doesn't refer to DOM element in arrow functions</code><br>
+      <code>&nbsp;&nbsp;d3.select(event.currentTarget).attr("fill", "green");</code><br>
+      <code>&#125;)</code><br>
+
+      <strong>🧠 Tips:</strong><br>
+      ✔️ Use d3.select(this) in regular functions<br>
+      ✔️ Use event.currentTarget in arrow functions<br>
+      ✔️ Prevent default behavior with event.preventDefault()
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>12) What are Path Generators in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> Path generators are functions that create the "d" attribute string for SVG path elements. They're essential for creating complex shapes like lines, areas, arcs, and pie charts.<br>
+
+      <strong>🔹 Line Generator:</strong><br>
+      <code>var lineGenerator = d3.line()</code><br>
+      <code>&nbsp;&nbsp;.x(d => d.x)</code><br>
+      <code>&nbsp;&nbsp;.y(d => d.y);</code><br>
+
+      <code>var data = [&#123;x: 0, y: 50&#125;, &#123;x: 100, y: 80&#125;, &#123;x: 200, y: 40&#125;];</code><br>
+      <code>svg.append("path")</code><br>
+      <code>&nbsp;&nbsp;.datum(data)</code><br>
+      <code>&nbsp;&nbsp;.attr("d", lineGenerator)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "none")</code><br>
+      <code>&nbsp;&nbsp;.attr("stroke", "blue");</code><br>
+
+      <strong>🔹 Area Generator:</strong><br>
+      <code>var areaGenerator = d3.area()</code><br>
+      <code>&nbsp;&nbsp;.x(d => d.x)</code><br>
+      <code>&nbsp;&nbsp;.y0(height) // Baseline</code><br>
+      <code>&nbsp;&nbsp;.y1(d => d.y); // Top line</code><br>
+
+      <code>svg.append("path")</code><br>
+      <code>&nbsp;&nbsp;.datum(data)</code><br>
+      <code>&nbsp;&nbsp;.attr("d", areaGenerator)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "steelblue");</code><br>
+
+      <strong>🔹 Arc Generator (Pie Charts):</strong><br>
+      <code>var arcGenerator = d3.arc()</code><br>
+      <code>&nbsp;&nbsp;.innerRadius(0) // 0 for pie, >0 for donut</code><br>
+      <code>&nbsp;&nbsp;.outerRadius(100);</code><br>
+
+      <code>var pieGenerator = d3.pie().value(d => d.value);</code><br>
+      <code>var data = [&#123;value: 10&#125;, &#123;value: 20&#125;, &#123;value: 30&#125;];</code><br>
+      <code>var arcs = pieGenerator(data);</code><br>
+
+      <code>svg.selectAll("path")</code><br>
+      <code>&nbsp;&nbsp;.data(arcs)</code><br>
+      <code>&nbsp;&nbsp;.enter().append("path")</code><br>
+      <code>&nbsp;&nbsp;.attr("d", arcGenerator)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", (d, i) => d3.schemeCategory10[i]);</code><br>
+
+      <strong>Curve Interpolation:</strong><br>
+      <code>lineGenerator.curve(d3.curveCardinal); // Smooth curves</code><br>
+      <code>lineGenerator.curve(d3.curveStep); // Step function</code><br>
+
+      <strong>🧠 Common Curves:</strong><br>
+      ✔️ curveLinear - Straight lines<br>
+      ✔️ curveCardinal - Smooth curves<br>
+      ✔️ curveBasis - B-spline<br>
+      ✔️ curveStep - Step function
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>13) What is the difference between attr() and style() in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> Both methods modify element properties, but they target different aspects of DOM elements.<br><br>
+
+      <strong>🔹 attr():</strong><br>
+      • Sets HTML/SVG attributes<br>
+      • Used for structural properties<br>
+      <code>d3.select("circle").attr("cx", 50).attr("r", 20);</code><br>
+      <code>d3.select("rect").attr("width", 100).attr("height", 50);</code><br>
+      <code>d3.select("img").attr("src", "image.jpg");</code><br><br>
+
+      <strong>🔹 style():</strong><br>
+      • Sets CSS styles<br>
+      • Used for visual styling properties<br>
+      <code>d3.select("div").style("color", "red");</code><br>
+      <code>d3.select("circle").style("fill", "blue").style("opacity", 0.5);</code><br>
+      <code>d3.select("p").style("font-size", "20px");</code><br><br>
+
+      <strong>Key Differences:</strong><br>
+      <code>// SVG fill - can use both, but attr is preferred</code><br>
+      <code>circle.attr("fill", "red"); // Preferred for SVG</code><br>
+      <code>circle.style("fill", "red"); // Works but less common</code><br><br>
+
+      <code>// CSS properties - use style()</code><br>
+      <code>div.style("background-color", "blue");</code><br>
+      <code>div.style("padding", "10px");</code><br><br>
+
+      <strong>🧠 Best Practices:</strong><br>
+      ✔️ Use attr() for SVG attributes (cx, cy, r, width, height)<br>
+      ✔️ Use style() for CSS properties (color, font-size, padding)<br>
+      ✔️ attr() is preferred for SVG fill and stroke<br>
+      ✔️ style() has higher specificity than CSS classes
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>14) How to create a Bar Chart in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> A bar chart uses rectangles (rect elements) to represent data values. Here's a complete implementation:<br><br>
+
+      <strong>Basic Bar Chart:</strong><br>
+      <code>var data = [30, 86, 168, 281, 303, 365];</code><br>
+      <code>var width = 500, height = 300;</code><br>
+      <code>var margin = &#123;top: 20, right: 20, bottom: 30, left: 40&#125;;</code><br><br>
+
+      <code>var svg = d3.select("body").append("svg")</code><br>
+      <code>&nbsp;&nbsp;.attr("width", width)</code><br>
+      <code>&nbsp;&nbsp;.attr("height", height);</code><br><br>
+
+      <code>// Create scales</code><br>
+      <code>var xScale = d3.scaleBand()</code><br>
+      <code>&nbsp;&nbsp;.domain(d3.range(data.length))</code><br>
+      <code>&nbsp;&nbsp;.range([margin.left, width - margin.right])</code><br>
+      <code>&nbsp;&nbsp;.padding(0.1);</code><br><br>
+
+      <code>var yScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, d3.max(data)])</code><br>
+      <code>&nbsp;&nbsp;.range([height - margin.bottom, margin.top]);</code><br><br>
+
+      <code>// Create bars</code><br>
+      <code>svg.selectAll("rect")</code><br>
+      <code>&nbsp;&nbsp;.data(data)</code><br>
+      <code>&nbsp;&nbsp;.enter().append("rect")</code><br>
+      <code>&nbsp;&nbsp;.attr("x", (d, i) => xScale(i))</code><br>
+      <code>&nbsp;&nbsp;.attr("y", d => yScale(d))</code><br>
+      <code>&nbsp;&nbsp;.attr("width", xScale.bandwidth())</code><br>
+      <code>&nbsp;&nbsp;.attr("height", d => yScale(0) - yScale(d))</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "steelblue");</code><br><br>
+
+      <code>// Add axes</code><br>
+      <code>svg.append("g")</code><br>
+      <code>&nbsp;&nbsp;.attr("transform", `translate(0,$&#123;height - margin.bottom&#125;)`)</code><br>
+      <code>&nbsp;&nbsp;.call(d3.axisBottom(xScale));</code><br><br>
+
+      <code>svg.append("g")</code><br>
+      <code>&nbsp;&nbsp;.attr("transform", `translate($&#123;margin.left&#125;,0)`)</code><br>
+      <code>&nbsp;&nbsp;.call(d3.axisLeft(yScale));</code><br><br>
+
+      <strong>🧠 Key Points:</strong><br>
+      ✔️ Use scaleBand() for categorical x-axis<br>
+      ✔️ Y-scale domain should start at 0<br>
+      ✔️ Bar height = yScale(0) - yScale(value)<br>
+      ✔️ Add padding between bars with .padding()
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>15) What are Domains and Ranges in D3 scales?</h4>
+    <p>
+      <strong>Answer:</strong> Domain and range are the input and output spaces of a scale function.<br><br>
+
+      <strong>🔹 Domain:</strong><br>
+      • The input data space<br>
+      • The range of your actual data values<br>
+      • What you're mapping FROM<br><br>
+
+      <strong>🔹 Range:</strong><br>
+      • The output visual space<br>
+      • Pixel coordinates or colors<br>
+      • What you're mapping TO<br><br>
+
+      <strong>Example - Temperature to Color:</strong><br>
+      <code>var colorScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, 100]) // Temperature in Celsius</code><br>
+      <code>&nbsp;&nbsp;.range(["blue", "red"]); // Cold to hot colors</code><br><br>
+
+      <code>colorScale(0); // Returns "blue"</code><br>
+      <code>colorScale(50); // Returns middle color (purple)</code><br>
+      <code>colorScale(100); // Returns "red"</code><br><br>
+
+      <strong>Example - Data to Position:</strong><br>
+      <code>var xScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, 1000]) // Data values 0-1000</code><br>
+      <code>&nbsp;&nbsp;.range([0, 500]); // Pixel positions 0-500</code><br><br>
+
+      <code>xScale(0); // Returns 0 pixels</code><br>
+      <code>xScale(500); // Returns 250 pixels</code><br>
+      <code>xScale(1000); // Returns 500 pixels</code><br><br>
+
+      <strong>Dynamic Domain from Data:</strong><br>
+      <code>var data = [5, 15, 30, 45, 60];</code><br>
+      <code>var scale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([d3.min(data), d3.max(data)])</code><br>
+      <code>&nbsp;&nbsp;.range([0, 400]);</code><br><br>
+
+      <strong>Multiple Domain/Range Values:</strong><br>
+      <code>var scale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, 50, 100]) // Three thresholds</code><br>
+      <code>&nbsp;&nbsp;.range(["blue", "yellow", "red"]); // Three colors</code><br><br>
+
+      <strong>🧠 Remember:</strong><br>
+      ✔️ Domain = Input (data space)<br>
+      ✔️ Range = Output (visual space)<br>
+      ✔️ Scale function maps domain to range<br>
+      ✔️ Use d3.min() and d3.max() for dynamic domains
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>16) Explain Force-Directed Graphs in D3.js</h4>
+    <p>
+      <strong>Answer:</strong> Force-directed graphs use physics simulation to position nodes and links. They're perfect for visualizing network relationships.<br><br>
+
+      <strong>Basic Force Simulation:</strong><br>
+      <code>var nodes = [</code><br>
+      <code>&nbsp;&nbsp;&#123;id: "A"&#125;, &#123;id: "B"&#125;, &#123;id: "C"&#125;, &#123;id: "D"&#125;</code><br>
+      <code>];</code><br><br>
+
+      <code>var links = [</code><br>
+      <code>&nbsp;&nbsp;&#123;source: "A", target: "B"&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;source: "A", target: "C"&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;source: "B", target: "D"&#125;</code><br>
+      <code>];</code><br><br>
+
+      <code>var simulation = d3.forceSimulation(nodes)</code><br>
+      <code>&nbsp;&nbsp;.force("link", d3.forceLink(links).id(d => d.id))</code><br>
+      <code>&nbsp;&nbsp;.force("charge", d3.forceManyBody())</code><br>
+      <code>&nbsp;&nbsp;.force("center", d3.forceCenter(width / 2, height / 2));</code><br><br>
+
+      <strong>🔹 Common Forces:</strong><br><br>
+
+      <strong>1. forceLink():</strong> Pulls connected nodes together<br>
+      <code>.force("link", d3.forceLink().distance(100))</code><br><br>
+
+      <strong>2. forceManyBody():</strong> Nodes repel each other<br>
+      <code>.force("charge", d3.forceManyBody().strength(-300))</code><br><br>
+
+      <strong>3. forceCenter():</strong> Pulls all nodes toward center<br>
+      <code>.force("center", d3.forceCenter(width/2, height/2))</code><br><br>
+
+      <strong>4. forceCollide():</strong> Prevents node overlap<br>
+      <code>.force("collide", d3.forceCollide().radius(20))</code><br><br>
+
+      <strong>Drawing the Graph:</strong><br>
+      <code>var link = svg.selectAll("line")</code><br>
+      <code>&nbsp;&nbsp;.data(links)</code><br>
+      <code>&nbsp;&nbsp;.enter().append("line")</code><br>
+      <code>&nbsp;&nbsp;.attr("stroke", "#999");</code><br><br>
+
+      <code>var node = svg.selectAll("circle")</code><br>
+      <code>&nbsp;&nbsp;.data(nodes)</code><br>
+      <code>&nbsp;&nbsp;.enter().append("circle")</code><br>
+      <code>&nbsp;&nbsp;.attr("r", 10)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "steelblue");</code><br><br>
+
+      <code>simulation.on("tick", () => &#123;</code><br>
+      <code>&nbsp;&nbsp;link</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("x1", d => d.source.x)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("y1", d => d.source.y)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("x2", d => d.target.x)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("y2", d => d.target.y);</code><br><br>
+
+      <code>&nbsp;&nbsp;node</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("cx", d => d.x)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("cy", d => d.y);</code><br>
+      <code>&#125;);</code><br><br>
+
+      <strong>🧠 Key Concepts:</strong><br>
+      ✔️ Simulation runs in ticks (iterations)<br>
+      ✔️ Nodes get x, y properties automatically<br>
+      ✔️ Update positions on each tick<br>
+      ✔️ Combine multiple forces for better layouts
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>17) How to implement Zoom and Pan in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> D3's zoom behavior allows users to zoom and pan visualizations for better exploration of data.<br><br>
+
+      <strong>Basic Zoom Setup:</strong><br>
+      <code>var svg = d3.select("body").append("svg")</code><br>
+      <code>&nbsp;&nbsp;.attr("width", 800)</code><br>
+      <code>&nbsp;&nbsp;.attr("height", 600);</code><br><br>
+
+      <code>var g = svg.append("g"); // Container for zoomable content</code><br><br>
+
+      <code>var zoom = d3.zoom()</code><br>
+      <code>&nbsp;&nbsp;.scaleExtent([0.5, 10]) // Min and max zoom</code><br>
+      <code>&nbsp;&nbsp;.on("zoom", zoomed);</code><br><br>
+
+      <code>svg.call(zoom);</code><br><br>
+
+      <code>function zoomed(event) &#123;</code><br>
+      <code>&nbsp;&nbsp;g.attr("transform", event.transform);</code><br>
+      <code>&#125;</code><br><br>
+
+      <strong>🔹 Zoom Configuration:</strong><br><br>
+
+      <strong>Scale Extent:</strong> Set min/max zoom levels<br>
+      <code>.scaleExtent([0.5, 10]) // 0.5x to 10x zoom</code><br><br>
+
+      <strong>Translate Extent:</strong> Limit panning area<br>
+      <code>.translateExtent([[0, 0], [width, height]])</code><br><br>
+
+      <strong>Programmatic Zoom:</strong><br>
+      <code>// Zoom to specific transform</code><br>
+      <code>svg.transition().duration(750)</code><br>
+      <code>&nbsp;&nbsp;.call(zoom.transform, d3.zoomIdentity.scale(2));</code><br><br>
+
+      <code>// Zoom to specific bounds</code><br>
+      <code>var bounds = [[100, 100], [400, 400]];</code><br>
+      <code>svg.transition().duration(750)</code><br>
+      <code>&nbsp;&nbsp;.call(zoom.transform, d3.zoomIdentity</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.translate(width / 2, height / 2)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.scale(2));</code><br><br>
+
+      <strong>Reset Zoom:</strong><br>
+      <code>d3.select("#reset").on("click", function() &#123;</code><br>
+      <code>&nbsp;&nbsp;svg.transition().duration(750)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.call(zoom.transform, d3.zoomIdentity);</code><br>
+      <code>&#125;);</code><br><br>
+
+      <strong>Semantic Zoom (Scale Elements):</strong><br>
+      <code>function zoomed(event) &#123;</code><br>
+      <code>&nbsp;&nbsp;var transform = event.transform;</code><br>
+      <code>&nbsp;&nbsp;g.attr("transform", transform);</code><br>
+      <code>&nbsp;&nbsp;// Keep stroke width constant</code><br>
+      <code>&nbsp;&nbsp;g.selectAll("circle").attr("r", 5 / transform.k);</code><br>
+      <code>&#125;</code><br><br>
+
+      <strong>🧠 Tips:</strong><br>
+      ✔️ Always apply zoom to SVG, transform to group<br>
+      ✔️ Use scaleExtent to prevent extreme zooming<br>
+      ✔️ Implement reset button for better UX<br>
+      ✔️ Consider semantic zoom for readability
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>18) What is the purpose of d3.extent(), d3.min(), and d3.max()?</h4>
+    <p>
+      <strong>Answer:</strong> These are array utility methods that find minimum, maximum, or both values in a dataset. They're essential for creating scales.<br><br>
+
+      <strong>🔹 d3.min():</strong> Returns minimum value<br>
+      <code>var data = [5, 15, 30, 45, 60];</code><br>
+      <code>d3.min(data); // Returns 5</code><br><br>
+
+      <code>// With accessor function</code><br>
+      <code>var objects = [&#123;value: 10&#125;, &#123;value: 30&#125;, &#123;value: 5&#125;];</code><br>
+      <code>d3.min(objects, d => d.value); // Returns 5</code><br><br>
+
+      <strong>🔹 d3.max():</strong> Returns maximum value<br>
+      <code>d3.max(data); // Returns 60</code><br>
+      <code>d3.max(objects, d => d.value); // Returns 30</code><br><br>
+
+      <strong>🔹 d3.extent():</strong> Returns [min, max] array<br>
+      <code>d3.extent(data); // Returns [5, 60]</code><br>
+      <code>d3.extent(objects, d => d.value); // Returns [5, 30]</code><br><br>
+
+      <strong>Real-World Usage in Scales:</strong><br>
+      <code>var data = [</code><br>
+      <code>&nbsp;&nbsp;&#123;year: 2020, sales: 1000&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;year: 2021, sales: 1500&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;year: 2022, sales: 2000&#125;</code><br>
+      <code>];</code><br><br>
+
+      <code>// Using extent for both min and max</code><br>
+      <code>var xScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain(d3.extent(data, d => d.year))</code><br>
+      <code>&nbsp;&nbsp;.range([0, 500]);</code><br><br>
+
+      <code>// Using max only (starting from 0)</code><br>
+      <code>var yScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, d3.max(data, d => d.sales)])</code><br>
+      <code>&nbsp;&nbsp;.range([400, 0]);</code><br><br>
+
+      <strong>Handling Missing Values:</strong><br>
+      <code>var dataWithNulls = [10, null, 30, undefined, 50];</code><br>
+      <code>d3.max(dataWithNulls); // Returns 50 (ignores null/undefined)</code><br><br>
+
+      <strong>Comparing Multiple Arrays:</strong><br>
+      <code>var sales1 = [100, 200, 300];</code><br>
+      <code>var sales2 = [150, 250, 400];</code><br>
+      <code>var maxSales = d3.max([...sales1, ...sales2]); // 400</code><br><br>
+
+      <strong>🧠 Best Practices:</strong><br>
+      ✔️ Use d3.extent() when you need both min and max<br>
+      ✔️ Use d3.max() alone for scales starting at 0<br>
+      ✔️ These functions ignore null/undefined values<br>
+      ✔️ Always use accessor functions for object arrays
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>19) How to create a Line Chart in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> Line charts use the d3.line() generator to create path elements connecting data points.<br><br>
+
+      <strong>Complete Line Chart Example:</strong><br>
+      <code>var data = [</code><br>
+      <code>&nbsp;&nbsp;&#123;date: new Date(2023, 0, 1), value: 30&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;date: new Date(2023, 1, 1), value: 50&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;date: new Date(2023, 2, 1), value: 45&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;date: new Date(2023, 3, 1), value: 70&#125;,</code><br>
+      <code>&nbsp;&nbsp;&#123;date: new Date(2023, 4, 1), value: 65&#125;</code><br>
+      <code>];</code><br><br>
+
+      <code>var width = 600, height = 400;</code><br>
+      <code>var margin = &#123;top: 20, right: 30, bottom: 30, left: 40&#125;;</code><br><br>
+
+      <code>var svg = d3.select("body").append("svg")</code><br>
+      <code>&nbsp;&nbsp;.attr("width", width)</code><br>
+      <code>&nbsp;&nbsp;.attr("height", height);</code><br><br>
+
+      <code>// Create scales</code><br>
+      <code>var xScale = d3.scaleTime()</code><br>
+      <code>&nbsp;&nbsp;.domain(d3.extent(data, d => d.date))</code><br>
+      <code>&nbsp;&nbsp;.range([margin.left, width - margin.right]);</code><br><br>
+
+      <code>var yScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, d3.max(data, d => d.value)])</code><br>
+      <code>&nbsp;&nbsp;.range([height - margin.bottom, margin.top]);</code><br><br>
+
+      <code>// Create line generator</code><br>
+      <code>var line = d3.line()</code><br>
+      <code>&nbsp;&nbsp;.x(d => xScale(d.date))</code><br>
+      <code>&nbsp;&nbsp;.y(d => yScale(d.value));</code><br><br>
+
+      <code>// Draw the line</code><br>
+      <code>svg.append("path")</code><br>
+      <code>&nbsp;&nbsp;.datum(data)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "none")</code><br>
+      <code>&nbsp;&nbsp;.attr("stroke", "steelblue")</code><br>
+      <code>&nbsp;&nbsp;.attr("stroke-width", 2)</code><br>
+      <code>&nbsp;&nbsp;.attr("d", line);</code><br><br>
+
+      <code>// Add circles at data points</code><br>
+      <code>svg.selectAll("circle")</code><br>
+      <code>&nbsp;&nbsp;.data(data)</code><br>
+      <code>&nbsp;&nbsp;.enter().append("circle")</code><br>
+      <code>&nbsp;&nbsp;.attr("cx", d => xScale(d.date))</code><br>
+      <code>&nbsp;&nbsp;.attr("cy", d => yScale(d.value))</code><br>
+      <code>&nbsp;&nbsp;.attr("r", 4)</code><br>
+      <code>&nbsp;&nbsp;.attr("fill", "steelblue");</code><br><br>
+
+      <code>// Add axes</code><br>
+      <code>svg.append("g")</code><br>
+      <code>&nbsp;&nbsp;.attr("transform", `translate(0,$&#123;height - margin.bottom&#125;)`)</code><br>
+      <code>&nbsp;&nbsp;.call(d3.axisBottom(xScale));</code><br><br>
+
+      <code>svg.append("g")</code><br>
+      <code>&nbsp;&nbsp;.attr("transform", `translate($&#123;margin.left&#125;,0)`)</code><br>
+      <code>&nbsp;&nbsp;.call(d3.axisLeft(yScale));</code><br><br>
+
+      <strong>Smooth Curves:</strong><br>
+      <code>line.curve(d3.curveCatmullRom); // Smooth interpolation</code><br><br>
+
+      <strong>Multiple Lines:</strong><br>
+      <code>var categories = ["Product A", "Product B"];</code><br>
+      <code>categories.forEach((cat, i) => &#123;</code><br>
+      <code>&nbsp;&nbsp;svg.append("path")</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.datum(data.filter(d => d.category === cat))</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("d", line)</code><br>
+      <code>&nbsp;&nbsp;&nbsp;&nbsp;.attr("stroke", d3.schemeCategory10[i]);</code><br>
+      <code>&#125;);</code><br><br>
+
+      <strong>🧠 Key Points:</strong><br>
+      ✔️ Use datum() not data() for single path<br>
+      ✔️ Set fill: "none" for line paths<br>
+      ✔️ Use scaleTime() for date axes<br>
+      ✔️ Add circles to highlight data points
+    </p>
+  </div>
+
+  <div class="question-answer">
+    <h4>20) What are Color Schemes in D3.js?</h4>
+    <p>
+      <strong>Answer:</strong> D3 provides built-in color schemes for categorical, sequential, and diverging color scales.<br><br>
+
+      <strong>🔹 Categorical Color Schemes:</strong><br>
+      For discrete, unordered categories<br><br>
+
+      <code>// schemeCategory10 - 10 distinct colors</code><br>
+      <code>var color = d3.scaleOrdinal(d3.schemeCategory10);</code><br>
+      <code>color("A"); // Returns first color</code><br>
+      <code>color("B"); // Returns second color</code><br><br>
+
+      <code>// Other categorical schemes</code><br>
+      <code>d3.schemeAccent // 8 colors</code><br>
+      <code>d3.schemeDark2 // 8 colors</code><br>
+      <code>d3.schemePaired // 12 colors</code><br>
+      <code>d3.schemeSet1 // 9 colors</code><br>
+      <code>d3.schemeSet2 // 8 colors</code><br>
+      <code>d3.schemeSet3 // 12 colors</code><br><br>
+
+      <strong>🔹 Sequential Color Schemes:</strong><br>
+      For ordered, continuous data<br><br>
+
+      <code>var colorScale = d3.scaleSequential()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, 100])</code><br>
+      <code>&nbsp;&nbsp;.interpolator(d3.interpolateBlues);</code><br><br>
+
+      <code>colorScale(0); // Light blue</code><br>
+      <code>colorScale(50); // Medium blue</code><br>
+      <code>colorScale(100); // Dark blue</code><br><br>
+
+      <code>// Popular sequential schemes:</code><br>
+      <code>d3.interpolateBlues</code><br>
+      <code>d3.interpolateGreens</code><br>
+      <code>d3.interpolateOranges</code><br>
+      <code>d3.interpolateReds</code><br>
+      <code>d3.interpolatePurples</code><br>
+      <code>d3.interpolateViridis</code><br>
+      <code>d3.interpolatePlasma</code><br><br>
+
+      <strong>🔹 Diverging Color Schemes:</strong><br>
+      For data with meaningful middle point<br><br>
+
+      <code>var divergingScale = d3.scaleSequential()</code><br>
+      <code>&nbsp;&nbsp;.domain([-100, 100])</code><br>
+      <code>&nbsp;&nbsp;.interpolator(d3.interpolateRdYlGn);</code><br><br>
+
+      <code>divergingScale(-100); // Red (negative)</code><br>
+      <code>divergingScale(0); // Yellow (neutral)</code><br>
+      <code>divergingScale(100); // Green (positive)</code><br><br>
+
+      <code>// Diverging schemes:</code><br>
+      <code>d3.interpolateRdYlGn // Red-Yellow-Green</code><br>
+      <code>d3.interpolateBrBG // Brown-Blue-Green</code><br>
+      <code>d3.interpolatePiYG // Pink-Yellow-Green</code><br>
+      <code>d3.interpolateRdBu // Red-Blue</code><br><br>
+
+      <strong>Custom Color Ranges:</strong><br>
+      <code>var customScale = d3.scaleLinear()</code><br>
+      <code>&nbsp;&nbsp;.domain([0, 50, 100])</code><br>
+      <code>&nbsp;&nbsp;.range(["blue", "yellow", "red"]);</code><br><br>
+
+      <strong>🧠 Choosing Color Schemes:</strong><br>
+      ✔️ Categorical: Unrelated categories<br>
+      ✔️ Sequential: Ordered data (low to high)<br>
+      ✔️ Diverging: Data with meaningful center<br>
+      ✔️ Consider color-blind accessibility
+    </p>
+  </div>
+
+</div>
+</div>      
