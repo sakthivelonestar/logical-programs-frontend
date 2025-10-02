@@ -16,13 +16,13 @@
     </div>
 
    <div class="examples">
-  <div class="header">
-    <h1>AWS EC2 Deployment Guide</h1>
-    <p>Angular (Frontend) and NestJS (Backend) with PostgreSQL and S3 Integration</p>
-  </div>
-
+    <div class="header">
+      <h1>AWS EC2 Deployment Guide</h1>
+      <p>Angular (Frontend) and NestJS (Backend) with PostgreSQL and S3 Integration</p>
+    </div>
+ 
   <h2>Phase 1: PostgreSQL Setup (Using Amazon RDS - Aurora PostgreSQL)</h2>
-  <ol>
+  <ol class="content">
     <li>Go to <strong>RDS</strong> in AWS Console.</li>
     <li>
       Click <strong>Create Database</strong>:
@@ -52,9 +52,9 @@
     <li>Click <strong>Create Database</strong> and wait for creation to complete.</li>
   </ol>
 
-  <h3>Inbound Rule for RDS</h3>
+  <h3>Inbound Rule for RDS</h3> <br>
   <p>Go to <strong>EC2 > Security Groups</strong>:</p>
-  <ul>
+  <ul class="content">
     <li>Find the security group used by your RDS DB</li>
     <li>
       Add inbound rule:
@@ -66,7 +66,7 @@
     </li>
   </ul>
 
-  <h3>Connect EC2 Backend to RDS</h3>
+  <h3>Connect EC2 Backend to RDS</h3> <br>
   <p>In your <code>.env</code> file in the EC2 instance, set:</p>
   <pre>DB_HOST=your-rds-endpoint.amazonaws.com
 DB_PORT=5432
@@ -80,7 +80,7 @@ DB_NAME=your_db_name</pre>
   <div class="page-break"></div>
 
   <h2>Phase 2: AWS S3 Bucket Setup</h2>
-  <ol>
+  <ol class="content">
     <li>Go to <strong>S3</strong> from AWS Console.</li>
     <li>
       Click <strong>Create Bucket</strong>:
@@ -94,7 +94,7 @@ DB_NAME=your_db_name</pre>
   </ol>
 
   <h3>Create IAM User for S3 Access</h3>
-  <ol>
+  <ol class="content">
     <li>
       Go to <strong>IAM > Users > Add User</strong>
       <ul>
@@ -118,7 +118,7 @@ AWS_SECRET_ACCESS_KEY=your_secret_key
 AWS_PUBLIC_BUCKET_NAME=your_bucket_name</pre>
 
   <h2>Phase 3: Create EC2 Instance</h2>
-  <ol>
+  <ol class="content">
     <li>Go to <strong>EC2</strong> from AWS Console.</li>
     <li>Click on <strong>Instances</strong> in the left menu.</li>
     <li>
@@ -177,7 +177,7 @@ export $(cat .env | xargs)
 pm2 restart nestd3-backend --update-env</pre>
 
   <h2>Phase 9: Access Your Application</h2>
-  <ul>
+  <ul class="content">
     <li>Frontend: <a href="http://13.201.133.122:8080">http://13.201.133.122:8080</a></li>
     <li>Backend API: <a href="http://13.201.133.122:3000">http://13.201.133.122:3000</a></li>
   </ul>
