@@ -1,0 +1,232 @@
+<div class="overall-wrapper" appMaximize #sonarQubeGuide="maximize" id="sonarQubeGuide">
+  <!-- Header -->
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="sonarQubeGuide.checkfullscreen() == 'hide'"
+      (click)="sonarQubeGuide.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="sonarQubeGuide.checkfullscreen() != 'hide'"
+      (click)="sonarQubeGuide.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+    <div class="header">
+      <h1>SonarQube Setup and Configuration Guide</h1>
+      <p>Complete guide for installing SonarQube and Scanner on Ubuntu/Linux</p>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="examples">
+
+    <!-- Section 1: Docker Installation -->
+     <h2>🐳 Part 1: SonarQube Installation with Docker</h2>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <h2>1. Install Docker</h2>
+      <p>Install Docker on your system:</p>
+      <pre id="code1">sudo apt install docker.io</pre>
+      <button class="copy-btn" onclick="copyCode('code1', 'tooltip1')">Copy Code</button>
+      <span class="tooltip" id="tooltip1">Copied!</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h2>2. Pull SonarQube Image</h2>
+      <p>Download the SonarQube Community Edition Docker image:</p>
+      <pre id="code2">sudo docker pull sonarqube:community</pre>
+      <button class="copy-btn" onclick="copyCode('code2', 'tooltip2')">Copy Code</button>
+      <span class="tooltip" id="tooltip2">Copied!</span>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h2>3. Run SonarQube Container</h2>
+      <p>Start the SonarQube container on port 9000:</p>
+      <pre id="code3">sudo docker run -d --name sonarqube -p 9000:9000 sonarqube:community</pre>
+      <button class="copy-btn" onclick="copyCode('code3', 'tooltip3')">Copy Code</button>
+      <span class="tooltip" id="tooltip3">Copied!</span>
+      <p style="margin-top: 15px;"><strong>Explanation:</strong></p>
+      <p><code>-d</code> : Run container in detached mode (background)</p>
+      <p><code>--name sonarqube</code> : Name the container "sonarqube"</p>
+      <p><code>-p 9000:9000</code> : Map port 9000 from container to host</p>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h2>4. Access SonarQube</h2>
+      <p>Open your browser and navigate to:</p>
+      <pre id="code4">http://localhost:9000/</pre>
+      <button class="copy-btn" onclick="copyCode('code4', 'tooltip4')">Copy Code</button>
+      <span class="tooltip" id="tooltip4">Copied!</span>
+      <p style="margin-top: 15px;"><strong>Default Credentials:</strong></p>
+      <p>Username: <code>admin</code></p>
+      <p>Password: <code>admin</code></p>
+      <p style="margin-top: 10px;"><em>(You will be prompted to change the password on first login)</em></p>
+    </div>
+
+    <!-- Section 2: Scanner Installation -->
+   
+      <h2> Part 2: SonarQube Scanner Installation</h2>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <h2>1. Change Directory to /opt</h2>
+      <pre id="code5">cd /opt</pre>
+      <button class="copy-btn" onclick="copyCode('code5', 'tooltip5')">Copy Code</button>
+      <span class="tooltip" id="tooltip5">Copied!</span>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step">
+      <h2>2. Download Sonar Scanner</h2>
+      <p>Download the scanner CLI from official source:</p>
+      <pre id="code6">sudo wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip</pre>
+      <button class="copy-btn" onclick="copyCode('code6', 'tooltip6')">Copy Code</button>
+      <span class="tooltip" id="tooltip6">Copied!</span>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step">
+      <h2>3. Unzip the Scanner</h2>
+      <pre id="code7">sudo unzip sonar-scanner-cli-4.8.0.2856-linux.zip</pre>
+      <button class="copy-btn" onclick="copyCode('code7', 'tooltip7')">Copy Code</button>
+      <span class="tooltip" id="tooltip7">Copied!</span>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step">
+      <h2>4. Rename for Easy Access</h2>
+      <p>Rename the extracted folder to a simpler name:</p>
+      <pre id="code8">sudo mv sonar-scanner-4.8.0.2856-linux sonar-scanner</pre>
+      <button class="copy-btn" onclick="copyCode('code8', 'tooltip8')">Copy Code</button>
+      <span class="tooltip" id="tooltip8">Copied!</span>
+    </div>
+
+    <!-- Step 9 -->
+    <div class="step">
+      <h2>5. Configure Scanner Properties</h2>
+      <p>Edit the scanner configuration file:</p>
+      <pre id="code9">sudo nano /opt/sonar-scanner/conf/sonar-scanner.properties</pre>
+      <button class="copy-btn" onclick="copyCode('code9', 'tooltip9')">Copy Code</button>
+      <span class="tooltip" id="tooltip9">Copied!</span>
+      <p style="margin-top: 15px;"><strong>Add/Verify these settings:</strong></p>
+      <pre id="code9b">sonar.host.url=http://localhost:9000
+sonar.sourceEncoding=UTF-8</pre>
+      <button class="copy-btn" onclick="copyCode('code9b', 'tooltip9b')">Copy Code</button>
+      <span class="tooltip" id="tooltip9b">Copied!</span>
+    </div>
+
+    <!-- Step 10 -->
+    <div class="step">
+      <h2>6. Add Scanner to PATH</h2>
+      <p>Add the scanner binary to your system PATH:</p>
+      <pre id="code10">export PATH="$PATH:/opt/sonar-scanner/bin"</pre>
+      <button class="copy-btn" onclick="copyCode('code10', 'tooltip10')">Copy Code</button>
+      <span class="tooltip" id="tooltip10">Copied!</span>
+      <p style="margin-top: 15px;"><strong>Make it Permanent:</strong></p>
+      <p>Add the above line to your <code>~/.bashrc</code> or <code>~/.profile</code> file:</p>
+      <pre id="code10b">echo 'export PATH="$PATH:/opt/sonar-scanner/bin"' >> ~/.bashrc
+source ~/.bashrc</pre>
+      <button class="copy-btn" onclick="copyCode('code10b', 'tooltip10b')">Copy Code</button>
+      <span class="tooltip" id="tooltip10b">Copied!</span>
+    </div>
+
+    <!-- Section 3: Project Setup -->
+      <h2> Part 3: Project Configuration and Scanning</h2>
+    
+    <!-- Step 11 -->
+    <div class="step">
+      <h2>1. Create sonar-project.properties</h2>
+      <p>In your project root directory, create a file named <code>sonar-project.properties</code>:</p>
+      <pre id="code11"># Project identification
+sonar.projectKey=my-project-key
+sonar.projectName=My Project Name
+sonar.projectVersion=1.0
+
+# Source code location
+sonar.sources=src
+
+# Encoding
+sonar.sourceEncoding=UTF-8
+
+# Language (optional)
+sonar.language=js
+
+# Exclusions (optional)
+sonar.exclusions=**/node_modules/**,**/*.spec.ts</pre>
+      <button class="copy-btn" onclick="copyCode('code11', 'tooltip11')">Copy Code</button>
+      <span class="tooltip" id="tooltip11">Copied!</span>
+    </div>
+
+    <!-- Step 12 -->
+    <div class="step">
+      <h2>2. Verify Configuration File</h2>
+      <p>Check if the properties file exists and is correctly formatted:</p>
+      <pre id="code12">cat sonar-project.properties</pre>
+      <button class="copy-btn" onclick="copyCode('code12', 'tooltip12')">Copy Code</button>
+      <span class="tooltip" id="tooltip12">Copied!</span>
+    </div>
+
+    <!-- Step 13 -->
+    <div class="step">
+      <h2>3. Run SonarQube Scanner</h2>
+      <p>Execute the scanner in your project directory:</p>
+      <pre id="code13">sonar-scanner</pre>
+      <button class="copy-btn" onclick="copyCode('code13', 'tooltip13')">Copy Code</button>
+      <span class="tooltip" id="tooltip13">Copied!</span>
+      <p style="margin-top: 15px;"><strong>With Authentication Token:</strong></p>
+      <pre id="code13b">sonar-scanner -Dsonar.login=YOUR_TOKEN_HERE</pre>
+      <button class="copy-btn" onclick="copyCode('code13b', 'tooltip13b')">Copy Code</button>
+      <span class="tooltip" id="tooltip13b">Copied!</span>
+    </div>
+
+    <!-- Step 14 -->
+    <div class="step">
+      <h2>4. Generate Authentication Token (Optional)</h2>
+      <p><strong>Steps to generate token in SonarQube:</strong></p>
+      <p>1. Login to SonarQube (http://localhost:9000)</p>
+      <p>2. Go to <strong>My Account</strong> → <strong>Security</strong></p>
+      <p>3. Enter a token name and click <strong>Generate</strong></p>
+      <p>4. Copy the generated token</p>
+      <p>5. Use it in the scanner command</p>
+    </div>
+
+    <!-- How it Works -->
+    <div class="step">
+      <h2>🎯 How It Works</h2>
+      <p><strong>1. Docker Container:</strong> SonarQube runs in an isolated Docker container on port 9000</p>
+      <p><strong>2. Scanner CLI:</strong> The scanner analyzes your code and sends results to SonarQube server</p>
+      <p><strong>3. Project Properties:</strong> The sonar-project.properties file tells the scanner what to analyze</p>
+      <p><strong>4. Web Dashboard:</strong> View analysis results, code quality, bugs, and vulnerabilities in the browser</p>
+      <p style="margin-top: 15px;"><strong>Result:</strong> You get detailed code quality reports with metrics like code smells, bugs, security vulnerabilities, and technical debt!</p>
+    </div>
+
+    <!-- Troubleshooting -->
+    <div class="step">
+      <h2>⚠️ Common Issues and Solutions</h2>
+      <p><strong>Port Already in Use:</strong></p>
+      <pre id="code14">sudo docker stop sonarqube
+sudo docker rm sonarqube
+sudo docker run -d --name sonarqube -p 9000:9000 sonarqube:community</pre>
+      <button class="copy-btn" onclick="copyCode('code14', 'tooltip14')">Copy Code</button>
+      <span class="tooltip" id="tooltip14">Copied!</span>
+      
+      <p style="margin-top: 15px;"><strong>Check Docker Container Status:</strong></p>
+      <pre id="code15">sudo docker ps
+sudo docker logs sonarqube</pre>
+      <button class="copy-btn" onclick="copyCode('code15', 'tooltip15')">Copy Code</button>
+      <span class="tooltip" id="tooltip15">Copied!</span>
+      
+      <p style="margin-top: 15px;"><strong>Scanner Command Not Found:</strong></p>
+      <p>Make sure you've added the scanner to PATH and reloaded your shell configuration</p>
+    </div>
+
+  </div>
+</div>

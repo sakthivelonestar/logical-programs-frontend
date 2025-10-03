@@ -1,0 +1,179 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <!-- Header -->
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+    <div class="header">
+      <h1>Angular Multilingual Implementation Guide</h1>
+      <p>Step-by-step guide for setting up multilingual support in Angular</p>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="examples">
+
+    <!-- Step 1 -->
+        <div class="step">
+            <h2>1. Project Setup and Configuration</h2>
+            <p><strong>Project Structure:</strong></p>
+            <pre id="code1">multilingual-app/
+├── src/
+│   ├── assets/
+│   │   └── i18n/
+│   │       ├── en.json
+│   │       ├── de.json
+│   │       └── fr.json
+│   ├── app/
+│   │   ├── app.config.ts
+│   │   └── app.component.ts
+│   └── main.ts
+└── package.json</pre>
+            <button class="copy-btn" onclick="copyCode('code1', 'tooltip1')">Copy Code</button>
+            <span class="tooltip" id="tooltip1">Copied!</span>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step">
+            <h2>2. Installation</h2>
+            <p>Install translation packages:</p>
+            <pre id="code2"># Install translation packages
+npm add &#64;ngx-translate/core
+npm add &#64;ngx-translate/http-loader</pre>
+            <button class="copy-btn" onclick="copyCode('code2', 'tooltip2')">Copy Code</button>
+            <span class="tooltip" id="tooltip2">Copied!</span>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step">
+            <h2>3. Configuration: app.config.ts</h2>
+            <pre id="code3">import  &#123; TranslateLoader, TranslateModule  &#125; from '&#64;ngx-translate/core';
+import  &#123; TranslateHttpLoader  &#125; from '&#64;ngx-translate/http-loader';
+import  &#123; HttpClient  &#125; from '&#64;angular/common/http';
+import  &#123; ApplicationConfig  &#125; from '&#64;angular/core';
+import  &#123; importProvidersFrom  &#125; from '&#64;angular/core';
+
+// Translation Loader Function
+export function HttpLoaderFactory(http: HttpClient)  &#123;
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+ &#125;
+
+export const appConfig: ApplicationConfig =  &#123;
+  providers: [
+    importProvidersFrom([
+      TranslateModule.forRoot( &#123;
+        loader:  &#123;
+          provide: TranslateLoader,
+          useFactory: HttpLoaderFactory,
+          deps: [HttpClient],
+         &#125;,
+       &#125;),
+    ]),
+  ],
+ &#125;;</pre>
+            <button class="copy-btn" onclick="copyCode('code3', 'tooltip3')">Copy Code</button>
+            <span class="tooltip" id="tooltip3">Copied!</span>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step">
+            <h2>4. Main.ts Configuration</h2>
+            <pre id="code4">import  &#123; bootstrapApplication  &#125; from '&#64;angular/platform-browser';
+import  &#123; AppComponent  &#125; from './app/app.component';
+import  &#123; appConfig  &#125; from './app/app.config';
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch(err => console.error(err));</pre>
+            <button class="copy-btn" onclick="copyCode('code4', 'tooltip4')">Copy Code</button>
+            <span class="tooltip" id="tooltip4">Copied!</span>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step">
+            <h2>5. Translation JSON Files</h2>
+            <p><strong>en.json (English)</strong></p>
+            <pre id="code5"> &#123;
+  "HELLO": "Hello",
+  "WORLD": "World",
+  "WELCOME": "Welcome to our website"
+ &#125;</pre>
+            <button class="copy-btn" onclick="copyCode('code5', 'tooltip5')">Copy Code</button>
+            <span class="tooltip" id="tooltip5">Copied!</span>
+
+            <p style="margin-top: 15px;"><strong>de.json (German)</strong></p>
+            <pre id="code6"> &#123;
+  "HELLO": "Hallo",
+  "WORLD": "Welt",
+  "WELCOME": "Willkommen auf unserer Website"
+ &#125;</pre>
+            <button class="copy-btn" onclick="copyCode('code6', 'tooltip6')">Copy Code</button>
+            <span class="tooltip" id="tooltip6">Copied!</span>
+        </div>
+
+        <!-- Step 6 -->
+        <div class="step">
+            <h2>6. Component Implementation (Standalone)</h2>
+            <p><strong>app.component.ts:</strong></p>
+            <pre id="code7">import  &#123; Component  &#125; from '&#64;angular/core';
+import  &#123; TranslateModule, TranslateService  &#125; from '&#64;ngx-translate/core';
+import  &#123; CommonModule  &#125; from '&#64;angular/common';
+
+&#64;Component( &#123;
+  selector: 'app-root',
+  standalone: true,
+  imports: [CommonModule, TranslateModule],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.scss'
+ &#125;)
+export class AppComponent  &#123;
+  
+  constructor(private translate: TranslateService)  &#123;
+    // Set default language
+    this.translate.setDefaultLang('en');
+       &#125;
+
+  // Method to switch language
+  switchLanguage(lang: string)  &#123;
+    this.translate.use(lang);
+   &#125;
+ &#125;</pre>
+            <button class="copy-btn" onclick="copyCode('code7', 'tooltip7')">Copy Code</button>
+            <span class="tooltip" id="tooltip7">Copied!</span>
+
+            <p style="margin-top: 20px;"><strong>app.component.html:</strong></p>
+            <pre id="code8">&lt;!-- Language Switcher Buttons --&gt;
+&lt;button (click)="switchLanguage('en')"&gt;English&lt;/button&gt;
+&lt;button (click)="switchLanguage('de')"&gt;German&lt;/button&gt;
+&lt;button (click)="switchLanguage('fr')"&gt;French&lt;/button&gt;
+
+&lt;!-- Content that will change based on language --&gt;
+&lt;h1&gt; &#123; &#123; "HELLO" | translate  &#125; &#125;&lt;/h1&gt;
+&lt;p&gt; &#123; &#123; "WORLD" | translate  &#125; &#125;&lt;/p&gt;
+&lt;p&gt; &#123; &#123; "WELCOME" | translate  &#125; &#125;&lt;/p&gt;</pre>
+            <button class="copy-btn" onclick="copyCode('code8', 'tooltip8')">Copy Code</button>
+            <span class="tooltip" id="tooltip8">Copied!</span>
+        </div>
+
+        <!-- How it Works -->
+        <div class="step">
+            <h2>🎯 How It Works</h2>
+            <p><strong>1. Create JSON files</strong> in <code>assets/i18n/</code> folder with your translations</p>
+            <p><strong>2. In HTML</strong>, use the pipe: <code> &#123; &#123; "KEY" | translate  &#125; &#125;</code></p>
+            <p><strong>3. Switch language</strong> by calling: <code>this.translate.use('en')</code></p>
+            <p style="margin-top: 15px;"><strong>Result:</strong> When you click a language button, ALL text with the translate pipe automatically updates to show the selected language!</p>
+        </div>
+
+
+  </div>
+</div>

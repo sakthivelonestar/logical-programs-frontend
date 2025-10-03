@@ -1,53 +1,70 @@
 <div class="wraper">
-    <div class="list">
-        <!-- D3 Fundamentals -->
-        <button 
-            class="styled" 
-            [routerLink]="['logger']" 
-            routerLinkActive="active">
-            Logger (Angular-firebase)(backend-Winston)
-        </button>
-        <button 
-            class="styled" 
-            [routerLink]="['loader']" 
-            routerLinkActive="active">
-            Http-Loader (Angular)
-        </button>
-         <button 
-            class="styled" 
-            [routerLink]="['email']" 
-            routerLinkActive="active">
-            Email (Angular),(Nestjs)
-        </button>
-        <button 
-            class="styled" 
-            [routerLink]="['swagger']" 
-            routerLinkActive="active">
-            Swager (Nestjs)
-        </button>
-         <button 
-            class="styled" 
-            [routerLink]="['prime-ng']" 
-            routerLinkActive="active">
-            PrimeNg (Angular)
-        </button>
-         <button 
-            class="styled" 
-            [routerLink]="['language']" 
-            routerLinkActive="active">
-            Language (Angular)
-        </button>
-        <button 
-            class="styled" 
-            [routerLink]="['notification']" 
-            routerLinkActive="active">
-            Notification
-        </button>
-       
-       
-       
-       
-    </div>
+   <div class="list">
+    <!-- Most important first -->
+    <button 
+        class="styled" 
+        [routerLink]="['logger']" 
+        routerLinkActive="active">
+        Logger (Angular-firebase)(backend-Winston)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['email']" 
+        routerLinkActive="active">
+        Email (Angular),(Nestjs)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['language']" 
+        routerLinkActive="active">
+        Language (Angular)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['loader']" 
+        routerLinkActive="active">
+        Http-Loader (Angular)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['prime-ng']" 
+        routerLinkActive="active">
+        PrimeNg (Angular)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['notification']" 
+        routerLinkActive="active">
+        Notification (Angular-Firebase, Node-Firebase)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['swagger']" 
+        routerLinkActive="active">
+        Swagger (Nestjs)
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['cron-job']" 
+        routerLinkActive="active">
+        Cron Job
+    </button>
+
+    <button 
+        class="styled" 
+        [routerLink]="['sonar-qube']" 
+        routerLinkActive="active">
+        SonarQube 
+    </button>
+</div>
+
 
     <div class="sub-components-wraper">
         <router-outlet></router-outlet>

@@ -5,6 +5,11 @@ import { HighlightsStoreHomeComponent } from './highlights-store-home/highlights
 import { EmailComponent } from './email/email.component';
 import { SwagerComponent } from './swager/swager.component';
 import { HttpLoderComponent } from './http-loder/http-loder.component';
+import { PrimeNgComponent } from './prime-ng/prime-ng.component';
+import { LanguageComponent } from './language/language.component';
+import { NotificationComponent } from './notification/notification.component';
+import { SonarQubeComponent } from './sonar-qube/sonar-qube.component';
+import { CronJobComponent } from './cron-job/cron-job.component';
 
 const routes: Routes = [
        {
@@ -32,7 +37,27 @@ const routes: Routes = [
                     path: 'swagger',
                     component:SwagerComponent
                   },
-                  
+                  {
+                    path: 'prime-ng',
+                    component:PrimeNgComponent
+                  },
+                   {
+                    path: 'language',
+                    component:LanguageComponent
+                  },
+                   {
+                    path: 'notification',
+                    component:NotificationComponent
+                  },
+                  {
+                    path: 'sonar-qube',
+                    component:SonarQubeComponent
+                  },
+                  {
+                    path:'cron-job',
+                    component:CronJobComponent
+                  }
+
                 ]
        },
 ];

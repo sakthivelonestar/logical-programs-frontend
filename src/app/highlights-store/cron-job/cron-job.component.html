@@ -1,0 +1,542 @@
+<div class="overall-wrapper" appMaximize #nestjsCronGuide="maximize" id="nestjsCronGuide">
+  <!-- Header -->
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="nestjsCronGuide.checkfullscreen() == 'hide'"
+      (click)="nestjsCronGuide.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="nestjsCronGuide.checkfullscreen() != 'hide'"
+      (click)="nestjsCronGuide.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+    <div class="header">
+      <h1>NestJS Cron Job Implementation Guide</h1>
+      <p>Simple and clean examples for scheduling tasks in NestJS</p>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="examples">
+
+    <!-- Step 1 -->
+    <div class="step">
+      <h2>1. Installation</h2>
+      <p>Install the required package:</p>
+      <pre id="code1">npm install &#64;nestjs/schedule</pre>
+      <button class="copy-btn" onclick="copyCode('code1', 'tooltip1')">Copy Code</button>
+      <span class="tooltip" id="tooltip1">Copied!</span>
+      <p style="margin-top: 15px;"><strong>Or with Bun:</strong></p>
+      <pre id="code1b">bun install &#64;nestjs/schedule</pre>
+      <button class="copy-btn" onclick="copyCode('code1b', 'tooltip1b')">Copy Code</button>
+      <span class="tooltip" id="tooltip1b">Copied!</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h2>2. Import ScheduleModule in App Module</h2>
+      <p><strong>app.module.ts:</strong></p>
+      <pre id="code2">import &#123; Module &#125; from '&#64;nestjs/common';
+import &#123; ScheduleModule &#125; from '&#64;nestjs/schedule';
+import &#123; TasksService &#125; from './tasks/tasks.service';
+
+&#64;Module(&#123;
+  imports: [
+    ScheduleModule.forRoot(),
+  ],
+  providers: [TasksService],
+&#125;)
+export class AppModule &#123;&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code2', 'tooltip2')">Copy Code</button>
+      <span class="tooltip" id="tooltip2">Copied!</span>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h2>3. Create Tasks Service</h2>
+      <p>Generate a service for your cron jobs:</p>
+      <pre id="code3">nest g service tasks</pre>
+      <button class="copy-btn" onclick="copyCode('code3', 'tooltip3')">Copy Code</button>
+      <span class="tooltip" id="tooltip3">Copied!</span>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h2>4. Basic Cron Job Examples</h2>
+      <p><strong>tasks.service.ts:</strong></p>
+      <pre id="code4">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Cron, CronExpression &#125; from '&#64;nestjs/schedule';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  // Run every 10 seconds
+  &#64;Cron('*/10 * * * * *')
+  handleEvery10Seconds() &#123;
+    this.logger.debug('Task running every 10 seconds');
+  &#125;
+
+  // Run every minute
+  &#64;Cron(CronExpression.EVERY_MINUTE)
+  handleEveryMinute() &#123;
+    this.logger.debug('Task running every minute');
+  &#125;
+
+  // Run every 5 minutes
+  &#64;Cron('0 */5 * * * *')
+  handleEvery5Minutes() &#123;
+    this.logger.debug('Task running every 5 minutes');
+  &#125;
+
+  // Run every hour
+  &#64;Cron(CronExpression.EVERY_HOUR)
+  handleEveryHour() &#123;
+    this.logger.debug('Task running every hour');
+  &#125;
+
+  // Run every day at midnight
+  &#64;Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
+  handleMidnight() &#123;
+    this.logger.debug('Task running at midnight');
+  &#125;
+
+  // Run every day at 2:30 AM
+  &#64;Cron('0 30 2 * * *')
+  handleDailyAt2_30AM() &#123;
+    this.logger.debug('Task running daily at 2:30 AM');
+  &#125;
+
+  // Run every Monday at 9:00 AM
+  &#64;Cron('0 0 9 * * MON')
+  handleEveryMondayAt9AM() &#123;
+    this.logger.debug('Task running every Monday at 9 AM');
+  &#125;
+
+  // Run on the first day of every month at midnight
+  &#64;Cron('0 0 0 1 * *')
+  handleFirstDayOfMonth() &#123;
+    this.logger.debug('Task running on first day of month');
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code4', 'tooltip4')">Copy Code</button>
+      <span class="tooltip" id="tooltip4">Copied!</span>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step">
+      <h2>5. Cron Expression Format</h2>
+      <p><strong>Understanding Cron Syntax:</strong></p>
+      <pre id="code5">* * * * * *
+│ │ │ │ │ │
+│ │ │ │ │ └─ Day of Week (0-7) (0 or 7 is Sunday)
+│ │ │ │ └─── Month (1-12)
+│ │ │ └───── Day of Month (1-31)
+│ │ └─────── Hour (0-23)
+│ └───────── Minute (0-59)
+└─────────── Second (0-59) [Optional]</pre>
+      <button class="copy-btn" onclick="copyCode('code5', 'tooltip5')">Copy Code</button>
+      <span class="tooltip" id="tooltip5">Copied!</span>
+      
+      <p style="margin-top: 15px;"><strong>Common Patterns:</strong></p>
+      <pre id="code5b">*           - Every unit (every minute, every hour, etc.)
+*/5         - Every 5 units (every 5 minutes, every 5 hours, etc.)
+0           - At the start (0 minutes, 0 hours, etc.)
+1,15        - At specific values (1 and 15)
+1-5         - Range (from 1 to 5)
+MON-FRI     - Monday through Friday</pre>
+      <button class="copy-btn" onclick="copyCode('code5b', 'tooltip5b')">Copy Code</button>
+      <span class="tooltip" id="tooltip5b">Copied!</span>
+    </div>
+
+    <!-- Step 6 -->
+    <div class="step">
+      <h2>6. Using CronExpression Helper</h2>
+      <p><strong>Available CronExpression constants:</strong></p>
+      <pre id="code6">import &#123; CronExpression &#125; from '&#64;nestjs/schedule';
+
+// Available constants:
+CronExpression.EVERY_SECOND           // '* * * * * *'
+CronExpression.EVERY_5_SECONDS        // '*/5 * * * * *'
+CronExpression.EVERY_10_SECONDS       // '*/10 * * * * *'
+CronExpression.EVERY_30_SECONDS       // '*/30 * * * * *'
+CronExpression.EVERY_MINUTE           // '0 * * * * *'
+CronExpression.EVERY_5_MINUTES        // '0 */5 * * * *'
+CronExpression.EVERY_10_MINUTES       // '0 */10 * * * *'
+CronExpression.EVERY_30_MINUTES       // '0 */30 * * * *'
+CronExpression.EVERY_HOUR             // '0 0 * * * *'
+CronExpression.EVERY_DAY_AT_MIDNIGHT  // '0 0 0 * * *'
+CronExpression.EVERY_DAY_AT_NOON      // '0 0 12 * * *'
+CronExpression.EVERY_WEEK             // '0 0 0 * * 0'
+CronExpression.EVERY_MONTH            // '0 0 0 1 * *'
+CronExpression.EVERY_YEAR             // '0 0 0 1 1 *'</pre>
+      <button class="copy-btn" onclick="copyCode('code6', 'tooltip6')">Copy Code</button>
+      <span class="tooltip" id="tooltip6">Copied!</span>
+    </div>
+
+    <!-- Step 7 -->
+    <div class="step">
+      <h2>7. Cron with Options (Name and Timezone)</h2>
+      <pre id="code7">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Cron, CronExpression &#125; from '&#64;nestjs/schedule';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  // Named cron job with timezone
+  &#64;Cron('0 0 9 * * MON-FRI', &#123;
+    name: 'weekday-morning-task',
+    timeZone: 'Asia/Kolkata',
+  &#125;)
+  handleWeekdayMorning() &#123;
+    this.logger.debug('Weekday morning task in IST timezone');
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code7', 'tooltip7')">Copy Code</button>
+      <span class="tooltip" id="tooltip7">Copied!</span>
+    </div>
+
+    <!-- Step 8 -->
+    <div class="step">
+      <h2>8. Interval-Based Jobs</h2>
+      <p>Run tasks at fixed intervals:</p>
+      <pre id="code8">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Interval &#125; from '&#64;nestjs/schedule';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  // Run every 10 seconds (10000 milliseconds)
+  &#64;Interval(10000)
+  handleInterval() &#123;
+    this.logger.debug('Interval task running every 10 seconds');
+  &#125;
+
+  // Run every 5 minutes (300000 milliseconds)
+  &#64;Interval(300000)
+  handleLongInterval() &#123;
+    this.logger.debug('Interval task running every 5 minutes');
+  &#125;
+
+  // Named interval
+  &#64;Interval('data-sync', 60000)
+  handleDataSync() &#123;
+    this.logger.debug('Data sync running every minute');
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code8', 'tooltip8')">Copy Code</button>
+      <span class="tooltip" id="tooltip8">Copied!</span>
+    </div>
+
+    <!-- Step 9 -->
+    <div class="step">
+      <h2>9. Timeout-Based Jobs (One-Time Execution)</h2>
+      <p>Run task once after a delay:</p>
+      <pre id="code9">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Timeout &#125; from '&#64;nestjs/schedule';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  // Run once after 5 seconds
+  &#64;Timeout(5000)
+  handleTimeout() &#123;
+    this.logger.debug('Task executed once after 5 seconds');
+  &#125;
+
+  // Named timeout
+  &#64;Timeout('startup-task', 10000)
+  handleStartupTask() &#123;
+    this.logger.debug('Startup task executed after 10 seconds');
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code9', 'tooltip9')">Copy Code</button>
+      <span class="tooltip" id="tooltip9">Copied!</span>
+    </div>
+
+    <!-- Step 10 -->
+    <div class="step">
+      <h2>10. Dynamic Cron Jobs (Start/Stop Manually)</h2>
+      <pre id="code10">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Cron, SchedulerRegistry &#125; from '&#64;nestjs/schedule';
+import &#123; CronJob &#125; from 'cron';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  constructor(private schedulerRegistry: SchedulerRegistry) &#123;&#125;
+
+  // Add a dynamic cron job
+  addCronJob(name: string, cronTime: string) &#123;
+    const job = new CronJob(cronTime, () => &#123;
+      this.logger.warn(`Job $&#123;name&#125; executing at $&#123;new Date()&#125;`);
+    &#125;);
+
+    this.schedulerRegistry.addCronJob(name, job);
+    job.start();
+
+    this.logger.warn(`Job $&#123;name&#125; added and started`);
+  &#125;
+
+  // Delete a cron job
+  deleteCronJob(name: string) &#123;
+    this.schedulerRegistry.deleteCronJob(name);
+    this.logger.warn(`Job $&#123;name&#125; deleted`);
+  &#125;
+
+  // Get all cron jobs
+  getCronJobs() &#123;
+    const jobs = this.schedulerRegistry.getCronJobs();
+    jobs.forEach((value, key) => &#123;
+      this.logger.log(`Job: $&#123;key&#125;, Next run: $&#123;value.nextDate()&#125;`);
+    &#125;);
+  &#125;
+
+  // Stop a cron job
+  stopCronJob(name: string) &#123;
+    const job = this.schedulerRegistry.getCronJob(name);
+    job.stop();
+    this.logger.warn(`Job $&#123;name&#125; stopped`);
+  &#125;
+
+  // Start a cron job
+  startCronJob(name: string) &#123;
+    const job = this.schedulerRegistry.getCronJob(name);
+    job.start();
+    this.logger.warn(`Job $&#123;name&#125; started`);
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code10', 'tooltip10')">Copy Code</button>
+      <span class="tooltip" id="tooltip10">Copied!</span>
+    </div>
+
+    <!-- Step 11 -->
+    <div class="step">
+      <h2>11. Real-World Example: Database Cleanup</h2>
+      <pre id="code11">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Cron, CronExpression &#125; from '&#64;nestjs/schedule';
+import &#123; InjectRepository &#125; from '&#64;nestjs/typeorm';
+import &#123; Repository, LessThan &#125; from 'typeorm';
+import &#123; LogEntry &#125; from './entities/log-entry.entity';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  constructor(
+    &#64;InjectRepository(LogEntry)
+    private logRepository: Repository&lt;LogEntry&gt;,
+  ) &#123;&#125;
+
+  // Delete logs older than 30 days every day at 2 AM
+  &#64;Cron('0 0 2 * * *', &#123;
+    name: 'cleanup-old-logs',
+    timeZone: 'Asia/Kolkata',
+  &#125;)
+  async cleanupOldLogs() &#123;
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    try &#123;
+      const result = await this.logRepository.delete(&#123;
+        createdAt: LessThan(thirtyDaysAgo),
+      &#125;);
+
+      this.logger.log(`Cleaned up $&#123;result.affected&#125; old log entries`);
+    &#125; catch (error) &#123;
+      this.logger.error('Error cleaning up logs:', error);
+    &#125;
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code11', 'tooltip11')">Copy Code</button>
+      <span class="tooltip" id="tooltip11">Copied!</span>
+    </div>
+
+    <!-- Step 12 -->
+    <div class="step">
+      <h2>12. Real-World Example: Email Notifications</h2>
+      <pre id="code12">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Cron &#125; from '&#64;nestjs/schedule';
+import &#123; MailerService &#125; from '&#64;nestjs-modules/mailer';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  constructor(private readonly mailerService: MailerService) &#123;&#125;
+
+  // Send weekly report every Monday at 9 AM
+  &#64;Cron('0 0 9 * * MON', &#123;
+    name: 'weekly-report',
+    timeZone: 'Asia/Kolkata',
+  &#125;)
+  async sendWeeklyReport() &#123;
+    try &#123;
+      await this.mailerService.sendMail(&#123;
+        to: 'admin&#64;example.com',
+        subject: 'Weekly Report',
+        template: 'weekly-report',
+        context: &#123;
+          reportDate: new Date().toLocaleDateString(),
+        &#125;,
+      &#125;);
+
+      this.logger.log('Weekly report sent successfully');
+    &#125; catch (error) &#123;
+      this.logger.error('Error sending weekly report:', error);
+    &#125;
+  &#125;
+
+  // Send daily reminder at 10 AM on weekdays
+  &#64;Cron('0 0 10 * * MON-FRI', &#123;
+    name: 'daily-reminder',
+  &#125;)
+  async sendDailyReminder() &#123;
+    this.logger.log('Sending daily reminders to users');
+    // Your reminder logic here
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code12', 'tooltip12')">Copy Code</button>
+      <span class="tooltip" id="tooltip12">Copied!</span>
+    </div>
+
+    <!-- Step 13 -->
+    <div class="step">
+      <h2>13. Real-World Example: API Data Sync</h2>
+      <pre id="code13">import &#123; Injectable, Logger &#125; from '&#64;nestjs/common';
+import &#123; Cron, CronExpression &#125; from '&#64;nestjs/schedule';
+import &#123; HttpService &#125; from '&#64;nestjs/axios';
+import &#123; firstValueFrom &#125; from 'rxjs';
+
+&#64;Injectable()
+export class TasksService &#123;
+  private readonly logger = new Logger(TasksService.name);
+
+  constructor(private readonly httpService: HttpService) &#123;&#125;
+
+  // Sync data from external API every 15 minutes
+  &#64;Cron('0 */15 * * * *', &#123;
+    name: 'sync-external-data',
+  &#125;)
+  async syncExternalData() &#123;
+    try &#123;
+      this.logger.log('Starting data sync from external API');
+
+      const response = await firstValueFrom(
+        this.httpService.get('https://api.example.com/data'),
+      );
+
+      // Process and save the data
+      this.logger.log(`Synced $&#123;response.data.length&#125; records`);
+    &#125; catch (error) &#123;
+      this.logger.error('Error syncing external data:', error);
+    &#125;
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code13', 'tooltip13')">Copy Code</button>
+      <span class="tooltip" id="tooltip13">Copied!</span>
+    </div>
+
+    <!-- Step 14 -->
+    <div class="step">
+      <h2>14. Disable Cron in Development</h2>
+      <p>Conditionally enable/disable cron jobs based on environment:</p>
+      <pre id="code14">import &#123; Module &#125; from '&#64;nestjs/common';
+import &#123; ScheduleModule &#125; from '&#64;nestjs/schedule';
+import &#123; ConfigModule, ConfigService &#125; from '&#64;nestjs/config';
+
+&#64;Module(&#123;
+  imports: [
+    ConfigModule.forRoot(),
+    ScheduleModule.forRoot(),
+  ],
+&#125;)
+export class AppModule &#123;&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code14', 'tooltip14')">Copy Code</button>
+      <span class="tooltip" id="tooltip14">Copied!</span>
+
+      <p style="margin-top: 15px;"><strong>In your service:</strong></p>
+      <pre id="code14b">import &#123; Injectable &#125; from '&#64;nestjs/common';
+import &#123; Cron &#125; from '&#64;nestjs/schedule';
+import &#123; ConfigService &#125; from '&#64;nestjs/config';
+
+&#64;Injectable()
+export class TasksService &#123;
+  constructor(private configService: ConfigService) &#123;&#125;
+
+  &#64;Cron('0 0 * * * *')
+  handleCron() &#123;
+    const isProduction = this.configService.get('NODE_ENV') === 'production';
+    
+    if (!isProduction) &#123;
+      return; // Skip in development
+    &#125;
+
+    // Execute cron logic only in production
+    console.log('Production cron job executed');
+  &#125;
+&#125;</pre>
+      <button class="copy-btn" onclick="copyCode('code14b', 'tooltip14b')">Copy Code</button>
+      <span class="tooltip" id="tooltip14b">Copied!</span>
+    </div>
+
+    <!-- How it Works -->
+    <div class="step">
+      <h2>🎯 How It Works</h2>
+      <p><strong>1. &#64;Cron Decorator:</strong> Schedule tasks using cron expressions</p>
+      <p><strong>2. &#64;Interval Decorator:</strong> Run tasks at fixed time intervals</p>
+      <p><strong>3. &#64;Timeout Decorator:</strong> Execute task once after a specified delay</p>
+      <p><strong>4. SchedulerRegistry:</strong> Dynamically manage cron jobs at runtime</p>
+      <p style="margin-top: 15px;"><strong>Use Cases:</strong></p>
+      <p>• Database cleanup and maintenance</p>
+      <p>• Sending scheduled notifications/emails</p>
+      <p>• Data synchronization with external APIs</p>
+      <p>• Generating periodic reports</p>
+      <p>• Backing up data</p>
+      <p>• Cache invalidation</p>
+    </div>
+
+    <!-- Quick Reference -->
+    <div class="step">
+      <h2>📋 Quick Reference</h2>
+      <pre id="code15">// Every second
+&#64;Cron('* * * * * *')
+
+// Every 30 seconds
+&#64;Cron('*/30 * * * * *')
+
+// Every minute
+&#64;Cron('0 * * * * *')
+
+// Every 5 minutes
+&#64;Cron('0 */5 * * * *')
+
+// Every hour at minute 0
+&#64;Cron('0 0 * * * *')
+
+// Every day at midnight
+&#64;Cron('0 0 0 * * *')
+
+// Every weekday at 9 AM
+&#64;Cron('0 0 9 * * MON-FRI')
+
+// First day of month at midnight
+&#64;Cron('0 0 0 1 * *')
+
+// Specific time: 2:30 PM every day
+&#64;Cron('0 30 14 * * *')</pre>
+      <button class="copy-btn" onclick="copyCode('code15', 'tooltip15')">Copy Code</button>
+      <span class="tooltip" id="tooltip15">Copied!</span>
+    </div>
+
+  </div>
+</div>
