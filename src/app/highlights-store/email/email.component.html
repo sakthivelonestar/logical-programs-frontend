@@ -1,0 +1,298 @@
+<div class="overall-wrapper"  appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+    <!-- Header -->
+    <div class="wrapper">
+ <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />      <div class="header">
+        <h1>Email Integration Guide</h1>
+        <p>Complete guide for Angular EmailJS (Frontend) and NestJS Email Service (Backend)</p>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="examples">
+      
+      <!-- Angular EmailJS Frontend Section -->
+      <h2>Angular EmailJS (Frontend)</h2>
+
+      <!-- Step 1 -->
+      <div class="step">
+        <h3>Step 1: Install EmailJS Package</h3>
+        <p>Install the EmailJS browser package in your Angular project:</p>
+        <pre #code1>npm install --save &#64;emailjs/browser</pre>
+        <button (click)="copyCode(code1, tooltip1)">Copy Code</button>
+        <span class="tooltip" #tooltip1>Copied!</span>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <h3>Step 2: Create Contact Form Template</h3>
+        <p>Add the following form template to your component HTML:</p>
+        <pre #code2>&lt;form [formGroup]="contactForm" (ngSubmit)="sendEmail()"&gt;
+  &lt;label&gt;Name&lt;/label&gt;
+  &lt;input type="text" formControlName="user_name"&gt;
+  &lt;div *ngIf="contactForm.get('user_name')?.invalid && contactForm.get('user_name')?.touched"&gt;
+    Name is required
+  &lt;/div&gt;
+
+  &lt;label&gt;Email&lt;/label&gt;
+  &lt;input type="email" formControlName="user_email"&gt;
+  &lt;div *ngIf="contactForm.get('user_email')?.invalid && contactForm.get('user_email')?.touched"&gt;
+    Valid email is required
+  &lt;/div&gt;
+
+  &lt;label&gt;Message&lt;/label&gt;
+  &lt;textarea formControlName="message"&gt;&lt;/textarea&gt;
+  &lt;div *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched"&gt;
+    Message is required
+  &lt;/div&gt;
+
+  &lt;button type="submit" [disabled]="contactForm.invalid"&gt;Send&lt;/button&gt;
+&lt;/form&gt;</pre>
+        <button (click)="copyCode(code2, tooltip2)">Copy Code</button>
+        <span class="tooltip" #tooltip2>Copied!</span>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <h3>Step 3: Import Required Modules</h3>
+        <p>Import the necessary Angular Forms and EmailJS modules in your component:</p>
+        <pre #code3>import &#123; FormBuilder, FormGroup, Validators &#125; from '&#64;angular/forms';
+import emailjs from '&#64;emailjs/browser';</pre>
+        <button (click)="copyCode(code3, tooltip3)">Copy Code</button>
+        <span class="tooltip" #tooltip3>Copied!</span>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <h3>Step 4: Implement Component Logic</h3>
+        <p>Add the following code to your component TypeScript file:</p>
+        <pre #code4>contactForm: FormGroup;
+
+constructor(private fb: FormBuilder) &#123;
+  this.contactForm = this.fb.group(&#123;
+    user_name: ['', Validators.required],
+    user_email: ['', [Validators.required, Validators.email]],
+    message: ['', Validators.required]
+  &#125;);
+&#125;
+
+sendEmail() &#123;
+  if (this.contactForm.invalid) &#123;
+    return;
+  &#125;
+
+  emailjs.send(
+    'YOUR_SERVICE_ID',    // Service ID from EmailJS
+    'YOUR_TEMPLATE_ID',   // Template ID from EmailJS
+    this.contactForm.value,
+    'YOUR_PUBLIC_KEY'     // Public Key from EmailJS
+  ).then(
+    () => &#123;
+      console.log('SUCCESS! Email sent.');
+      this.contactForm.reset();
+    &#125;,
+    (error) => &#123;
+      console.error('FAILED...', error);
+    &#125;
+  );
+&#125;</pre>
+        <button (click)="copyCode(code4, tooltip4)">Copy Code</button>
+        <span class="tooltip" #tooltip4>Copied!</span>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step">
+        <h3>Step 5: Get EmailJS Credentials</h3>
+        <p><strong>How to get SERVICE_ID, TEMPLATE_ID, and PUBLIC_KEY:</strong></p>
+        <ol>
+          <li><strong>Create an EmailJS Account:</strong> Go to <a href="https://www.emailjs.com/" target="_blank">emailjs.com</a> and sign up</li>
+          <li><strong>Add Email Service:</strong> Navigate to "Email Services" and connect your email provider (Gmail, Outlook, etc.)</li>
+          <li><strong>Copy Service ID:</strong> After adding the service, you'll see your SERVICE_ID</li>
+          <li><strong>Create Email Template:</strong> Go to "Email Templates" and create a new template with variables like &#123; &#123;user_name&#125;&#125;, &#123; &#123;user_email&#125;&#125;, &#123; &#123;message&#125;&#125;</li>
+          <li><strong>Copy Template ID:</strong> Save the template and copy its TEMPLATE_ID</li>
+          <li><strong>Get Public Key:</strong> Go to "Account" → "General" and copy your PUBLIC_KEY (User ID)</li>
+          <li><strong>Update Your Code:</strong> Replace the placeholder values in your sendEmail() function</li>
+        </ol>
+      </div>
+
+      <!-- NestJS Backend Section -->
+      <h2>NestJS Email Service (Backend)</h2>
+
+      <!-- Step 1 -->
+      <div class="step">
+        <h3>Step 1: Install Required Packages</h3>
+        <p>Install the necessary NestJS mailer packages:</p>
+        <pre #code5>npm install &#64;nestjs-modules/mailer nodemailer handlebars</pre>
+        <button (click)="copyCode(code5, tooltip5)">Copy Code</button>
+        <span class="tooltip" #tooltip5>Copied!</span>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step">
+        <h3>Step 2: Project Structure</h3>
+        <p>Create the following folder structure:</p>
+        <pre #code6>src/
+ ├── app.module.ts
+ ├── utility/
+ │    ├── base.interface.ts
+ │    └── email/
+ │         ├── email.service.ts
+ │         └── templates/
+ │              └── verify-email.hbs</pre>
+        <button (click)="copyCode(code6, tooltip6)">Copy Code</button>
+        <span class="tooltip" #tooltip6>Copied!</span>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step">
+        <h3>Step 3: Configure Environment Variables</h3>
+        <p>Add the following to your .env file:</p>
+        <pre #code7># Email Configuration
+MAIL_HOST=smtp.gmail.com
+MAIL_USER=fyndna41&#64;gmail.com
+MAIL_PASSWORD=gncbbgdacpzywidn</pre>
+        <button (click)="copyCode(code7, tooltip7)">Copy Code</button>
+        <span class="tooltip" #tooltip7>Copied!</span>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step">
+        <h3>Step 4: Configure App Module</h3>
+        <p>Add MailerModule configuration to your app.module.ts:</p>
+        <pre #code8>import &#123; MailerModule &#125; from '&#64;nestjs-modules/mailer';
+import &#123; HandlebarsAdapter &#125; from '&#64;nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import &#123; join &#125; from 'path';
+
+&#64;Module(&#123;
+  imports: [
+    MailerModule.forRoot(&#123;
+      transport: &#123;
+        host: process.env.MAIL_HOST,
+        service: 'gmail',
+        port: 2525,
+        auth: &#123;
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
+        &#125;
+      &#125;,
+      defaults: &#123;
+        from: process.env.MAIL_FROM,
+      &#125;,
+      template: &#123;
+        dir: join(__dirname, 'core', 'utils', 'email', 'templates'),
+        adapter: new HandlebarsAdapter(),
+        options: &#123;
+          strict: true,
+        &#125;,
+      &#125;,
+    &#125;),
+  ],
+&#125;)
+controllers: [AppController],
+providers: [AppService, EmailService],
+
+</pre>
+        <button (click)="copyCode(code8, tooltip8)">Copy Code</button>
+        <span class="tooltip" #tooltip8>Copied!</span>
+      </div>
+
+      <!-- Step 5 -->
+      <div class="step">
+        <h3>Step 5: Create Email Service</h3>
+        <p>Create email.service.ts with the following code:</p>
+        <pre #code9>import &#123; MailerService &#125; from '&#64;nestjs-modules/mailer';
+import &#123; Injectable &#125; from '&#64;nestjs/common';
+require('dotenv').config();
+
+&#64;Injectable()
+export class EmailService &#123;
+  constructor(private readonly mailerService: MailerService) &#123;&#125;
+
+  async sendResetPasswordEmail(fullName: string, email: string, password: string) &#123;
+    const nodemailer = require('nodemailer');
+    const transporter = nodemailer.createTransport(&#123;
+      host: process.env.MAIL_HOST,
+      port: 587,
+      secure: false,
+      auth: &#123;
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASSWORD,
+      &#125;,
+    &#125;);
+
+    let output = await this.mailerService.sendMail(&#123;        
+      from: process.env.MAIL_USER,
+      to: email,
+      subject: 'FYNDNA Password Reset Request',
+      html: `
+      &lt;div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; background-color: #f9f9f9;"&gt;
+        &lt;p style="font-size: 16px; margin: 0 0 10px;"&gt;Hi $&#123;fullName&#125;,&lt;/p&gt;
+        &lt;p style="font-size: 16px; margin: 0 0 10px;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Your account has been successfully created! Please use the credentials below to log in and change your password immediately:&lt;/p&gt;
+        &lt;div style="background-color: #fff; padding: 15px; border: 1px solid #ddd; margin-bottom: 15px;"&gt;
+          &lt;p style="font-size: 16px; margin: 0 0 5px;"&gt;&lt;strong&gt;Email:&lt;/strong&gt; &lt;span style="color: #007bff;"&gt;$&#123;email&#125;&lt;/span&gt;&lt;/p&gt;
+        &lt;/div&gt;
+        &lt;div style="display: flex; justify-content: center;"&gt;
+          &lt;a href="$&#123;password&#125;" style="background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;"&gt;
+            Reset Password
+          &lt;/a&gt;
+        &lt;/div&gt;
+        &lt;p style="font-size: 16px; display: block; text-align: center;"&gt;
+          If you didn't request this, please ignore this email or contact support.
+        &lt;/p&gt;
+        &lt;div style="border-top: 1px solid #ddd; margin-top: 20px; padding-top: 10px; text-align: center;"&gt;
+          &lt;p style="font-size: 16px; margin: 0 0 10px;"&gt;Thank you for choosing Fyndna App.&lt;/p&gt;
+          &lt;p style="font-size: 16px; margin: 0;"&gt;Best regards,&lt;/p&gt;
+          &lt;p style="font-size: 16px; margin: 0;"&gt;The FYNDNA App Team&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;`
+    &#125;);
+  &#125;
+&#125;</pre>
+        <button (click)="copyCode(code9, tooltip9)">Copy Code</button>
+        <span class="tooltip" #tooltip9>Copied!</span>
+      </div>
+
+      <!-- Step 6 -->
+      <div class="step">
+        <h3>Step 6: Use Email Service in Controller</h3>
+        <p>Import and use the EmailService in your controller:</p>
+        <pre #code10>import &#123; EmailService &#125; from 'src/core/utils/email/email.service';
+
+constructor(private readonly emailService: EmailService) &#123;&#125;
+
+// Usage example
+let generatedPassword = 'Password&#64;123';
+this.emailService.sendPasswordEmail(fullName, data.email, generatedPassword);</pre>
+        <button (click)="copyCode(code10, tooltip10)">Copy Code</button>
+        <span class="tooltip" #tooltip10>Copied!</span>
+      </div>
+
+      <!-- Step 7 -->
+      <div class="step">
+        <h3>Step 7: Generate Gmail App Password</h3>
+        <p><strong>How to get MAIL_PASSWORD (Gmail App Password):</strong></p>
+        <ol>
+          <li><strong>Enable 2-Factor Authentication:</strong> Go to your Google Account → Security → Enable 2-Step Verification</li>
+          <li><strong>Access App Passwords:</strong> After enabling 2FA, go to Security → 2-Step Verification → App passwords</li>
+          <li><strong>Generate Password:</strong> Select "Mail" as the app and "Other" as the device, give it a name (e.g., "NestJS App")</li>
+          <li><strong>Copy Password:</strong> Google will generate a 16-character password. Copy this password</li>
+          <li><strong>Update .env:</strong> Paste this password as the value for MAIL_PASSWORD in your .env file</li>
+          <li><strong>Important:</strong> This password is different from your regular Gmail password and is specifically for apps</li>
+        </ol>
+        <p><strong>Alternative for testing:</strong> You can also use services like Mailtrap or Ethereal Email for development without needing a real Gmail account.</p>
+      </div>
+
+    </div>
+  </div>

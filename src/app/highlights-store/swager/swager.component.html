@@ -1,0 +1,73 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <!-- Header -->
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+    <div class="header">
+      <h1>Swagger Documentation in NestJS</h1>
+      <p>Step-by-step guide for integrating Swagger in your NestJS project</p>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="examples">
+    <h2>Steps to Implement Swagger</h2>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <h3>Step 1: Installation</h3>
+      <pre #code1><code>npm install --save &#64;nestjs/swagger swagger-ui-express</code></pre>
+      <button  (click)="copyCode(code1, tooltip1)">Copy Code</button>
+      <span class="tooltip" #tooltip1>Copied!</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h3>Step 2: Global Prefix Setup</h3>
+      <pre #code2><code>// main.ts
+const globalPrefix = 'api';
+app.setGlobalPrefix(globalPrefix);</code></pre>
+      <button (click)="copyCode(code2, tooltip2)">Copy Code</button>
+      <span class="tooltip" #tooltip2>Copied!</span>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h3>Step 3: Swagger Configuration</h3>
+      <pre #code3><code>// main.ts
+import &#123; DocumentBuilder, SwaggerModule &#125; from '&#64;nestjs/swagger';
+
+const config = new DocumentBuilder()
+  .setTitle('My API')
+  .setDescription('API documentation for my NestJS project')
+  .setVersion('1.0')
+  .addTag('users')
+  .build();
+
+const document = SwaggerModule.createDocument(app, config);
+SwaggerModule.setup('api-docs', app, document);</code></pre>
+      <button (click)="copyCode(code3, tooltip3)">Copy Code</button>
+      <span class="tooltip" #tooltip3>Copied! {{tooltip3|json}}</span>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h3>Step 4: Access Documentation</h3>
+      <pre #code4><code>http://localhost:3000/api-docs</code></pre>
+      <button (click)="copyCode(code4, tooltip4)">Copy Code</button>
+      <span class="tooltip" #tooltip4>Copied!</span>
+    </div>
+  </div>
+</div>

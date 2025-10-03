@@ -1,0 +1,322 @@
+<div class="overall-wrapper" appMaximize #nestjsAuthGuards="maximize" id="nestjsAuthGuards">
+  <!-- Header -->
+  <div class="wrapper">
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() == 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/expand.svg"
+      alt="Expand"
+    />
+    <img
+      class="swap"
+      *ngIf="nestjsAuthGuards.checkfullscreen() != 'hide'"
+      (click)="nestjsAuthGuards.toggle()"
+      src="../../../assets/Minimize icon.svg"
+      alt="Minimize"
+    />
+    <div class="header">
+      <h1>Angular HTTP Loader Documentation</h1>
+      <p>Step-by-step guide to implement a global loader using a service and interceptor</p>
+    </div>
+  </div>
+    
+  <!-- Documentation Steps -->
+  <div class="examples">
+    <h2>Steps to Implement HTTP Loader</h2>
+
+   <div class="step">
+  <h3>Step 1: Create Loader Component</h3>
+
+  <!-- Loader HTML -->
+  <pre #code1><code>
+&lt;div class="container-wraper" *ngIf="isLoading"&gt;
+  &lt;div class="container"&gt;
+    &lt;div class="slice"&gt;&lt;/div&gt;
+    &lt;div class="slice"&gt;&lt;/div&gt;
+    &lt;div class="slice"&gt;&lt;/div&gt;
+    &lt;div class="slice"&gt;&lt;/div&gt;
+    &lt;div class="slice"&gt;&lt;/div&gt;
+    &lt;div class="slice"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+  </code></pre>
+  <button  (click)="copyCode(code1, tooltip1)">Copy Code</button>
+        <span class="tooltip" #tooltip1>Copied!</span>
+
+  <!-- Loader SCSS -->
+  <pre #code11><code>
+/* loader.component.scss */
+
+.container-wraper&#123;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    width: 100vw;
+    height: 100vh;
+    background-color:#0000007D;
+&#125;
+  .container &#123;
+    --uib-size: 45px;
+    --uib-color: blue;
+    --uib-speed: 2.5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: var(--uib-size);
+    width: var(--uib-size);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom:0;
+    z-index: 9998;
+  &#125;
+
+  .slice &#123;
+    position: relative;
+    height: calc(var(--uib-size) / 6);
+    width: 100%;
+  &#125;
+
+  .slice::before,
+  .slice::after &#123;
+    --uib-a: calc(var(--uib-speed) / -2);
+    --uib-b: calc(var(--uib-speed) / -6);
+    content: '';
+    position: absolute;
+    top: 0;
+    left: calc(50% - var(--uib-size) / 12);
+    height: 100%;
+    width: calc(100% / 6);
+    border-radius: 50%;
+    background-color: var(--uib-color);
+    flex-shrink: 0;
+    animation: orbit var(--uib-speed) linear infinite;
+    transition: background-color 0.3s ease;
+  &#125;
+
+  .slice:nth-child(1)::after &#123;
+    animation-delay: var(--uib-a);
+  &#125;
+
+  .slice:nth-child(2)::before &#123;
+    animation-delay: var(--uib-b);
+  &#125;
+
+  .slice:nth-child(2)::after &#123;
+    animation-delay: calc(var(--uib-a) + var(--uib-b));
+  &#125;
+
+  .slice:nth-child(3)::before &#123;
+    animation-delay: calc(var(--uib-b) * 2);
+  &#125;
+  .slice:nth-child(3)::after &#123;
+    animation-delay: calc(var(--uib-a) + var(--uib-b) * 2);
+  &#125;
+
+  .slice:nth-child(4)::before &#123;
+    animation-delay: calc(var(--uib-b) * 3);
+  &#125;
+  .slice:nth-child(4)::after &#123;
+    animation-delay: calc(var(--uib-a) + var(--uib-b) * 3);
+  &#125;
+
+  .slice:nth-child(5)::before &#123;
+    animation-delay: calc(var(--uib-b) * 4);
+  &#125;
+  .slice:nth-child(5)::after &#123;
+    animation-delay: calc(var(--uib-a) + var(--uib-b) * 4);
+  &#125;
+
+  .slice:nth-child(6)::before &#123;
+    animation-delay: calc(var(--uib-b) * 5);
+  &#125;
+  .slice:nth-child(6)::after &#123;
+    animation-delay: calc(var(--uib-a) + var(--uib-b) * 5);
+  &#125;
+
+  &#64;keyframes orbit &#123;
+    0% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.25)) scale(0.73684);
+      opacity: 0.65;
+    &#125;
+    5% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.235)) scale(0.684208);
+      opacity: 0.58;
+    &#125;
+    10% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.182)) scale(0.631576);
+      opacity: 0.51;
+    &#125;
+    15% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.129)) scale(0.578944);
+      opacity: 0.44;
+    &#125;
+    20% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.076)) scale(0.526312);
+      opacity: 0.37;
+    &#125;
+    25% &#123;
+      transform: translateX(0%) scale(0.47368);
+      opacity: 0.3;
+    &#125;
+    30% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.076)) scale(0.526312);
+      opacity: 0.37;
+    &#125;
+    35% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.129)) scale(0.578944);
+      opacity: 0.44;
+    &#125;
+    40% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.182)) scale(0.631576);
+      opacity: 0.51;
+    &#125;
+    45% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.235)) scale(0.684208);
+      opacity: 0.58;
+    &#125;
+    50% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.25)) scale(0.73684);
+      opacity: 0.65;
+    &#125;
+    55% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.235)) scale(0.789472);
+      opacity: 0.72;
+    &#125;
+    60% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.182)) scale(0.842104);
+      opacity: 0.79;
+    &#125;
+    65% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.129)) scale(0.894736);
+      opacity: 0.86;
+    &#125;
+    70% &#123;
+      transform: translateX(calc(var(--uib-size) * -0.076)) scale(0.947368);
+      opacity: 0.93;
+    &#125;
+    75% &#123;
+      transform: translateX(0%) scale(1);
+      opacity: 1;
+    &#125;
+    80% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.076)) scale(0.947368);
+      opacity: 0.93;
+    &#125;
+    85% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.129)) scale(0.894736);
+      opacity: 0.86;
+    &#125;
+    90% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.182)) scale(0.842104);
+      opacity: 0.79;
+    &#125;
+    95% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.235)) scale(0.789472);
+      opacity: 0.72;
+    &#125;
+    100% &#123;
+      transform: translateX(calc(var(--uib-size) * 0.25)) scale(0.73684);
+      opacity: 0.65;
+    &#125;
+  &#125;
+  </code></pre>
+  <button  (click)="copyCode(code11, tooltip11)">Copy Code</button>
+        <span class="tooltip" #tooltip11>Copied!</span>
+
+  <!-- Loader TS -->
+  <pre #code12><code>
+import &#123; Component, Input &#125; from '&#64;angular/core';
+
+&#64;Component(&#123;
+  selector: 'app-loader',
+  templateUrl: './loader.component.html',
+  styleUrls: ['./loader.component.scss']
+&#125;)
+export class LoaderComponent &#123;
+  &#64;Input() isLoading: boolean = false;
+&#125;
+  </code></pre>
+ <button  (click)="copyCode(code12, tooltip12)">Copy Code</button>
+        <span class="tooltip" #tooltip12>Copied!</span>
+</div>
+    
+
+    <div class="step">
+      <h3>Step 2: Create Loader Service</h3>
+      <pre #code2><code>ng g s page-loader-service</code></pre>
+      <button  (click)="copyCode(code2, tooltip2)">Copy Code</button>
+      <span class="tooltip" #tooltip2>Copied!</span>
+      <pre  #code3><code>
+&#64;Injectable(&#123; providedIn: 'root' &#125;)
+export class PageLoaderService &#123;
+  private httpLoading$ = new ReplaySubject&lt;boolean&gt;(1);
+  httpProgress(): Observable&lt;boolean&gt; &#123; return this.httpLoading$.asObservable(); &#125;
+  setHttpProgressStatus(inProgress: boolean) &#123; this.httpLoading$.next(inProgress); &#125;
+&#125;
+      </code></pre>
+      <button  (click)="copyCode(code3, tooltip3)">Copy Code</button>
+      <span class="tooltip" #tooltip3>Copied!</span>
+    </div>
+
+    <div class="step">
+      <h3>Step 3: Create Interceptor</h3>
+      <pre #code4><code>
+&#64;Injectable()
+export class LoaderInterceptor implements HttpInterceptor &#123;
+  private count = 0;
+  constructor(private pageLoaderService: PageLoaderService) &#123;&#125;
+
+  intercept(req: HttpRequest&lt;any&gt;, next: HttpHandler): Observable&lt;HttpEvent&lt;any&gt;&gt; &#123;
+    if (this.count === 0) this.pageLoaderService.setHttpProgressStatus(true);
+    this.count++;
+    return next.handle(req).pipe(finalize(() => &#123;
+      this.count--;
+      if (this.count === 0) this.pageLoaderService.setHttpProgressStatus(false);
+    &#125;));
+  &#125;
+&#125;
+      </code></pre>
+        <button  (click)="copyCode(code4, tooltip4)">Copy Code</button>
+      <span class="tooltip" #tooltip4>Copied!</span>
+    </div>
+
+    <div class="step">
+      <h3>Step 4: Configure app.config.ts</h3>
+      <pre #code5><code>
+export const appConfig: ApplicationConfig = &#123;
+  providers: [
+    provideHttpClient(withInterceptorsFromDi()),
+    &#123; provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true &#125;
+  ]
+&#125;;
+      </code></pre>
+        <button  (click)="copyCode(code5, tooltip5)">Copy Code</button>
+        <span class="tooltip" #tooltip5>Copied!</span>
+    </div>
+
+    <div class="step">
+      <h3>Step 5: Subscribe in AppComponent</h3>
+      <!-- Loader -->
+<p><!-- Loader -->&lt;app-loader [isLoading]="isLoading"&gt;&lt;/app-loader&gt;</p>
+      <pre #code6><code>
+export class AppComponent implements AfterViewInit &#123;
+  isLoading = true;
+  constructor(private pageLoaderService: PageLoaderService) &#123;&#125;
+
+  ngAfterViewInit() &#123;
+    this.pageLoaderService.httpProgress().subscribe(status =&gt; this.isLoading = status);
+  &#125;
+&#125;
+      </code></pre>
+        <button  (click)="copyCode(code6, tooltip6)">Copy Code</button>
+        <span class="tooltip" #tooltip6>Copied!</span>
+    </div>
+  </div>
+</div>

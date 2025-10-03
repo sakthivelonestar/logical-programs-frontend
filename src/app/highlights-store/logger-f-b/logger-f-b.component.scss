@@ -1,0 +1,145 @@
+.overall-wrapper {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background-color: #fdfdfd;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  .wrapper {
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+
+    .header {
+      h1 {
+        font-size: 2rem;
+        color: #051357;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 1rem;
+        color: #7f8c8d;
+      }
+    }
+  }
+
+  .examples {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    height: auto;
+
+    h2 {
+      font-size: 1.5rem;
+      color: #051357;
+      border-bottom: 3px solid #3498db;
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .step {
+      background: #f8f9fa;
+      border-left: 5px solid #3498db;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      position: relative;
+
+      &:hover {
+        transform: translateX(5px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+
+      h3 {
+        color: #2c3e50;
+        margin-bottom: 0.5rem;
+      }
+
+      pre {
+        background: #1e1e1e;
+        color: #f8f8f2;
+        padding: 10px;
+        border-radius: 6px;
+        overflow-x: auto;
+        font-family: 'Consolas', monospace;
+        font-size: 0.95rem;
+        margin-bottom: 5px;
+      }
+
+      button {
+        margin-top: 5px;
+        background-color: #3498db;
+        color: #fff;
+        border: none;
+        padding: 6px 12px;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+
+        &:hover {
+          background-color: #2980b9;
+        }
+      }
+    }
+  }
+
+  .swap {
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    z-index: 10;
+    background-color: #FFF;
+    border-radius: 50%;
+    padding: 3px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+   
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .overall-wrapper {
+    padding: 15px;
+
+    .examples h2 {
+      font-size: 1.3rem;
+    }
+
+    .examples .step h3 {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+ .tooltip {
+        display: inline-block;
+        margin-left: 10px;
+        opacity: 0;
+        transition: opacity 0.3s;
+        font-size: 0.85rem;
+        color: #fff;
+        background-color: #2ecc71;
+        padding: 2px 8px;
+        border-radius: 4px;
+
+        &.visible {
+          opacity: 1;
+        }
+      }

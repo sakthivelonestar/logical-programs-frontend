@@ -1,0 +1,221 @@
+<div class="overall-wrapper" appMaximize #firebaseAnalytics="maximize" id="firebaseAnalytics">
+  <div class="wrapper">
+    <img class="swap" *ngIf="firebaseAnalytics.checkfullscreen() == 'hide'" (click)="firebaseAnalytics.toggle()" src="../../../assets/expand.svg" alt="Expand">
+    <img class="swap" *ngIf="firebaseAnalytics.checkfullscreen() != 'hide'" (click)="firebaseAnalytics.toggle()" src="../../../assets/Minimize icon.svg" alt="Minimize">
+     <div class="header">
+        <h1>Logger Integration Guide</h1>
+        <p>Complete guide for Angular Firebase (Frontend) and NestJS Winston (Backend)</p>
+      </div>  
+    
+  </div>
+
+  <div class="examples">
+    <h2>Angular Firebase Logger Setup (Frontend)</h2>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <h3>Step 1: Install Firebase Packages</h3>
+      <p>Install Firebase and AngularFire packages in your Angular project:</p>
+      <pre #code1>npm install firebase &#64;angular/fire</pre>
+      <button (click)="copyCode(code1, tooltip1)">Copy Code</button>
+      <span class="tooltip" #tooltip1>Copied!</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h3>Step 2: Configure Firebase Environment</h3>
+      <p>Add your Firebase configuration to the environment file (environment.ts or environment.development.ts):</p>
+      <pre #code2>export const environment = &#123;
+  production: false,
+  firebase: &#123;
+    apiKey: "YOUR_API_KEY",
+    authDomain: "your-project.firebaseapp.com",
+    projectId: "your-project-id",
+    storageBucket: "your-project.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:abcdef123456",
+    measurementId: "G-XXXXXXXXXX" // important for Analytics on web
+  &#125;
+&#125;;</pre>
+      <button (click)="copyCode(code2, tooltip2)">Copy Code</button>
+      <span class="tooltip" #tooltip2>Copied!</span>
+      <p><strong>Note:</strong> Get these credentials from your Firebase Console → Project Settings → General → Your apps</p>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h3>Step 3: Initialize Firebase in main.ts</h3>
+      <p>Bootstrap your Angular application with Firebase providers in main.ts:</p>
+      <pre #code3>import &#123; bootstrapApplication &#125; from '&#64;angular/platform-browser';
+import &#123; provideFirebaseApp, initializeApp &#125; from '&#64;angular/fire/app';
+import &#123; provideAnalytics, getAnalytics, ScreenTrackingService, UserTrackingService &#125; from '&#64;angular/fire/analytics';
+
+import &#123; AppComponent &#125; from './app/app.component';
+import &#123; environment &#125; from './environments/environment';
+
+bootstrapApplication(AppComponent, &#123;
+  providers: [
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    // initializes Analytics (only in supported browsers)
+    provideAnalytics(() => getAnalytics()),
+    // optional helpers that auto-track screens / user id (AngularFire)
+    ScreenTrackingService,
+    UserTrackingService
+  ]
+&#125;).catch(err => console.error(err));</pre>
+      <button (click)="copyCode(code3, tooltip3)">Copy Code</button>
+      <span class="tooltip" #tooltip3>Copied!</span>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h3>Step 4: Use Analytics in Component</h3>
+      <p>Import Analytics and log custom events in your component (app.component.ts or any component):</p>
+      <pre #code4>import &#123; Component &#125; from '&#64;angular/core';
+import &#123; Analytics, logEvent &#125; from '&#64;angular/fire/analytics';
+
+&#64;Component(&#123;
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+&#125;)
+export class AppComponent &#123;
+  constructor(private analytics: Analytics) &#123;&#125;
+
+  trackBuy() &#123;
+    // log a custom event (name is case-sensitive)
+    logEvent(this.analytics, 'purchase', &#123;
+      value: 9.99,
+      currency: 'USD',
+      item_id: 'sku_123'
+    &#125;);
+  &#125;
+
+  trackPageView() &#123;
+    logEvent(this.analytics, 'page_view', &#123;
+      page_title: 'Home Page',
+      page_location: window.location.href,
+      page_path: window.location.pathname
+    &#125;);
+  &#125;
+
+  trackButtonClick(buttonName: string) &#123;
+    logEvent(this.analytics, 'button_click', &#123;
+      button_name: buttonName
+    &#125;);
+  &#125;
+&#125;</pre>
+      <button (click)="copyCode(code4, tooltip4)">Copy Code</button>
+      <span class="tooltip" #tooltip4>Copied!</span>
+    </div>
+
+     <h2>NestJS Winston Logger Setup (Backend)</h2>
+
+    <!-- Step 1 -->
+    <div class="step">
+      <h3>Step 1: Install Packages</h3>
+      <pre #code5>npm install winston nest-winston winston-daily-rotate-file</pre>
+      <button (click)="copyCode(code5, tooltip5)">Copy Code</button>
+      <span class="tooltip" #tooltip5>Copied!</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step">
+      <h3>Step 2: Configure AppModule</h3>
+      <pre #code6>WinstonModule.forRoot(&#123;
+  level: 'info',
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json(),
+    nestWinstonModuleUtilities.format.nestLike('NEST', &#123;
+      colors: true,
+      prettyPrint: true,
+    &#125;),
+  ),
+  transports: [
+    new winston.transports.DailyRotateFile(&#123;
+      filename: process.env.LogPath + '/error-%DATE%.log',
+      level: 'error',
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '100m',
+    &#125;),
+    new winston.transports.DailyRotateFile(&#123;
+      filename: process.env.LogPath + '/warning-%DATE%.log',
+      level: 'warn',
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '100m',
+    &#125;),
+    new winston.transports.DailyRotateFile(&#123;
+      filename: process.env.LogPath + '/activity-%DATE%.log',
+      level: 'info',
+      datePattern: 'YYYY-MM-DD',
+      zippedArchive: true,
+      maxSize: '100m',
+    &#125;),
+  ],
+&#125;);</pre>
+      <button (click)="copyCode(code6, tooltip6)">Copy Code</button>
+      <span class="tooltip" #tooltip6>Copied!</span>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step">
+      <h3>Step 3: Logger Service</h3>
+      <pre #code7>import &#123; Injectable, Inject, HttpException, HttpStatus &#125; from '&#64;nestjs/common';
+import &#123; WINSTON_MODULE_PROVIDER &#125; from 'nest-winston';
+import &#123; Logger &#125; from 'winston';
+import &#123; Request &#125; from 'express';
+
+&#64;Injectable()
+export class UtilsService &#123;
+  constructor(&#64;Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) &#123;&#125;
+
+  createLogger(controllerName: string, req: Request) &#123;
+    const user = req.user?.['id'] ? 'userId: ' + req.user['id'] + ' | ' : '';
+    return &#123;
+      info: (message: string) => this.logger.info(\`| \$&#123;controllerName&#125; | \$&#123;req.method&#125; | \$&#123;req.url&#125; | \$&#123;user&#125; \$&#123;message&#125;\`),
+      warn: (message: string) => this.logger.warn(\`| \$&#123;controllerName&#125; | \$&#123;req.method&#125; | \$&#123;req.url&#125; | \$&#123;user&#125; \$&#123;message&#125;\`),
+      error: (message: string, error?: unknown) => this.logger.error(\`| \$&#123;controllerName&#125; | \$&#123;req.method&#125; | \$&#123;req.url&#125; | \$&#123;user&#125; | \$&#123;message&#125; | \$&#123;error || ''&#125;\`)
+    &#125;;
+  &#125;
+
+  throwError(message: string, status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR) &#123;
+    throw new HttpException(&#123; status, error: message &#125;, status);
+  &#125;
+&#125;</pre>
+      <button (click)="copyCode(code7, tooltip7)">Copy Code</button>
+      <span class="tooltip" #tooltip7>Copied!</span>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step">
+      <h3>Step 4: Example Controller Usage</h3>
+      <pre #code8>&#64;Post('getOverallInflowOutflowData')
+async getOverallInflowOutflowData(&#64;Req() req: Request, &#64;Res() res: Response, &#64;Body() filters: FilterDto) &#123;
+  const logger = this.loggerService.createLogger(DashboardController.name, req);
+  try &#123;
+    logger.info('Inside overall inflow and outflow');
+    const data = await this.dashboardService.getOverallInflowOutflowData(filters);
+
+    if (data.length > 0) &#123;
+      logger.info(\`Data Retrieved: \$&#123;data.length&#125; records\`);
+      return res.status(HttpStatus.OK).json(&#123; status: true, data, message: 'Data Retrieved Successfully' &#125;);
+    &#125; else &#123;
+      logger.warn('No Data Found');
+      return res.status(HttpStatus.OK).json(&#123; status: true, data: [], message: 'No Data Found' &#125;);
+    &#125;
+  &#125; catch (err) &#123;
+    logger.error('Error fetching inflow/outflow data: ' + err.message, &#123; stack: err.stack &#125;);
+    return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(&#123; status: false, message: 'Internal Server Error' &#125;);
+  &#125;
+&#125;</pre>
+      <button (click)="copyCode(code8, tooltip8)">Copy Code</button>
+      <span class="tooltip" #tooltip8>Copied!</span>
+    </div>
+
+
+
+  </div>
+</div>

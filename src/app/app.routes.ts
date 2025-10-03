@@ -35,4 +35,8 @@ export const routes: Routes = [
       path: "nest",
       loadChildren: () => import('./nest/nest.module').then(m => m.NestModule)
    },
+    {
+      path: "highlights-store",
+      loadChildren: () => import('./highlights-store/highlights-store.module').then(m => m.HighlightsStoreModule)
+   },
 ];
