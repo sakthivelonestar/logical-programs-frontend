@@ -220,45 +220,36 @@ require('dotenv').config();
 export class EmailService &#123;
   constructor(private readonly mailerService: MailerService) &#123;&#125;
 
-  async sendResetPasswordEmail(fullName: string, email: string, password: string) &#123;
-    const nodemailer = require('nodemailer');
-    const transporter = nodemailer.createTransport(&#123;
-      host: process.env.MAIL_HOST,
-      port: 587,
-      secure: false,
-      auth: &#123;
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASSWORD,
-      &#125;,
-    &#125;);
-
-    let output = await this.mailerService.sendMail(&#123;        
-      from: process.env.MAIL_USER,
-      to: email,
-      subject: 'FYNDNA Password Reset Request',
-      html: `
-      &lt;div style="font-family: Arial, sans-serif; padding: 20px; max-width: 600px; margin: auto; border: 1px solid #ddd; background-color: #f9f9f9;"&gt;
-        &lt;p style="font-size: 16px; margin: 0 0 10px;"&gt;Hi $&#123;fullName&#125;,&lt;/p&gt;
-        &lt;p style="font-size: 16px; margin: 0 0 10px;"&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;Your account has been successfully created! Please use the credentials below to log in and change your password immediately:&lt;/p&gt;
-        &lt;div style="background-color: #fff; padding: 15px; border: 1px solid #ddd; margin-bottom: 15px;"&gt;
-          &lt;p style="font-size: 16px; margin: 0 0 5px;"&gt;&lt;strong&gt;Email:&lt;/strong&gt; &lt;span style="color: #007bff;"&gt;$&#123;email&#125;&lt;/span&gt;&lt;/p&gt;
-        &lt;/div&gt;
-        &lt;div style="display: flex; justify-content: center;"&gt;
-          &lt;a href="$&#123;password&#125;" style="background-color: #007bff; color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 5px;"&gt;
-            Reset Password
-          &lt;/a&gt;
-        &lt;/div&gt;
-        &lt;p style="font-size: 16px; display: block; text-align: center;"&gt;
-          If you didn't request this, please ignore this email or contact support.
-        &lt;/p&gt;
-        &lt;div style="border-top: 1px solid #ddd; margin-top: 20px; padding-top: 10px; text-align: center;"&gt;
-          &lt;p style="font-size: 16px; margin: 0 0 10px;"&gt;Thank you for choosing Fyndna App.&lt;/p&gt;
-          &lt;p style="font-size: 16px; margin: 0;"&gt;Best regards,&lt;/p&gt;
-          &lt;p style="font-size: 16px; margin: 0;"&gt;The FYNDNA App Team&lt;/p&gt;
-        &lt;/div&gt;
-      &lt;/div&gt;`
-    &#125;);
-  &#125;
+    async sendPasswordEmail(fullName: string, email: string, password: string, ) &#123;
+      const nodemailer = require('nodemailer');
+      const transporter = nodemailer.createTransport(&#123;
+        host: process.env.MAIL_HOST,
+        port: 587, // or 465 for secure
+        secure: false, // true for 465, false for other ports
+        auth: &#123;
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASSWORD,
+        &#125;,
+      &#125;);
+      let output=  await this.mailerService.sendMail(&#123;        
+        from: process.env.MAIL_USER, // sender address
+        to: email, // list of receivers
+        subject: 'Fyndna User Creation', // Subject line
+        html : 
+                    &lt;pre style="font-family: Arial, sans-serif; padding: 10px; max-width: 400px; margin: auto; border: 1px solid #ddd; height: auto"&gt;
+    &lt;p style="margin: 0; padding: 0;"&gt;Hi $&#123;fullName&#125;&lt;/p&gt;
+    &lt;p style="margin: 0; padding: 0;"&gt;To successfully create an account for login:&lt;/p&gt;
+    &lt;p style="margin: 0; padding: 0;"&gt;
+        &lt;strong&gt;Email:&lt;/strong&gt; &lt;span style="color: #00f;"&gt;$&#123;email&#125;&lt;/span&gt;&lt;br&gt;
+        &lt;strong&gt;Password:&lt;/strong&gt; $&#123;password&#125;
+    &lt;/p&gt;
+    &lt;p style="margin: 0; padding: 0;"&gt;Please log in and change your password immediately.&lt;/p&gt;
+    &lt;p style="margin: 0; padding: 0;"&gt;Best wishes,&lt;/p&gt;
+    &lt;p style="margin: 0; padding: 0;"&gt;Fyndna App Team&lt;/p&gt;
+&lt;/pre&gt;
+                
+      &#125;);
+    &#125;
 &#125;</pre>
         <button (click)="copyCode(code9, tooltip9)">Copy Code</button>
         <span class="tooltip" #tooltip9>Copied!</span>

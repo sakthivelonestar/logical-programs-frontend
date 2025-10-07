@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class NotificationComponent {
 
-   copyCode(element: HTMLElement, tooltip: HTMLElement) {
+  copyCode(element: HTMLElement, tooltip: HTMLElement) {
     const codeText = element.innerText;
     navigator.clipboard.writeText(codeText).then(() => {
       tooltip.classList.add('visible');

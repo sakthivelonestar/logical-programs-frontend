@@ -65,8 +65,13 @@ import  &#123; ApplicationConfig  &#125; from '&#64;angular/core';
 import  &#123; importProvidersFrom  &#125; from '&#64;angular/core';
 
 // Translation Loader Function
-export function HttpLoaderFactory(http: HttpClient)  &#123;
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+// Custom Translation Loader
+export class CustomTranslateLoader implements TranslateLoader  &#123;
+  constructor(private http: HttpClient)  &#123; &#125;
+
+  getTranslation(lang: string): Observable &lt; any &gt;  &#123; 
+    return this.http.get(`/assets/i18n/$ &#123;lang &#125;.json`);
+   &#125;
  &#125;
 
 export const appConfig: ApplicationConfig =  &#123;

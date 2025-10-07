@@ -35,7 +35,7 @@
       <p><strong>Create a Firebase Project:</strong></p>
       <p>Sign up for a free Firebase account and create a new project. Obtain the configuration key and Web Push certificates (VAPID Key and Sender ID).</p>
       <p style="margin-top: 15px;"><strong>Firebase Configuration:</strong></p>
-      <pre id="code1">export const firebaseConfig = &#123;
+      <pre #code1>export const firebaseConfig = &#123;
   apiKey: "YOUR_API_KEY",
   authDomain: "YOUR_AUTH_DOMAIN",
   projectId: "YOUR_PROJECT_ID",
@@ -45,15 +45,15 @@
   measurementId: "YOUR_MEASUREMENT_ID",
   vapidKey: "YOUR_VAPID_KEY"
 &#125;;</pre>
-      <button class="copy-btn" onclick="copyCode('code1', 'tooltip1')">Copy Code</button>
-      <span class="tooltip" id="tooltip1">Copied!</span>
+      <button   (click)="copyCode(code1, tooltip1)">Copy Code</button>
+      <span class="tooltip" #tooltip1>Copied!</span>
     </div>
 
     <!-- Step 2 -->
     <div class="step">
       <h2>2. Create firebase-messaging-sw.js</h2>
       <p>Add the following file in the <code>src</code> folder:</p>
-      <pre id="code2">importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js");
+      <pre #code2>importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-app-compat.js");
 importScripts("https://www.gstatic.com/firebasejs/10.1.0/firebase-messaging-compat.js");
 
 firebase.initializeApp(&#123;
@@ -77,26 +77,26 @@ messaging.onBackgroundMessage((payload) => &#123;
   &#125;;
   self.registration.showNotification(notificationTitle, notificationOptions);
 &#125;);</pre>
-      <button class="copy-btn" onclick="copyCode('code2', 'tooltip2')">Copy Code</button>
-      <span class="tooltip" id="tooltip2">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code2, tooltip2)">Copy Code</button>
+      <span class="tooltip" #tooltip2>Copied!</span>
     </div>
 
     <!-- Step 3 -->
     <div class="step">
       <h2>3. Create manifest.json</h2>
       <p>Add the following file in the (firebase -> settings -> Cloud Messaging) <code>src</code> folder:</p>
-      <pre id="code3">&#123;
+      <pre #code3>&#123;
   "gcm_sender_id": "YOUR_SENDER_ID"
 &#125;</pre>
-      <button class="copy-btn" onclick="copyCode('code3', 'tooltip3')">Copy Code</button>
-      <span class="tooltip" id="tooltip3">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code3, tooltip3)">Copy Code</button>
+      <span class="tooltip" #tooltip3>Copied!</span>
     </div>
 
     <!-- Step 4 -->
     <div class="step">
       <h2>4. Update angular.json</h2>
       <p>Add the following under the assets section:</p>
-      <pre id="code4">"assets": [
+      <pre #code4>"assets": [
   "src/favicon.ico",
   "src/assets",
   &#123;
@@ -110,15 +110,15 @@ messaging.onBackgroundMessage((payload) => &#123;
     "output": "/"
   &#125;
 ]</pre>
-      <button class="copy-btn" onclick="copyCode('code4', 'tooltip4')">Copy Code</button>
-      <span class="tooltip" id="tooltip4">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code4, tooltip4)">Copy Code</button>
+      <span class="tooltip" #tooltip4>Copied!</span>
     </div>
 
     <!-- Step 5 -->
     <div class="step">
       <h2>5. Get Device Token</h2>
       <p>Request notification permission and retrieve the device token:</p>
-      <pre id="code5">import &#123; isPlatformBrowser &#125; from '&#64;angular/common';
+      <pre #code5>import &#123; isPlatformBrowser &#125; from '&#64;angular/common';
 import &#123; getMessaging, getToken, onMessage &#125; from 'firebase/messaging';
 
 ngOnInit(): void &#123;
@@ -151,15 +151,15 @@ async requestPermission() &#123;
     return null;
   &#125;
 &#125;</pre>
-      <button class="copy-btn" onclick="copyCode('code5', 'tooltip5')">Copy Code</button>
-      <span class="tooltip" id="tooltip5">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code5, tooltip5)">Copy Code</button>
+      <span class="tooltip" #tooltip5>Copied!</span>
     </div>
 
     <!-- Step 6 -->
     <div class="step">
       <h2>6. Listen for Notifications</h2>
       <p>Handle incoming notifications:</p>
-      <pre id="code6">listen() &#123;
+      <pre #code6>listen() &#123;
   const messaging = getMessaging();
   onMessage(messaging, (payload) => &#123;
     console.log('Message received:', payload);
@@ -177,21 +177,21 @@ displayNotification(payload: any): void &#123;
     
     const notification = new Notification(title, options);
     
-    notification.onclick = (event) => &#123;
+    notification. (click) = (event) => &#123;
       event.preventDefault();
       window.open("http://www.mozilla.org", "_blank");
     &#125;;
   &#125;
 &#125;</pre>
-      <button class="copy-btn" onclick="copyCode('code6', 'tooltip6')">Copy Code</button>
-      <span class="tooltip" id="tooltip6">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code6, tooltip6)">Copy Code</button>
+      <span class="tooltip" #tooltip6>Copied!</span>
     </div>
 
     <!-- Step 7 -->
     <div class="step">
       <h2>7. Update Token in Database</h2>
       <p>Save the device token to your backend:</p>
-      <pre id="code7">notificationToken() &#123;
+      <pre #code7>notificationToken() &#123;
   this.apiService.Post(ApiList.notificationToken, &#123; 
     deviceToken: this.deviceToken 
   &#125;).subscribe(&#123;
@@ -203,16 +203,16 @@ displayNotification(payload: any): void &#123;
     &#125;
   &#125;);
 &#125;</pre>
-      <button class="copy-btn" onclick="copyCode('code7', 'tooltip7')">Copy Code</button>
-      <span class="tooltip" id="tooltip7">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code7, tooltip7)">Copy Code</button>
+      <span class="tooltip" #tooltip7>Copied!</span>
     </div>
 
     <!-- Step 8 -->
     <div class="step">
       <h2>8. Install Required Packages</h2>
-      <pre id="code8">npm install firebase &#64;angular/fire</pre>
-      <button class="copy-btn" onclick="copyCode('code8', 'tooltip8')">Copy Code</button>
-      <span class="tooltip" id="tooltip8">Copied!</span>
+      <pre #code8>npm install firebase &#64;angular/fire</pre>
+      <button class="copy-btn"  (click)="copyCode(code8, tooltip8)">Copy Code</button>
+      <span class="tooltip" #tooltip8>Copied!</span>
     </div>
 
     <!-- Backend Section Header -->
@@ -229,7 +229,7 @@ displayNotification(payload: any): void &#123;
     <!-- Step 10 -->
     <div class="step">
       <h2>2. Create Firebase Service</h2>
-      <pre id="code10">import &#123; Injectable, OnModuleInit &#125; from '&#64;nestjs/common';
+      <pre #code10>import &#123; Injectable, OnModuleInit &#125; from '&#64;nestjs/common';
 import * as firebase from 'firebase-admin';
 import &#123; join &#125; from 'path';
 
@@ -267,14 +267,14 @@ export class FirebaseService implements OnModuleInit &#123;
     &#125;
   &#125;
 &#125;</pre>
-      <button class="copy-btn" onclick="copyCode('code10', 'tooltip10')">Copy Code</button>
-      <span class="tooltip" id="tooltip10">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code10, tooltip10)">Copy Code</button>
+      <span class="tooltip" #tooltip10>Copied!</span>
     </div>
 
     <!-- Step 11 -->
     <div class="step">
       <h2>3. Use Service in Controller</h2>
-      <pre id="code11">async sendNotification(userId: number): Promise&lt;void&gt; &#123;
+      <pre #code11>async sendNotification(userId: number): Promise&lt;void&gt; &#123;
   const token = await this.UserNotificationMappingRepository.findOne(&#123;
     where: &#123; userId: userId, isActive: true &#125;
   &#125;);
@@ -289,16 +289,16 @@ export class FirebaseService implements OnModuleInit &#123;
     "Test"
   );
 &#125;</pre>
-      <button class="copy-btn" onclick="copyCode('code11', 'tooltip11')">Copy Code</button>
-      <span class="tooltip" id="tooltip11">Copied!</span>
+      <button class="copy-btn"  (click)="copyCode(code11, tooltip11)">Copy Code</button>
+      <span class="tooltip" #tooltip11>Copied!</span>
     </div>
 
     <!-- Step 12 -->
     <div class="step">
       <h2>4. Install Required Packages</h2>
-      <pre id="code12">npm install firebase-admin</pre>
-      <button class="copy-btn" onclick="copyCode('code12', 'tooltip12')">Copy Code</button>
-      <span class="tooltip" id="tooltip12">Copied!</span>
+      <pre #code12>npm install firebase-admin</pre>
+      <button class="copy-btn"  (click)="copyCode(code12, tooltip12)">Copy Code</button>
+      <span class="tooltip" #tooltip12>Copied!</span>
     </div>
 
     <!-- How it Works -->
