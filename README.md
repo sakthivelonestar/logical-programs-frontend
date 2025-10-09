@@ -1,4 +1,3 @@
-7# LogicPrograms
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.15.
 
@@ -10,18 +9,60 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The appli
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
-## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## 📋 Prerequisites
 
-## Running unit tests
+Before cloning this repository, ensure you have the following installed:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- **Node.js** (v14 or higher)
+- **npm** or **yarn**
+- **Git**
+- **Git LFS** (Large File Storage) - Required for large asset files
 
-## Running end-to-end tests
+## 🚀 Getting Started
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+### 1. Install Git LFS
 
-## Further help
+This project uses Git LFS to manage large files. You must install it before cloning.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+**Windows:**
+- Download from [git-lfs.github.com](https://git-lfs.github.com/)
+- Run the installer
+- Open a new terminal/PowerShell window
+
+**Mac:**
+```bash
+brew install git-lfs
+
+### 2. Clone the Repository
+```bash
+git clone https://github.com/your-username/logical-programs-frontend.git
+cd logical-programs-frontend
+```
+
+### 3. Verify LFS Files
+
+Check that large files were downloaded correctly:
+```bash
+git lfs ls-files
+```
+
+You should see `Angular-boilerplate.zip` listed (144 MB).
+
+**Verify file size:**
+```bash
+# Windows PowerShell
+dir src\assets\Angular-boilerplate.zip
+
+# Mac/Linux
+ls -lh src/assets/Angular-boilerplate.zip
+```
+
+If the file is only ~130 bytes, LFS files weren't downloaded. Run:
+```bash
+git lfs pull
+```
+
+### 4. Install Dependencies
+```bash
+npm install
