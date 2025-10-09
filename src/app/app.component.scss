@@ -22,14 +22,14 @@ p,h1,h2,h3,h4,h5,h6{
         .front-end{
             width: 550px;
             height: 70px;
-            // background-color: #0F9D58;
             display: flex;
             justify-content: center;
-            align-items: center;
+            background: linear-gradient(-45deg, #23d5ab, #23a6d5, #e73c7e, #ee7752);
+            border-radius: 10px; 
+            gap: 10px;
             .features {
-                width: 80%;
+                width: 75%;
                 height: 100%;
-                background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
                 background-size: 400% 400%;
                 animation: gradientShift 15s ease infinite;
                 border-radius: 10px;
@@ -51,7 +51,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n1 {
                     position: absolute;
                     top: 10px;
-                    left: 120px;
+                    left: 145px;
                     color: rgb(240, 240, 244);
                     z-index: 1;
                     animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
@@ -60,7 +60,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n2 {
                     position: absolute;
                     top: 2px;
-                    left: 15px;
+                    left: 40px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -70,7 +70,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n3 {
                     position: absolute;
                     top: 2px;
-                    left: 70px;
+                    left: 95px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -79,8 +79,8 @@ p,h1,h2,h3,h4,h5,h6{
 
                 .n4 {
                     position: absolute;
-                    top: 45px;
-                    left: 20px;
+                    top: 50px;
+                    left: 40px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -90,7 +90,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n5 {
                     position: absolute;
                     top: 28px;
-                    left: 180px;
+                    left: 205px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -100,7 +100,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n6 {
                     position: absolute;
                     top: 45px;
-                    left: 220px;
+                    left: 245px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -110,7 +110,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n7 {
                     position: absolute;
                     top: 45px;
-                    left: 110px;
+                    left: 135px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -120,7 +120,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n8 {
                     position: absolute;
                     top: 25px;
-                    left: 70px;
+                    left: 95px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -131,7 +131,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n9 {
                     position: absolute;
                     top: 25px;
-                    left: 280px;
+                    left: 305px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -142,7 +142,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n10 {
                     position: absolute;
                     top: 2px;
-                    left: 290px;
+                    left: 315px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -152,7 +152,7 @@ p,h1,h2,h3,h4,h5,h6{
                 .n11 {
                     position: absolute;
                     top: 45px;
-                    left: 300px;
+                    left: 325px;
                     color: rgb(240, 240, 244);
                     font-size: 12px !important;
                     z-index: 1;
@@ -168,6 +168,7 @@ p,h1,h2,h3,h4,h5,h6{
                 align-items: center;
                 position: relative;
                 cursor: pointer;
+                // background-color: reSSd;
 
                     img {
                 border-radius: 8px;
@@ -301,11 +302,13 @@ p,h1,h2,h3,h4,h5,h6{
             height: 70px;
             display: flex;
             justify-content: center;
-            align-items: center;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            border-radius: 10px;
+            gap: 15px;
+
             .features {
-                width: 80%;
+                width: 75%;
                 height: 100%;
-                background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
                 background-size: 400% 400%;
                 animation: gradientShift 15s ease infinite;
                 border-radius: 10px;
@@ -446,7 +449,7 @@ p,h1,h2,h3,h4,h5,h6{
                 position: relative;
                 cursor: pointer;
 
-                            img {
+            img {
                 border-radius: 8px;
                 transition: transform 0.3s ease;
                 animation: gradientGlow 3s ease-in-out infinite;
@@ -467,7 +470,7 @@ p,h1,h2,h3,h4,h5,h6{
                 align-items: center;
                 justify-content: center;
                 bottom: 5px;
-                right: calc(115% - 50px);
+                right: calc(105% - 50px);
                 animation: blink 1.5s ease-in-out infinite;
                 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
             }
