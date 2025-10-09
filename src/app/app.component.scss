@@ -20,8 +20,8 @@ p,h1,h2,h3,h4,h5,h6{
         padding-top: 20px;
         padding-bottom: 10px;
         .front-end{
-            width: 32%;
-            height: 100%;
+            width: 550px;
+            height: 70px;
             // background-color: #0F9D58;
             display: flex;
             justify-content: center;
@@ -261,12 +261,12 @@ p,h1,h2,h3,h4,h5,h6{
 
         }
         .position{
-            width: 35%;
+            width: 400px;
              h1 {
             font-family:'Times New Roman', Times, serif;
             // padding-bottom: 10px;
             text-align: center;
-            font-size: 3em; 
+            font-size: 2.2em; 
             font-weight: bold;
             text-align: center;
             background-image: linear-gradient(to right, rgba(0, 128, 0, 0.659),rgba(255, 0, 0, 0.53), rgb(141, 141, 6), blue); 
@@ -297,8 +297,8 @@ p,h1,h2,h3,h4,h5,h6{
             }
         }
         .backend{
-            width: 32%;
-            height: 100%;
+            width: 550px;
+            height: 70px;
             display: flex;
             justify-content: center;
             align-items: center;
