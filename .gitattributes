@@ -1,1 +1,2 @@
 src/assets/Angular-boilerplate.zip filter=lfs diff=lfs merge=lfs -text
+src/assets/nestjs-boilerplate.zip filter=lfs diff=lfs merge=lfs -text
