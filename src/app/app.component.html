@@ -1,5 +1,50 @@
 <div class="wrapper">
-  <h1>Fullstack Technologies</h1>
+  <div class="header"> 
+    <div class="front-end">
+         <div class="features">
+                 <h3 class="n1">Angular-boilerplate</h3>
+                 <p class="n2">Sign Up</p>
+                 <p class="n3">Sign In</p>
+                 <p class="n4">Interceptor</p>
+                 <p class="n5">Logger</p>
+                 <p class="n6">Multilingual</p>
+                 <p class="n7">HTTP Loader</p>
+                 <p class="n8">PrimeNG</p>
+                 <p class="n9">Push Notification</p>
+                 <p class="n10">AuthGuard</p>
+                 <p class="n11">Lazy Loading</p>
+         </div>
+         <div class="img">
+            <img src="../assets/boilerplate.webp" width="70px" height="70px" alt="Angular_boilerplate">
+             <span class="download" (click)="askPassword('Angular-boilerplate')">
+                <i class="pi pi-download"></i>
+            </span> 
+         </div>
+    </div>
+    <div class="position">
+       <h1>Fullstack Technologies</h1>
+    </div>
+    <div class="backend">
+           <div class="img">
+            <img src="../assets/boilerplate.webp" width="70px" height="70px" alt="Angular_boilerplate">
+            <span class="download" class="download" (click)="askPassword('nestjs-boilerplate')">
+                <i class="pi pi-download"></i>
+            </span>          
+          </div>
+          <div class="features">
+               <h3 class="n1">NestJs-boilerplate</h3>
+                <p class="n2">Sign Up</p>
+                <p class="n3">Sign In</p>
+                <p class="n4">Typeorm</p>
+                <p class="n5">Logger</p>
+                <p class="n6">Email</p>
+                <p class="n7">Push Notification</p>
+                <p class="n8">Swagger</p>
+                <p class="n9">JWT authentication</p>
+                <p class="n10">Authgard</p>
+          </div>
+    </div>
+  </div>
 
   <div class="card-wrapper">
     <div 
@@ -56,3 +101,22 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+<!-- dialog -->
+<p-dialog header="Enter Password" [(visible)]="visible" [modal]="true" [closable]="false" [style]="{width: '25rem'}">
+  <div class="flex flex-column gap-3">
+    <input
+      pPassword
+      [(ngModel)]="password"
+      placeholder="Enter password"
+      style="width: 100%"
+    />
+    <div class="dialog-actions">
+      <p-button label="Cancel"  severity="secondary" (onClick)="visible = false"></p-button>
+      <p-button label="Download" (onClick)="confirmDownload()"></p-button>
+    </div>
+  </div>
+</p-dialog>
+
+<!-- Toast -->
+<p-toast />

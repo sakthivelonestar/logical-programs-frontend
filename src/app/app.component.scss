@@ -7,12 +7,264 @@ p,h1,h2,h3,h4,h5,h6{
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-image: url("/assets/green-paint-brush-textured-background.jpg");
     font-family: 'Times New Roman', Times, serif;
 
-     h1 {
+    .header{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 20px;
+        padding-bottom: 10px;
+        .front-end{
+            width: 32%;
+            height: 100%;
+            // background-color: #0F9D58;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .features {
+                width: 80%;
+                height: 100%;
+                background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+                background-size: 400% 400%;
+                animation: gradientShift 15s ease infinite;
+                border-radius: 10px;
+                position: relative;
+                overflow: hidden;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+                    animation: rotate 20s linear infinite;
+                    z-index: 0;
+                }
+
+                .n1 {
+                    position: absolute;
+                    top: 10px;
+                    left: 120px;
+                    color: rgb(240, 240, 244);
+                    z-index: 1;
+                    animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
+                }
+
+                .n2 {
+                    position: absolute;
+                    top: 2px;
+                    left: 15px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: pulse 2s ease-in-out infinite;
+                }
+
+                .n3 {
+                    position: absolute;
+                    top: 2px;
+                    left: 70px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: slideRight 1.5s ease-in-out infinite;
+                }
+
+                .n4 {
+                    position: absolute;
+                    top: 45px;
+                    left: 20px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: bounce 2.5s ease-in-out infinite;
+                }
+
+                .n5 {
+                    position: absolute;
+                    top: 28px;
+                    left: 180px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: wiggle 2s ease-in-out infinite;
+                }
+
+                .n6 {
+                    position: absolute;
+                    top: 45px;
+                    left: 220px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: pulse 2.2s ease-in-out infinite;
+                    animation-delay: 0.4s;                }
+
+                .n7 {
+                    position: absolute;
+                    top: 45px;
+                    left: 110px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: scaleUp 2s ease-in-out infinite;
+                }
+
+                .n8 {
+                    position: absolute;
+                    top: 25px;
+                    left: 70px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: float 2.5s ease-in-out infinite;
+                    animation-delay: 0.5s;                    
+                }
+
+                .n9 {
+                    position: absolute;
+                    top: 25px;
+                    left: 280px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: float 2.5s ease-in-out infinite;
+                    animation-delay: 0.5s;
+                }
+
+                .n10 {
+                    position: absolute;
+                    top: 2px;
+                    left: 290px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: shake 6s ease-in-out infinite;
+                }
+
+                .n11 {
+                    position: absolute;
+                    top: 45px;
+                    left: 300px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: pulse 2.2s ease-in-out infinite;
+                    animation-delay: 0.4s;
+                }
+            }
+            .img{
+                width: 20%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                cursor: pointer;
+
+                    img {
+                border-radius: 8px;
+                transition: transform 0.3s ease;
+                animation: gradientGlow 3s ease-in-out infinite;
+            }
+
+            .img:hover img {
+                transform: scale(1.05);
+                animation: gradientGlowHover 1.5s ease-in-out infinite;
+            }
+
+            .download {
+                position: absolute;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                bottom: 5px;
+                right: calc(65% - 50px);
+                animation: blink 1.5s ease-in-out infinite;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .download i {
+                color: #4285F4;
+                font-size: 14px;
+            }
+
+            /* Gradient glow animation for image */
+            @keyframes gradientGlow {
+                0%, 100% {
+                    filter: drop-shadow(0 0 8px rgba(66, 133, 244, 0.4))
+                            drop-shadow(0 0 16px rgba(66, 133, 244, 0.2));
+                }
+                25% {
+                    filter: drop-shadow(0 0 12px rgba(234, 67, 53, 0.4))
+                            drop-shadow(0 0 20px rgba(234, 67, 53, 0.2));
+                }
+                50% {
+                    filter: drop-shadow(0 0 10px rgba(251, 188, 5, 0.4))
+                            drop-shadow(0 0 18px rgba(251, 188, 5, 0.2));
+                }
+                75% {
+                    filter: drop-shadow(0 0 12px rgba(52, 168, 83, 0.4))
+                            drop-shadow(0 0 20px rgba(52, 168, 83, 0.2));
+                }
+            }
+
+            @keyframes gradientGlowHover {
+                0%, 100% {
+                    filter: drop-shadow(0 0 15px rgba(66, 133, 244, 0.6))
+                            drop-shadow(0 0 25px rgba(66, 133, 244, 0.3));
+                }
+                50% {
+                    filter: drop-shadow(0 0 20px rgba(234, 67, 53, 0.6))
+                            drop-shadow(0 0 30px rgba(234, 67, 53, 0.3));
+                }
+            }
+
+            /* Blink animation for download icon */
+            @keyframes blink {
+                0%, 100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 0.4;
+                    transform: scale(0.95);
+                }
+            }
+
+            .img:hover .download {
+                animation: blinkFast 0.8s ease-in-out infinite;
+            }
+
+            @keyframes blinkFast {
+                0%, 100% {
+                    opacity: 1;
+                    transform: scale(1.1);
+                }
+                50% {
+                    opacity: 0.5;
+                    transform: scale(0.9);
+                }
+            }
+            }
+
+        }
+        .position{
+            width: 35%;
+             h1 {
             font-family:'Times New Roman', Times, serif;
-            padding-bottom: 10px;
+            // padding-bottom: 10px;
             text-align: center;
             font-size: 3em; 
             font-weight: bold;
@@ -22,27 +274,269 @@ p,h1,h2,h3,h4,h5,h6{
             -webkit-background-clip: text;
             background-clip: text; 
             -webkit-text-fill-color: transparent;   
-              background-image: radial-gradient(circle at center,
+            background-image: radial-gradient(circle at center,
                 #4285F4,
                 #DB4437, 
                 #F4B400, 
                 #0F9D58 
                 );
-                background-size: 300% 300%; 
-                animation: radial-gradient-animation 8s ease-in-out infinite alternate; 
-        }
+            background-size: 300% 300%; 
+            animation: radial-gradient-animation 8s ease-in-out infinite alternate; 
+            }
 
-       @keyframes radial-gradient-animation {
-            0% {
-                background-position: 50% 50%;
-            }
-            50% {
-                background-position: 0% 0%; 
-            }
-            100% {
-                background-position: 100% 100%; 
+           @keyframes radial-gradient-animation {
+                0% {
+                    background-position: 50% 50%;
+                }
+                50% {
+                    background-position: 0% 0%; 
+                }
+                100% {
+                    background-position: 100% 100%; 
+                }
             }
         }
+        .backend{
+            width: 32%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .features {
+                width: 80%;
+                height: 100%;
+                background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+                background-size: 400% 400%;
+                animation: gradientShift 15s ease infinite;
+                border-radius: 10px;
+                position: relative;
+                overflow: hidden;
+
+                &::before {
+                    content: '';
+                    position: absolute;
+                    top: -50%;
+                    left: -50%;
+                    width: 200%;
+                    height: 200%;
+                    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+                    animation: rotate 20s linear infinite;
+                    z-index: 0;
+                }
+
+                .n1 {
+                    position: absolute;
+                    top: 10px;
+                    left: 120px;
+                    color: rgb(240, 240, 244);
+                    z-index: 1;
+                    animation: float 3s ease-in-out infinite, glow 2s ease-in-out infinite;
+                }
+
+                .n2 {
+                    position: absolute;
+                    top: 2px;
+                    left: 15px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: pulse 2s ease-in-out infinite;
+                }
+
+                .n3 {
+                    position: absolute;
+                    top: 2px;
+                    left: 70px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: slideRight 1.5s ease-in-out infinite;
+                }
+
+                .n4 {
+                    position: absolute;
+                    top: 45px;
+                    left: 20px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: bounce 2.5s ease-in-out infinite;
+                }
+
+                .n5 {
+                    position: absolute;
+                    top: 28px;
+                    left: 180px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: wiggle 2s ease-in-out infinite;
+                }
+
+                .n6 {
+                    position: absolute;
+                    top: 45px;
+                    left: 230px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: pulse 2.2s ease-in-out infinite;
+                    animation-delay: 0.4s; 
+
+                }
+
+                .n7 {
+                    position: absolute;
+                    top: 45px;
+                    left: 110px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: scaleUp 2s ease-in-out infinite;
+                }
+
+                .n8 {
+                    position: absolute;
+                    top: 25px;
+                    left: 70px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: float 2.5s ease-in-out infinite;
+                    animation-delay: 0.5s;                }
+
+                .n9 {
+                    position: absolute;
+                    top: 27px;
+                    left: 260px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: float 2.5s ease-in-out infinite;
+                    animation-delay: 0.5s;
+                }
+
+                .n10 {
+                    position: absolute;
+                    top: 2px;
+                    left: 290px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: shake 6s ease-in-out infinite;
+                }
+
+                .n11 {
+                    position: absolute;
+                    top: 45px;
+                    left: 300px;
+                    color: rgb(240, 240, 244);
+                    font-size: 12px !important;
+                    z-index: 1;
+                    animation: pulse 2.2s ease-in-out infinite;
+                    animation-delay: 0.4s;
+                }
+}
+            .img{
+                width: 20%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                cursor: pointer;
+
+                            img {
+                border-radius: 8px;
+                transition: transform 0.3s ease;
+                animation: gradientGlow 3s ease-in-out infinite;
+            }
+
+            .img:hover img {
+                transform: scale(1.05);
+                animation: gradientGlowHover 1.5s ease-in-out infinite;
+            }
+
+            .download {
+                position: absolute;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 50%;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                bottom: 5px;
+                right: calc(115% - 50px);
+                animation: blink 1.5s ease-in-out infinite;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .download i {
+                color: #4285F4;
+                font-size: 14px;
+            }
+
+            /* Gradient glow animation for image */
+            @keyframes gradientGlow {
+                0%, 100% {
+                    filter: drop-shadow(0 0 8px rgba(66, 133, 244, 0.4))
+                            drop-shadow(0 0 16px rgba(66, 133, 244, 0.2));
+                }
+                25% {
+                    filter: drop-shadow(0 0 12px rgba(234, 67, 53, 0.4))
+                            drop-shadow(0 0 20px rgba(234, 67, 53, 0.2));
+                }
+                50% {
+                    filter: drop-shadow(0 0 10px rgba(251, 188, 5, 0.4))
+                            drop-shadow(0 0 18px rgba(251, 188, 5, 0.2));
+                }
+                75% {
+                    filter: drop-shadow(0 0 12px rgba(52, 168, 83, 0.4))
+                            drop-shadow(0 0 20px rgba(52, 168, 83, 0.2));
+                }
+            }
+
+            @keyframes gradientGlowHover {
+                0%, 100% {
+                    filter: drop-shadow(0 0 15px rgba(66, 133, 244, 0.6))
+                            drop-shadow(0 0 25px rgba(66, 133, 244, 0.3));
+                }
+                50% {
+                    filter: drop-shadow(0 0 20px rgba(234, 67, 53, 0.6))
+                            drop-shadow(0 0 30px rgba(234, 67, 53, 0.3));
+                }
+            }
+
+            /* Blink animation for download icon */
+            @keyframes blink {
+                0%, 100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 0.4;
+                    transform: scale(0.95);
+                }
+            }
+
+            .img:hover .download {
+                animation: blinkFast 0.8s ease-in-out infinite;
+            }
+
+            @keyframes blinkFast {
+                0%, 100% {
+                    opacity: 1;
+                    transform: scale(1.1);
+                }
+                50% {
+                    opacity: 0.5;
+                    transform: scale(0.9);
+                }
+            }
+            }
+        }
+    }
     .card-wrapper{ 
         width: 100%;
         height: 10%;
@@ -76,15 +570,153 @@ p,h1,h2,h3,h4,h5,h6{
             }
     }
     
-} 
-.modules{
-    width: 100%;
-    height: 84%;
-    padding-top: 1%;
-    position: relative;
-
+    } 
+    .modules{
+        width: 100%;
+        height: 84%;
+        padding-top: 1%;
+        position: relative;
+    }
 }
+
+
+// Keyframe Animations
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6), 0 0 15px rgba(255, 255, 255, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 1), 0 0 30px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes slideRight {
+  0%, 100% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  33% {
+    transform: rotate(-5deg);
+  }
+  66% {
+    transform: rotate(5deg);
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes colorShift {
+  0%, 100% {
+    color: rgb(240, 240, 244);
+    text-shadow: 0 0 10px rgba(240, 240, 244, 0.5);
+  }
+  50% {
+    color: rgb(255, 255, 255);
+    text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes slideUp {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
+  }
+}
 
 

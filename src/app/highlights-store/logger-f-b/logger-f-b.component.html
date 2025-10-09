@@ -122,40 +122,52 @@ export class AppComponent &#123;
     <!-- Step 2 -->
     <div class="step">
       <h3>Step 2: Configure AppModule</h3>
-      <pre #code6>WinstonModule.forRoot(&#123;
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.json(),
-    nestWinstonModuleUtilities.format.nestLike('NEST', &#123;
-      colors: true,
-      prettyPrint: true,
-    &#125;),
-  ),
-  transports: [
-    new winston.transports.DailyRotateFile(&#123;
-      filename: process.env.LogPath + '/error-%DATE%.log',
-      level: 'error',
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      maxSize: '100m',
-    &#125;),
-    new winston.transports.DailyRotateFile(&#123;
-      filename: process.env.LogPath + '/warning-%DATE%.log',
-      level: 'warn',
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      maxSize: '100m',
-    &#125;),
-    new winston.transports.DailyRotateFile(&#123;
-      filename: process.env.LogPath + '/activity-%DATE%.log',
-      level: 'info',
-      datePattern: 'YYYY-MM-DD',
-      zippedArchive: true,
-      maxSize: '100m',
-    &#125;),
-  ],
-&#125;);</pre>
+      <pre #code6>
+//Outside of &#64;Module
+const logDir = process.env.LogPath || './logs';
+// Ensure the log folder exists
+if (!fs.existsSync(logDir)) &#123;
+  fs.mkdirSync(logDir, &#123; recursive: true &#125;);
+&#125;
+
+//Inside of &#64;Module
+ WinstonModule.forRoot(&#123;
+        level: 'info',
+        format: winston.format.combine(
+          winston.format.timestamp(),
+          winston.format.json(),
+          nestWinstonModuleUtilities.format.nestLike('NEST', &#123;
+            colors: true,
+            prettyPrint: true,
+          &#125;),
+        ),
+        transports: [
+          new winston.transports.DailyRotateFile(&#123;
+            filename: path.join(logDir, 'error-%DATE%.log'),
+            level: 'error',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: true,
+            maxSize: '100m',
+          &#125;),
+          new winston.transports.DailyRotateFile(&#123;
+            filename: path.join(logDir, 'warning-%DATE%.log'),
+            level: 'warn',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: true,
+            maxSize: '100m',
+          &#125;),
+          new winston.transports.DailyRotateFile(&#123;
+            filename: path.join(logDir, 'activity-%DATE%.log'),
+            level: 'info',
+            datePattern: 'YYYY-MM-DD',
+            zippedArchive: true,
+            maxSize: '100m',
+          &#125;),
+        ],
+    &#125;)
+ 
+
+</pre>
       <button (click)="copyCode(code6, tooltip6)">Copy Code</button>
       <span class="tooltip" #tooltip6>Copied!</span>
     </div>
@@ -163,28 +175,43 @@ export class AppComponent &#123;
     <!-- Step 3 -->
     <div class="step">
       <h3>Step 3: Logger Service</h3>
-      <pre #code7>import &#123; Injectable, Inject, HttpException, HttpStatus &#125; from '&#64;nestjs/common';
+      <pre #code7>
+import &#123; Injectable, Inject, HttpException, HttpStatus &#125; from '&#64;nestjs/common';
 import &#123; WINSTON_MODULE_PROVIDER &#125; from 'nest-winston';
 import &#123; Logger &#125; from 'winston';
 import &#123; Request &#125; from 'express';
 
-&#64;Injectable()
-export class UtilsService &#123;
-  constructor(&#64;Inject(WINSTON_MODULE_PROVIDER) private readonly logger: Logger) &#123;&#125;
-
-  createLogger(controllerName: string, req: Request) &#123;
-    const user = req.user?.['id'] ? 'userId: ' + req.user['id'] + ' | ' : '';
-    return &#123;
-      info: (message: string) => this.logger.info(\`| \$&#123;controllerName&#125; | \$&#123;req.method&#125; | \$&#123;req.url&#125; | \$&#123;user&#125; \$&#123;message&#125;\`),
-      warn: (message: string) => this.logger.warn(\`| \$&#123;controllerName&#125; | \$&#123;req.method&#125; | \$&#123;req.url&#125; | \$&#123;user&#125; \$&#123;message&#125;\`),
-      error: (message: string, error?: unknown) => this.logger.error(\`| \$&#123;controllerName&#125; | \$&#123;req.method&#125; | \$&#123;req.url&#125; | \$&#123;user&#125; | \$&#123;message&#125; | \$&#123;error || ''&#125;\`)
-    &#125;;
+declare module 'express' &#123;
+  interface Request &#123;
+    user?: any;
   &#125;
+&#125;
 
-  throwError(message: string, status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR) &#123;
+&#64;Injectable()
+export class LoggerserviceService &#123;
+    constructor(
+    &#64;Inject(WINSTON_MODULE_PROVIDER)
+    private readonly logger: Logger,
+  ) &#123;&#125;
+
+ createLogger(controllerName: string, req: Request) &#123;
+  const user = req.user?.sub ? `userId: $&#123;req.user.sub&#125; | ` : '';
+
+  return &#123;
+    info: (message: string) =>
+      this.logger.info(`| $&#123;controllerName&#125; | $&#123;req.method&#125; | $&#123;req.url&#125; | $&#123;user&#125;$&#123;message&#125;`),
+    warn: (message: string) =>
+      this.logger.warn(`| $&#123;controllerName&#125; | $&#123;req.method&#125; | $&#123;req.url&#125; | $&#123;user&#125;$&#123;message&#125;`),
+    error: (message: string, error?: unknown) =>
+      this.logger.error(`| $&#123;controllerName&#125; | $&#123;req.method&#125; | $&#123;req.url&#125; | $&#123;user&#125;$&#123;message&#125; | $&#123;error || ''&#125;`),
+  &#125;;
+&#125;
+ 
+     throwError(message: string, status: HttpStatus = HttpStatus.INTERNAL_SERVER_ERROR) &#123;
     throw new HttpException(&#123; status, error: message &#125;, status);
   &#125;
-&#125;</pre>
+&#125;
+</pre>
       <button (click)="copyCode(code7, tooltip7)">Copy Code</button>
       <span class="tooltip" #tooltip7>Copied!</span>
     </div>
@@ -214,8 +241,5 @@ async getOverallInflowOutflowData(&#64;Req() req: Request, &#64;Res() res: Respo
       <button (click)="copyCode(code8, tooltip8)">Copy Code</button>
       <span class="tooltip" #tooltip8>Copied!</span>
     </div>
-
-
-
   </div>
 </div>

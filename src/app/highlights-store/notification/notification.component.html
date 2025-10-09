@@ -222,8 +222,24 @@ displayNotification(payload: any): void &#123;
     <div class="step">
       <h2>1. Firebase Service Account</h2>
       <p><strong>Steps:</strong></p>
-      <p>1. Create a Firebase service account and download the private key JSON file.</p>
+      <p>1. Create a Firebase <strong>service account and download the private key JSON file.</strong></p>
       <p>2. Add the JSON file inside the <code>src</code> folder of your NestJS project.</p>
+      <p>3. Initialize Firebase in <code>main.ts</code></p>
+      <pre #code91>
+import &#123; bootstrapApplication &#125; from '&#64;angular/platform-browser';
+import &#123; appConfig &#125; from './app/app.config';
+import &#123; AppComponent &#125; from './app/app.component';
+import &#123; initializeApp &#125; from 'firebase/app';
+import &#123; firebaseConfig &#125; from './environments/env';
+
+const app = initializeApp(firebaseConfig);
+console.log('Firebase initialized:', app.name);
+
+bootstrapApplication(AppComponent, appConfig)
+  .catch((err) => console.error(err));
+      </pre>
+      <button class="copy-btn"  (click)="copyCode(code91, tooltip91)">Copy Code</button>
+      <span class="tooltip" #tooltip91>Copied!</span>
     </div>
 
     <!-- Step 10 -->
